@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marsolve | Construção de Excelência no Algarve</title>
+  <meta name="description" content="Marsolve é a melhor empresa de construção do Algarve, especializada em moradias de luxo, projetos únicos e desenvolvimentos imobiliários premium.">
+  <meta name="theme-color" content="#C0584A">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gantari:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=6">
+  <script>
+    if (sessionStorage.getItem('marsolve_visited')) {
+      document.documentElement.classList.add('preloader-done');
+    }
+    function setHomeTheme(theme) {
+      document.documentElement.setAttribute('data-home-theme', theme);
+      document.body.setAttribute('data-home-theme', theme);
+      var stage = document.getElementById('page-stage');
+      if (stage) {
+        if (theme === 'white') {
+          stage.classList.remove('page-stage--terracotta');
+          stage.classList.add('page-stage--white');
+        } else {
+          stage.classList.remove('page-stage--white');
+          stage.classList.add('page-stage--terracotta');
+        }
+      }
+      var btns = document.querySelectorAll('.theme-switch__btn');
+      btns.forEach(function(b) {
+        var active = b.getAttribute('data-theme') === theme;
+        b.classList.toggle('is-active', active);
+      });
+      try {
+        localStorage.setItem('marsolve_theme', theme);
+      } catch(e) {}
+    }
+    (function() {
+      var savedTheme = 'terracotta';
+      try {
+        savedTheme = localStorage.getItem('marsolve_theme') || 'terracotta';
+      } catch(e) {}
+      document.documentElement.setAttribute('data-home-theme', savedTheme);
+    })();
+  </script>
+</head>
+<body class="page--home" data-home-theme="terracotta">
+
+  <!-- Preloader -->
+  <div id="site-preloader" class="site-preloader">
+    <div class="site-preloader__bg"></div>
+    <div class="site-preloader__stage">
+      <div class="site-preloader__frames">
+        <div class="site-preloader__frame active" data-index="0">
+          <img src="assets/bythesea-card.jpg" alt="">
+        </div>
+        <div class="site-preloader__frame" data-index="1">
+          <img src="assets/evergreen-card.jpg" alt="">
+        </div>
+        <div class="site-preloader__frame" data-index="2">
+          <img src="assets/urban-living-card.jpg" alt="">
+        </div>
+        <div class="site-preloader__frame" data-index="3">
+          <img src="assets/rare-gems-card.jpg" alt="">
+        </div>
+        <div class="site-preloader__frame site-preloader__frame--final" data-index="4">
+          <img src="assets/marsolve-hero.jpg" alt="">
+        </div>
+      </div>
+      <div class="site-preloader__counter">
+        <div class="site-preloader__counter-mask">
+          <div class="site-preloader__number-wrapper">
+            <div class="site-preloader__digit site-preloader__digit--tens">
+              <div class="site-preloader__digit-inner">
+                <span class="site-preloader__number">0</span>
+                <span class="site-preloader__number">1</span>
+                <span class="site-preloader__number">2</span>
+                <span class="site-preloader__number">3</span>
+                <span class="site-preloader__number">4</span>
+                <span class="site-preloader__number">5</span>
+                <span class="site-preloader__number">6</span>
+                <span class="site-preloader__number">7</span>
+                <span class="site-preloader__number">8</span>
+                <span class="site-preloader__number">9</span>
+              </div>
+            </div>
+            <div class="site-preloader__digit site-preloader__digit--ones">
+              <div class="site-preloader__digit-inner">
+                <span class="site-preloader__number">0</span>
+                <span class="site-preloader__number">1</span>
+                <span class="site-preloader__number">2</span>
+                <span class="site-preloader__number">3</span>
+                <span class="site-preloader__number">4</span>
+                <span class="site-preloader__number">5</span>
+                <span class="site-preloader__number">6</span>
+                <span class="site-preloader__number">7</span>
+                <span class="site-preloader__number">8</span>
+                <span class="site-preloader__number">9</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Page -->
+    <div id="page-stage" class="page-stage--terracotta">
+      <main>
+        <div class="page-grid">
+
+          <!-- Navigation -->
+          <nav class="site-nav" aria-label="Primary">
+            <header class="logo">
+              <a href="index.html" aria-label="Marsolve - home">
+                <img class="logo-img" src="assets/logo-horizontal.png" alt="Marsolve" width="1084" height="125">
+              </a>
+            </header>
+
+            <a href="portfolio.html" class="portfolio-btn link-underline" id="nav-portfolio-btn">Portfólio</a>
+            <a href="about.html" class="about-btn link-underline">Sobre</a>
+
+            <div class="site-nav__actions">
+              <button type="button" class="menu-btn" aria-label="Abrir menu" aria-expanded="false" id="menu-toggle-btn">
+                <span class="menu-btn__icon-box">
+                  <svg class="menu-btn__svg" viewBox="0 0 418.76 799.46" fill="none" aria-hidden="true">
+                    <rect fill="currentColor" x="106.39" y="734.12" width="205.98" height="65.34" rx="10.07" ry="10.07"/>
+                    <path fill="currentColor" stroke="currentColor" stroke-miterlimit="10" stroke-width="7" d="M410.24,319.12L219.65,9.27c-4.7-7.69-15.88-7.69-20.58,0L23.47,294.23l-14.95,24.89c-2.94,4.9-4.61,10.39-4.95,15.92-.1,1.42-.1,2.84,0,4.21.34,5.59,2.01,11.07,4.95,15.97l190.54,309.85c4.7,7.69,15.88,7.69,20.58,0l190.59-309.85c2.94-4.9,4.61-10.39,4.95-15.97.1-1.37.1-2.79,0-4.21-.34-5.54-2.01-11.02-4.95-15.92ZM371.57,337.5l-162.22,269.63L47.19,337.45v-.54L209.36,67.23l162.22,269.63v.64Z"/>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </nav>
+
+          <!-- Contacto no Canto Inferior Esquerdo -->
+          <a href="contact.html" class="bottom-left-contact link-underline">Contacto</a>
+
+          <!-- Theme Toggle Switcher -->
+          <div class="theme-switch" id="theme-switch" role="group" aria-label="Escolha a cor de fundo">
+            <button type="button" class="theme-switch__btn is-active" data-theme="terracotta" onclick="setHomeTheme('terracotta')">
+              <span class="theme-switch__dot theme-switch__dot--terracotta"></span>
+              <span class="theme-switch__label">Terracota</span>
+            </button>
+            <button type="button" class="theme-switch__btn" data-theme="white" onclick="setHomeTheme('white')">
+              <span class="theme-switch__dot theme-switch__dot--white"></span>
+              <span class="theme-switch__label">Branco</span>
+            </button>
+          </div>
+
+          <!-- Hero Section -->
+          <div class="hero-section">
+            <div class="hero-top">
+              <div class="hero-visual">
+                <img class="hero-opening-media" src="assets/hero-splash.png"
+                     alt="Moradia contemporânea de luxo no Algarve construída pela Marsolve"
+                     width="1024" height="683">
+              </div>
+
+              <div class="marquee" aria-hidden="true">
+                <div class="marquee-reveal">
+                  <div class="marquee-scroll">
+                    <div class="marquee-collection">
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                    </div>
+                    <div class="marquee-collection" aria-hidden="true">
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Building Further</span><span class="marquee-sep">◇</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-bottom">
+              <div class="hero-content">
+                <h1>Construção de excelência no Algarve. Moradias, villas e projetos <em>à sua medida.</em></h1>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+  <!-- Slide-out Contact & Inquiry Drawer -->
+  <div id="nav-menu" class="nav-menu" aria-hidden="true">
+    <div class="nav-menu__backdrop"></div>
+    <div class="nav-menu__panel">
+      <div class="nav-menu__header">
+        <button class="nav-menu__close" aria-label="Fechar" id="nav-menu-close">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <line x1="2" y1="2" x2="16" y2="16" stroke="currentColor" stroke-width="1.8"/>
+            <line x1="16" y1="2" x2="2" y2="16" stroke="currentColor" stroke-width="1.8"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Drawer Menu Navigation -->
+      <nav class="drawer-nav" aria-label="Menu Principal">
+        <ul class="drawer-nav__list">
+          <li class="drawer-nav__item">
+            <a href="index.html" class="drawer-nav__link">
+              <span class="drawer-nav__num">01</span>
+              <span class="drawer-nav__text">Início</span>
+            </a>
+          </li>
+          <li class="drawer-nav__item">
+            <a href="about.html" class="drawer-nav__link">
+              <span class="drawer-nav__num">02</span>
+              <span class="drawer-nav__text">Sobre</span>
+            </a>
+          </li>
+          <li class="drawer-nav__item">
+            <a href="portfolio.html" class="drawer-nav__link" id="drawer-open-portfolio">
+              <span class="drawer-nav__num">03</span>
+              <span class="drawer-nav__text">Portfólio</span>
+            </a>
+          </li>
+          <li class="drawer-nav__item">
+            <a href="contact.html" class="drawer-nav__link">
+              <span class="drawer-nav__num">04</span>
+              <span class="drawer-nav__text">Contacto</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Drawer Footer: Redes Sociais, Legal, Livro de Reclamações -->
+      <div class="drawer-footer">
+        <div class="drawer-footer__section">
+          <span class="drawer-footer__heading">Redes Sociais</span>
+          <div class="drawer-socials">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="drawer-social-link">Instagram</a>
+            <span class="drawer-social-sep">•</span>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="drawer-social-link">LinkedIn</a>
+            <span class="drawer-social-sep">•</span>
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="drawer-social-link">Facebook</a>
+            <span class="drawer-social-sep">•</span>
+            <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" class="drawer-social-link">WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="drawer-footer__section">
+          <span class="drawer-footer__heading">Contacto &amp; Morada</span>
+          <div class="drawer-footer__contacts">
+            <a href="tel:+351910000000" class="drawer-footer__contact-item">(+351) 910 000 000</a>
+            <a href="mailto:info@marsolve.pt" class="drawer-footer__contact-item">info@marsolve.pt</a>
+            <p class="drawer-footer__address">Av. 5 de Outubro, 8000-000 Faro, Algarve</p>
+          </div>
+        </div>
+
+        <div class="drawer-footer__legal">
+          <a href="#" class="drawer-legal-link">Política de Privacidade</a>
+          <span class="drawer-legal-sep">•</span>
+          <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener noreferrer" class="drawer-legal-link">Livro de Reclamações Online</a>
+        </div>
+
+        <p class="drawer-copyright">© 2026 MARSOLVE Construção Civil, Lda.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=6"></script>
+</body>
+</html>
