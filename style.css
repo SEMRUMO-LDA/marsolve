@@ -275,7 +275,9 @@ body.selection-open #selection-menu {
   gap: var(--grid-gap);
   /* o padding inferior reserva a faixa da pill; sendo relativo à altura
      do wrapper, serve a home e o portfolio sem calculos separados */
-  padding: var(--grid-padding) calc(var(--grid-padding) + 4.5vw) var(--carousel-pill-band);
+  /* largura toda: os cards respiram melhor e as duas paginas ficam iguais.
+     O padding inferior reserva a faixa dos controlos. */
+  padding: 0 0 var(--carousel-pill-band);
   box-sizing: border-box;
 }
 
@@ -293,12 +295,10 @@ body.selection-open #selection-menu {
 
 /* Slide Navigation Arrows */
 .selection-nav-arrow {
-  position: absolute;
-  top: calc((var(--grid-padding) + var(--carousel-h) - var(--carousel-pill-band)) / 2);
-  transform: translateY(-50%);
-  z-index: 25;
-  width: 48px;
-  height: 48px;
+  position: static;
+  transform: none;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: rgba(35, 31, 32, 0.75);
   backdrop-filter: blur(8px);
@@ -314,37 +314,41 @@ body.selection-open #selection-menu {
 
 .selection-nav-arrow:hover:not(:disabled) {
   background: rgba(35, 31, 32, 0.95);
-  transform: translateY(-50%) scale(1.08);
+  transform: scale(1.08);
   border-color: rgba(255, 255, 255, 0.7);
 }
 
 /* uma seta que nao leva a lado nenhum nao se mostra: na pagina 1 nao ha
    anterior, na ultima nao ha seguinte */
+/* desativada desaparece mas mantem a caixa: assim a pill nao salta
+   horizontalmente quando se muda de pagina */
 .selection-nav-arrow:disabled {
   opacity: 0;
   visibility: hidden;
   cursor: default;
   pointer-events: none;
-  transform: translateY(-50%) scale(0.88);
+  transform: scale(0.88);
 }
 
-.selection-nav-prev {
-  left: calc(var(--grid-padding) * 0.6);
-}
 
-.selection-nav-next {
-  right: calc(var(--grid-padding) * 0.6);
-}
 
 /* Indicators */
-.selection-slide-indicators {
+/* setas e paginacao vivem juntas numa barra centrada por baixo dos cards,
+   para nada ficar por cima das imagens */
+.selection-controls {
   position: absolute;
-  top: auto;
-  right: auto;
   bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selection-slide-indicators {
+  position: static;
+  transform: none;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -474,7 +478,7 @@ body.selection-open .bottom-left-contact {
   width: 100%;
   aspect-ratio: 1024 / 585;
   overflow: hidden;
-  height: 20svh;
+  height: clamp(140px, 26vh, 320px);
 }
 
 .selection-card__cover::after {
@@ -660,8 +664,6 @@ body.page--portfolio .selection-carousel-wrapper {
 
 body.page--portfolio .selection-cards-slide {
   height: 100%;
-  /* mesma faixa reservada em baixo para a pill */
-  padding: 0 0 var(--carousel-pill-band);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--grid-gap);
@@ -673,22 +675,10 @@ body.page--portfolio .selection-card {
   max-height: 100%;
 }
 
-body.page--portfolio .selection-card__cover {
-  height: clamp(140px, 26vh, 320px);
-}
 
-body.page--portfolio .selection-nav-arrow {
-  /* centrada na area util dos cards, nao no wrapper */
-  top: calc((var(--grid-padding) + 100% - var(--carousel-pill-band)) / 2);
-  transform: translateY(-50%);
-}
-
-body.page--portfolio .selection-nav-arrow:disabled {
-  transform: translateY(-50%) scale(0.88);
-}
 
 body.page--portfolio .selection-nav-arrow:hover:not(:disabled) {
-  transform: translateY(-50%) scale(1.08);
+  transform: scale(1.08);
 }
 
 body.page--portfolio .bottom-left-contact {
@@ -2158,7 +2148,8 @@ body.page--internal .selection-preview-bar__link:hover,
   .selection-cards-slide {
     grid-template-columns: repeat(2, 1fr);
     height: auto;
-    padding: var(--grid-padding);
+    /* sem recuo lateral, como no desktop; em baixo fica a faixa dos controlos */
+    padding: 0 0 var(--carousel-pill-band);
     overflow-y: auto;
   }
 
@@ -2953,14 +2944,12 @@ body.page--home:not(.selection-open) .home-selection .selection-card {
 }
 
 /* setas e indicadores acompanham os cards */
-.home-selection .selection-nav-arrow,
-.home-selection .selection-slide-indicators {
+.home-selection .selection-controls {
   opacity: 0;
   transition: opacity 400ms ease 420ms;
 }
 
-body.page--home.selection-open .home-selection .selection-nav-arrow:not(:disabled),
-body.page--home.selection-open .home-selection .selection-slide-indicators {
+body.page--home.selection-open .home-selection .selection-controls {
   opacity: 1;
 }
 
@@ -2974,8 +2963,7 @@ body.page--home.selection-open .home-selection .selection-slide-indicators {
   body.page--home .portfolio-btn::after,
   .home-selection,
   .home-selection .selection-card,
-  .home-selection .selection-nav-arrow,
-  .home-selection .selection-slide-indicators {
+  .home-selection .selection-controls {
     transition-duration: 1ms !important;
     transition-delay: 0ms !important;
   }
