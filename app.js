@@ -100,8 +100,31 @@
   }
 
   // — Selection Menu Toggle —
+  // O URL acompanha o estado: com o portfolio aberto o endereco e
+  // #portfolio, o que o torna partilhavel e faz o botao Voltar fechar.
+  // syncingUrl evita que o hashchange que nos proprios provocamos volte a
+  // entrar aqui.
+  let syncingUrl = false;
+
+  function homeSelectionAvailable() {
+    return isHomePage && !!document.getElementById('home-selection');
+  }
+
+  function setPortfolioHash(on) {
+    if (!homeSelectionAvailable()) return;
+    const hasHash = window.location.hash === '#portfolio';
+    if (on === hasHash) return;
+    syncingUrl = true;
+    try {
+      const url = on ? '#portfolio' : window.location.pathname + window.location.search;
+      history.pushState({ portfolio: on }, '', url);
+    } catch (_) {}
+    setTimeout(() => { syncingUrl = false; }, 0);
+  }
+
   function openSelection() {
     body.classList.add('selection-open');
+    setPortfolioHash(true);
     if (selectionBtn) selectionBtn.setAttribute('aria-expanded', 'true');
     const navPortfolioBtn = document.getElementById('nav-portfolio-btn');
     if (navPortfolioBtn) navPortfolioBtn.setAttribute('aria-expanded', 'true');
@@ -112,6 +135,7 @@
 
   function closeSelection() {
     body.classList.remove('selection-open');
+    setPortfolioHash(false);
     if (selectionBtn) selectionBtn.setAttribute('aria-expanded', 'false');
     const navPortfolioBtn = document.getElementById('nav-portfolio-btn');
     if (navPortfolioBtn) navPortfolioBtn.setAttribute('aria-expanded', 'false');
@@ -158,7 +182,6 @@
           return;
         }
         closeSelection();
-        try { history.replaceState(null, '', window.location.pathname); } catch (_) {}
       }
     });
   }
@@ -215,7 +238,6 @@
       }
       if (body.classList.contains('selection-open')) {
         closeSelection();
-        try { history.replaceState(null, '', window.location.pathname); } catch (_) {}
       }
       if (navMenu && navMenu.classList.contains('open')) {
         closeNavMenu();
@@ -255,17 +277,32 @@
 
   // #portfolio na home abre o estado; noutra pagina qualquer, volta a home
   function handlePortfolioHash() {
-    if (window.location.hash !== '#portfolio' || isPortfolioPage) return;
-    if (isHomePage && document.getElementById('home-selection')) {
-      updateCarousel(0);
-      openSelection();
+    if (isPortfolioPage) return;
+    const wants = window.location.hash === '#portfolio';
+
+    if (homeSelectionAvailable()) {
+      // tirar ou por o hash (incluindo pelo botao Voltar) muda o estado
+      if (wants && !body.classList.contains('selection-open')) {
+        updateCarousel(0);
+        openSelection();
+      } else if (!wants && body.classList.contains('selection-open')) {
+        closeSelection();
+      }
       return;
     }
-    window.location.href = 'index.html#portfolio';
+
+    if (wants) window.location.href = 'index.html#portfolio';
   }
 
   // a chamada inicial fica no init: aqui o carrossel ainda nao esta declarado
-  window.addEventListener('hashchange', handlePortfolioHash);
+  window.addEventListener('hashchange', () => {
+    if (syncingUrl) return;
+    handlePortfolioHash();
+  });
+  window.addEventListener('popstate', () => {
+    if (isPortfolioPage) return;
+    handlePortfolioHash();
+  });
 
   // — Scroll na home leva ao portfólio —
   // A home é um ecrã fixo (html,body têm overflow:hidden), por isso o gesto
