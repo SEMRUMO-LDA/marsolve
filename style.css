@@ -582,9 +582,8 @@ body.selection-open .bottom-left-contact {
   transition: transform 0.8s var(--standard-easing), border-radius 0.8s var(--standard-easing);
 }
 
-body.selection-open #page-stage {
-  display: none !important;
-}
+/* a hero deixa de desaparecer de repente: agora tem animacao de saida
+   (ver "Transicao hero <-> portfolio" no fim do ficheiro) */
 
 /* — Standalone Portfolio Page Layout — */
 body.page--portfolio {
@@ -719,26 +718,26 @@ body {
 html[data-home-theme="terracotta"] body,
 body[data-home-theme="terracotta"],
 body.page--terracotta {
-  background: var(--brand-primary) !important;
+  background: var(--brand-primary);
 }
 
 html[data-home-theme="terracotta"] #page-stage,
 body[data-home-theme="terracotta"] #page-stage,
 .page-stage--terracotta {
-  background: var(--brand-primary) !important;
-  color: #ffffff !important;
+  background: var(--brand-primary);
+  color: #ffffff;
 }
 
 html[data-home-theme="terracotta"] .site-nav,
 body[data-home-theme="terracotta"] .site-nav,
 .page-stage--terracotta .site-nav {
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
 html[data-home-theme="terracotta"] .logo-img,
 body[data-home-theme="terracotta"] .logo-img,
 .page-stage--terracotta .logo-img {
-  filter: brightness(0) invert(1) !important;
+  filter: brightness(0) invert(1);
 }
 
 html[data-home-theme="terracotta"] .portfolio-btn,
@@ -747,7 +746,7 @@ body[data-home-theme="terracotta"] .portfolio-btn,
 body[data-home-theme="terracotta"] .about-btn,
 .page-stage--terracotta .portfolio-btn,
 .page-stage--terracotta .about-btn {
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
 html[data-home-theme="terracotta"] .portfolio-btn:hover,
@@ -756,45 +755,45 @@ body[data-home-theme="terracotta"] .portfolio-btn:hover,
 body[data-home-theme="terracotta"] .about-btn:hover,
 .page-stage--terracotta .portfolio-btn:hover,
 .page-stage--terracotta .about-btn:hover {
-  color: #E7C826 !important;
+  color: #E7C826;
 }
 
 html[data-home-theme="terracotta"] .bottom-left-contact,
 body[data-home-theme="terracotta"] .bottom-left-contact,
 .page-stage--terracotta .bottom-left-contact {
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
 html[data-home-theme="terracotta"] .bottom-left-contact:hover,
 body[data-home-theme="terracotta"] .bottom-left-contact:hover,
 .page-stage--terracotta .bottom-left-contact:hover {
-  color: #E7C826 !important;
+  color: #E7C826;
 }
 
 html[data-home-theme="terracotta"] .hero-content h1,
 body[data-home-theme="terracotta"] .hero-content h1,
 .page-stage--terracotta .hero-content h1 {
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
 html[data-home-theme="terracotta"] .hero-content h1 em,
 body[data-home-theme="terracotta"] .hero-content h1 em,
 .page-stage--terracotta .hero-content h1 em {
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
 html[data-home-theme="terracotta"] .marquee-text,
 body[data-home-theme="terracotta"] .marquee-text,
 .page-stage--terracotta .marquee-text {
-  color: #ffffff !important;
-  opacity: 0.22 !important;
+  color: #ffffff;
+  opacity: 0.22;
 }
 
 html[data-home-theme="terracotta"] .marquee-sep,
 body[data-home-theme="terracotta"] .marquee-sep,
 .page-stage--terracotta .marquee-sep {
-  color: #ffffff !important;
-  opacity: 0.35 !important;
+  color: #ffffff;
+  opacity: 0.35;
 }
 
 /* Menu button on Terracotta: icon is WHITE */
@@ -802,15 +801,15 @@ html[data-home-theme="terracotta"] .menu-btn,
 body[data-home-theme="terracotta"] .menu-btn,
 .page-stage--terracotta .menu-btn,
 .menu-btn--about {
-  background: transparent !important;
-  color: #ffffff !important;
+  background: transparent;
+  color: #ffffff;
 }
 
 html[data-home-theme="terracotta"] .menu-btn:hover,
 body[data-home-theme="terracotta"] .menu-btn:hover,
 .page-stage--terracotta .menu-btn:hover,
 .menu-btn--about:hover {
-  color: #E7C826 !important;
+  color: #E7C826;
 }
 
 /* — 2. WHITE THEME (Fundo Branco & Texto Escuro) — */
@@ -2797,14 +2796,175 @@ body.is-ready .site-preloader {
   }
 }
 
-/* — Saída da home por scroll: desvanece antes de navegar — */
-body.page--home.is-leaving #page-stage {
+
+/* ============================================================
+   Transição hero <-> portfólio (home)
+
+   Três zonas, tal como desenhado:
+     - linha de cima e de baixo: ficam, só mudam de cor
+     - centro: a hero sai, os cards entram
+     - fundo: muda de cor, e começa primeiro
+
+   Os tempos estão escalonados de propósito. O fundo lidera para
+   que os cards cheguem a um espaço já mudado; se tudo arrancasse
+   ao mesmo tempo, leria como confusão em vez de sequência.
+   ============================================================ */
+
+:root {
+  --t-bg: 520ms;
+  --t-chrome: 400ms;
+  --t-hero-out: 340ms;
+  --t-cards-in: 520ms;
+  --e-out: cubic-bezier(0.4, 0, 1, 1);
+  --e-in: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* — Fundo: lidera, sem atraso — */
+body.page--home #page-stage {
+  transition: background var(--t-bg) ease, color var(--t-bg) ease;
+}
+
+body.page--home.selection-open #page-stage {
+  background: var(--selection-bg);
+}
+
+/* — Moldura: fica no sítio, recolore com ligeiro atraso — */
+body.page--home .site-nav a,
+body.page--home .bottom-left-contact,
+body.page--home .menu-btn {
+  transition: color var(--t-chrome) ease 80ms, opacity var(--t-chrome) ease 80ms;
+}
+
+body.page--home .logo-img {
+  transition: filter var(--t-chrome) ease 80ms;
+}
+
+body.page--home.selection-open .portfolio-btn,
+body.page--home.selection-open .about-btn,
+body.page--home.selection-open .bottom-left-contact,
+body.page--home.selection-open .menu-btn {
+  color: var(--brand-dark);
+}
+
+/* o PNG do logótipo já é terracota; a home inverte-o para branco.
+   No fundo claro basta desfazer a inversão. Usa-se a identidade
+   brightness(1) invert(0) em vez de none, porque none não interpola
+   e o filtro saltaria em vez de transitar. */
+body.page--home.selection-open .logo-img {
+  filter: brightness(1) invert(0);
+}
+
+/* o sublinhado do Portfólio desenha-se, confirmando onde se aterrou */
+body.page--home .portfolio-btn {
+  position: relative;
+}
+
+body.page--home .portfolio-btn::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 420ms var(--e-in) 160ms;
+}
+
+body.page--home.selection-open .portfolio-btn::after {
+  transform: scaleX(1);
+}
+
+/* — Centro: hero sai para cima, cards entram de baixo — */
+body.page--home .hero-section {
+  transition: opacity var(--t-hero-out) var(--e-out),
+              transform var(--t-hero-out) var(--e-out);
+}
+
+body.page--home.selection-open .hero-section {
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transform: translateY(-38px) scale(0.965);
+  pointer-events: none;
+}
+
+.home-selection {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--t-cards-in) var(--e-in) 220ms,
+              visibility 0s linear var(--t-cards-in);
+}
+
+body.page--home.selection-open .home-selection {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity var(--t-cards-in) var(--e-in) 220ms,
+              visibility 0s linear 0s;
+}
+
+/* stagger: cada card chega 60ms depois do anterior */
+.home-selection .selection-card {
+  opacity: 0;
+  transform: translateY(46px);
+  transition: opacity 460ms var(--e-in),
+              transform 460ms var(--e-in);
+}
+
+body.page--home.selection-open .home-selection .selection-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.home-selection .selection-cards-slide .selection-card:nth-child(1) { transition-delay: 260ms; }
+.home-selection .selection-cards-slide .selection-card:nth-child(2) { transition-delay: 320ms; }
+.home-selection .selection-cards-slide .selection-card:nth-child(3) { transition-delay: 380ms; }
+.home-selection .selection-cards-slide .selection-card:nth-child(4) { transition-delay: 440ms; }
+
+/* ao fechar, os cards saem todos juntos e depressa — sem stagger
+   invertido, que faria a saída parecer hesitante */
+body.page--home:not(.selection-open) .home-selection .selection-card {
+  transition-delay: 0ms;
+  transition-duration: 220ms;
+}
+
+/* setas e indicadores acompanham os cards */
+.home-selection .selection-nav-arrow,
+.home-selection .selection-slide-indicators {
+  opacity: 0;
+  transition: opacity 400ms ease 420ms;
+}
+
+body.page--home.selection-open .home-selection .selection-nav-arrow,
+body.page--home.selection-open .home-selection .selection-slide-indicators {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.page--home.is-leaving #page-stage {
-    transition: none;
+  body.page--home #page-stage,
+  body.page--home .site-nav a,
+  body.page--home .bottom-left-contact,
+  body.page--home .menu-btn,
+  body.page--home .logo-img,
+  body.page--home .hero-section,
+  body.page--home .portfolio-btn::after,
+  .home-selection,
+  .home-selection .selection-card,
+  .home-selection .selection-nav-arrow,
+  .home-selection .selection-slide-indicators {
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+  body.page--home.selection-open .hero-section {
+    transform: none;
+  }
+  .home-selection .selection-card {
+    transform: none;
   }
 }

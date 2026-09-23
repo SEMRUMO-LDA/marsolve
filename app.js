@@ -148,6 +148,9 @@
   // Close selection when clicking the minimized page
   if (pageStage) {
     pageStage.addEventListener('click', (e) => {
+      // na home os cards vivem dentro do page-stage: um clique num card
+      // deve seguir o link, nao fechar a selecao
+      if (e.target.closest && e.target.closest('.home-selection')) return;
       if (body.classList.contains('selection-open')) {
         if (isPortfolioPage) {
           closeSelection();
@@ -230,6 +233,12 @@
       updateCarousel(0);
       return;
     }
+    // na home o portfolio e um estado, nao uma pagina
+    if (isHomePage && document.getElementById('home-selection')) {
+      updateCarousel(0);
+      openSelection();
+      return;
+    }
     window.location.href = 'portfolio.html';
   }
 
@@ -257,41 +266,54 @@
     const WHEEL_THRESHOLD = 60;   // ignora toques leves no trackpad
     const SWIPE_THRESHOLD = 60;
     const ARM_DELAY = 900;        // ignora a inércia residual ao voltar atrás
-    const FADE_MS = 400;
 
     let wheelAccum = 0;
     let resetTimer = null;
-    let leaving = false;
     let armed = false;
 
     setTimeout(() => { armed = true; }, ARM_DELAY);
 
-    function canLeave() {
+    function gestureAllowed() {
       return armed &&
-             !leaving &&
              body.classList.contains('is-ready') &&
-             !body.classList.contains('selection-open') &&
              !(navMenu && navMenu.classList.contains('open'));
     }
 
-    function leaveToPortfolio() {
-      if (leaving) return;
-      leaving = true;
-      body.classList.add('is-leaving');
-      const reduced = window.matchMedia &&
-                      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      setTimeout(() => {
+    function isOpen() {
+      return body.classList.contains('selection-open');
+    }
+
+    const homeSelection = document.getElementById('home-selection');
+
+    function showSelection() {
+      if (!homeSelection) {
+        // sem cards na pagina, o comportamento antigo serve de recurso
         window.location.href = 'portfolio.html';
-      }, reduced ? 0 : FADE_MS);
+        return;
+      }
+      updateCarousel(0);
+      openSelection();
+    }
+
+    function hideSelection() {
+      closeSelection();
     }
 
     window.addEventListener('wheel', (e) => {
-      if (!canLeave()) return;
-      if (e.deltaY <= 0) { wheelAccum = 0; return; }
+      if (!gestureAllowed()) return;
+      // acumula na direcao do gesto; inverter o sentido zera a contagem
+      if ((wheelAccum > 0 && e.deltaY < 0) || (wheelAccum < 0 && e.deltaY > 0)) wheelAccum = 0;
       wheelAccum += e.deltaY;
       clearTimeout(resetTimer);
       resetTimer = setTimeout(() => { wheelAccum = 0; }, 200);
-      if (wheelAccum >= WHEEL_THRESHOLD) leaveToPortfolio();
+
+      if (!isOpen() && wheelAccum >= WHEEL_THRESHOLD) {
+        wheelAccum = 0;
+        showSelection();
+      } else if (isOpen() && wheelAccum <= -WHEEL_THRESHOLD) {
+        wheelAccum = 0;
+        hideSelection();
+      }
     }, { passive: true });
 
     let swipeStartY = null;
@@ -303,16 +325,21 @@
       if (swipeStartY === null) return;
       const travelled = swipeStartY - e.changedTouches[0].screenY;
       swipeStartY = null;
-      if (canLeave() && travelled > SWIPE_THRESHOLD) leaveToPortfolio();
+      if (!gestureAllowed()) return;
+      if (!isOpen() && travelled > SWIPE_THRESHOLD) showSelection();
+      else if (isOpen() && travelled < -SWIPE_THRESHOLD) hideSelection();
     }, { passive: true });
 
     document.addEventListener('keydown', (e) => {
-      if (!canLeave()) return;
+      if (!gestureAllowed()) return;
       const tag = e.target && e.target.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+      if (!isOpen() && (e.key === 'ArrowDown' || e.key === 'PageDown')) {
         e.preventDefault();
-        leaveToPortfolio();
+        showSelection();
+      } else if (isOpen() && (e.key === 'ArrowUp' || e.key === 'PageUp')) {
+        e.preventDefault();
+        hideSelection();
       }
     });
   }
