@@ -53,9 +53,7 @@
     if (sessionStorage.getItem('marsolve_visited')) {
       preloader.style.display = 'none';
       body.classList.add('is-ready');
-      if (window.location.hash === '#portfolio') {
-        setTimeout(openSelection, 50);
-      }
+      // o hash e tratado por handlePortfolioHash(), chamado no init
       return;
     }
 
@@ -94,10 +92,9 @@
       setTimeout(() => {
         body.classList.add('is-ready');
         preloader.style.display = 'none';
-        // If arrived with #portfolio, navigate to portfolio page
-        if (window.location.hash === '#portfolio') {
-          window.location.href = 'portfolio.html';
-        }
+        // chegou com #portfolio: abre o estado aqui, ja depois do preloader,
+        // para a transicao ser vista em vez de acontecer por tras dele
+        handlePortfolioHash();
       }, 600);
     }, 400);
   }
@@ -246,7 +243,8 @@
       openSelection();
       return;
     }
-    window.location.href = 'portfolio.html';
+    // noutras paginas, voltar a home com o hash: o portfolio vive la
+    window.location.href = 'index.html#portfolio';
   }
 
   // Attach to all portfolio buttons
@@ -255,7 +253,7 @@
     btn.addEventListener('click', togglePortfolioSelection);
   });
 
-  // #portfolio na home abre o estado; noutras paginas leva a pagina dedicada
+  // #portfolio na home abre o estado; noutra pagina qualquer, volta a home
   function handlePortfolioHash() {
     if (window.location.hash !== '#portfolio' || isPortfolioPage) return;
     if (isHomePage && document.getElementById('home-selection')) {
@@ -263,7 +261,7 @@
       openSelection();
       return;
     }
-    window.location.href = 'portfolio.html';
+    window.location.href = 'index.html#portfolio';
   }
 
   // a chamada inicial fica no init: aqui o carrossel ainda nao esta declarado
@@ -490,8 +488,10 @@
   function initPreloader() {
     if (preloaderStarted) return;
     preloaderStarted = true;
+    const willRunPreloader = !!preloader && !sessionStorage.getItem('marsolve_visited');
     runPreloader();
-    handlePortfolioHash();
+    // com preloader a correr, o hash so e tratado quando ele termina
+    if (!willRunPreloader) handlePortfolioHash();
   }
 
   if (document.readyState !== 'loading') {
