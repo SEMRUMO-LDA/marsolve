@@ -249,6 +249,74 @@
     }
   });
 
+  // — Scroll na home leva ao portfólio —
+  // A home é um ecrã fixo (html,body têm overflow:hidden), por isso o gesto
+  // de scroll não tinha destino nenhum. Aqui damos-lhe um: descer navega
+  // para o portfólio, tal como já fazem os botões "Portfólio".
+  if (isHomePage) {
+    const WHEEL_THRESHOLD = 60;   // ignora toques leves no trackpad
+    const SWIPE_THRESHOLD = 60;
+    const ARM_DELAY = 900;        // ignora a inércia residual ao voltar atrás
+    const FADE_MS = 400;
+
+    let wheelAccum = 0;
+    let resetTimer = null;
+    let leaving = false;
+    let armed = false;
+
+    setTimeout(() => { armed = true; }, ARM_DELAY);
+
+    function canLeave() {
+      return armed &&
+             !leaving &&
+             body.classList.contains('is-ready') &&
+             !body.classList.contains('selection-open') &&
+             !(navMenu && navMenu.classList.contains('open'));
+    }
+
+    function leaveToPortfolio() {
+      if (leaving) return;
+      leaving = true;
+      body.classList.add('is-leaving');
+      const reduced = window.matchMedia &&
+                      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setTimeout(() => {
+        window.location.href = 'portfolio.html';
+      }, reduced ? 0 : FADE_MS);
+    }
+
+    window.addEventListener('wheel', (e) => {
+      if (!canLeave()) return;
+      if (e.deltaY <= 0) { wheelAccum = 0; return; }
+      wheelAccum += e.deltaY;
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => { wheelAccum = 0; }, 200);
+      if (wheelAccum >= WHEEL_THRESHOLD) leaveToPortfolio();
+    }, { passive: true });
+
+    let swipeStartY = null;
+    window.addEventListener('touchstart', (e) => {
+      swipeStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      if (swipeStartY === null) return;
+      const travelled = swipeStartY - e.changedTouches[0].screenY;
+      swipeStartY = null;
+      if (canLeave() && travelled > SWIPE_THRESHOLD) leaveToPortfolio();
+    }, { passive: true });
+
+    document.addEventListener('keydown', (e) => {
+      if (!canLeave()) return;
+      const tag = e.target && e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+        e.preventDefault();
+        leaveToPortfolio();
+      }
+    });
+  }
+
   // — 4-by-4 Portfolio Carousel Slider Logic —
   const carouselTrack = document.getElementById('selection-track');
   const carouselPrev = document.getElementById('carousel-prev');

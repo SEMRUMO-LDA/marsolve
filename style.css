@@ -2796,3 +2796,15 @@ body.is-ready .site-preloader {
     padding: 6vw 5vw;
   }
 }
+
+/* — Saída da home por scroll: desvanece antes de navegar — */
+body.page--home.is-leaving #page-stage {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page--home.is-leaving #page-stage {
+    transition: none;
+  }
+}
