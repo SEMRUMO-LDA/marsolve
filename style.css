@@ -300,27 +300,31 @@ body.selection-open #selection-menu {
 
 /* Slide Navigation Arrows */
 .selection-nav-arrow {
+  /* sem caixa: toda a moldura do site e tinta sobre o fundo, e os controlos
+     passam a pertencer-lhe em vez de ficarem pousados por cima */
   position: static;
   transform: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(35, 31, 32, 0.75);
-  backdrop-filter: blur(8px);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  box-shadow: none;
+  color: var(--brand-dark);
+  opacity: 0.72;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.3s, transform 0.3s, opacity 0.3s, border-color 0.3s;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .selection-nav-arrow:hover:not(:disabled) {
-  background: rgba(35, 31, 32, 0.95);
-  transform: scale(1.08);
-  border-color: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.selection-nav-prev:hover:not(:disabled) {
+  transform: translateX(-2px);
 }
 
 /* uma seta que nao leva a lado nenhum nao se mostra: na pagina 1 nao ha
@@ -332,7 +336,6 @@ body.selection-open #selection-menu {
   visibility: hidden;
   cursor: default;
   pointer-events: none;
-  transform: scale(0.88);
 }
 
 
@@ -348,7 +351,7 @@ body.selection-open #selection-menu {
   z-index: 25;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
 }
 
 .selection-slide-indicators {
@@ -357,18 +360,16 @@ body.selection-open #selection-menu {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(35, 31, 32, 0.6);
-  backdrop-filter: blur(8px);
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 .selection-slide-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(35, 31, 32, 0.25);
   border: none;
   cursor: pointer;
   padding: 0;
@@ -376,7 +377,7 @@ body.selection-open #selection-menu {
 }
 
 .selection-slide-dot.active {
-  background: #ffffff;
+  background: var(--brand-dark);
   width: 22px;
   border-radius: 999px;
 }
@@ -384,9 +385,9 @@ body.selection-open #selection-menu {
 .selection-slide-label {
   font-family: var(--sans-font);
   font-size: 0.75rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
-  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--brand-dark);
+  letter-spacing: 0.09em;
   margin-left: 0.25rem;
 }
 
