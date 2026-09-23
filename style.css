@@ -28,6 +28,9 @@
 
   --standard-easing: cubic-bezier(.7, .6, 0, 1);
   --grid-padding: 4.5vw;
+  /* altura do carrossel e faixa reservada em baixo para a pill */
+  --carousel-h: 75svh;
+  --carousel-pill-band: 58px;
   --grid-gap: 2.6vw;
   --grid-columns: 12;
 
@@ -250,7 +253,7 @@ body.selection-open #selection-menu {
 .selection-carousel-wrapper {
   position: relative;
   width: 100%;
-  height: 75svh;
+  height: var(--carousel-h);
   overflow: hidden;
   z-index: 4;
 }
@@ -270,7 +273,9 @@ body.selection-open #selection-menu {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--grid-gap);
-  padding: var(--grid-padding) calc(var(--grid-padding) + 4.5vw) 0;
+  /* o padding inferior reserva a faixa da pill; sendo relativo à altura
+     do wrapper, serve a home e o portfolio sem calculos separados */
+  padding: var(--grid-padding) calc(var(--grid-padding) + 4.5vw) var(--carousel-pill-band);
   box-sizing: border-box;
 }
 
@@ -280,7 +285,7 @@ body.selection-open #selection-menu {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--grid-gap);
   width: 100%;
-  height: 75svh;
+  height: var(--carousel-h);
   padding: var(--grid-padding) calc(var(--grid-padding) + 4.5vw) 0;
   position: relative;
   z-index: 4;
@@ -289,7 +294,7 @@ body.selection-open #selection-menu {
 /* Slide Navigation Arrows */
 .selection-nav-arrow {
   position: absolute;
-  top: calc(37.5svh + 10px);
+  top: calc((var(--grid-padding) + var(--carousel-h) - var(--carousel-pill-band)) / 2);
   transform: translateY(-50%);
   z-index: 25;
   width: 48px;
@@ -313,10 +318,14 @@ body.selection-open #selection-menu {
   border-color: rgba(255, 255, 255, 0.7);
 }
 
+/* uma seta que nao leva a lado nenhum nao se mostra: na pagina 1 nao ha
+   anterior, na ultima nao ha seguinte */
 .selection-nav-arrow:disabled {
-  opacity: 0.18;
-  cursor: not-allowed;
+  opacity: 0;
+  visibility: hidden;
+  cursor: default;
   pointer-events: none;
+  transform: translateY(-50%) scale(0.88);
 }
 
 .selection-nav-prev {
@@ -330,8 +339,11 @@ body.selection-open #selection-menu {
 /* Indicators */
 .selection-slide-indicators {
   position: absolute;
-  top: calc(var(--grid-padding) * 0.35);
-  right: var(--grid-padding);
+  top: auto;
+  right: auto;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 25;
   display: inline-flex;
   align-items: center;
@@ -648,7 +660,8 @@ body.page--portfolio .selection-carousel-wrapper {
 
 body.page--portfolio .selection-cards-slide {
   height: 100%;
-  padding: 0;
+  /* mesma faixa reservada em baixo para a pill */
+  padding: 0 0 var(--carousel-pill-band);
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--grid-gap);
@@ -665,8 +678,13 @@ body.page--portfolio .selection-card__cover {
 }
 
 body.page--portfolio .selection-nav-arrow {
-  top: 50%;
+  /* centrada na area util dos cards, nao no wrapper */
+  top: calc((var(--grid-padding) + 100% - var(--carousel-pill-band)) / 2);
   transform: translateY(-50%);
+}
+
+body.page--portfolio .selection-nav-arrow:disabled {
+  transform: translateY(-50%) scale(0.88);
 }
 
 body.page--portfolio .selection-nav-arrow:hover:not(:disabled) {
@@ -2941,7 +2959,7 @@ body.page--home:not(.selection-open) .home-selection .selection-card {
   transition: opacity 400ms ease 420ms;
 }
 
-body.page--home.selection-open .home-selection .selection-nav-arrow,
+body.page--home.selection-open .home-selection .selection-nav-arrow:not(:disabled),
 body.page--home.selection-open .home-selection .selection-slide-indicators {
   opacity: 1;
 }
