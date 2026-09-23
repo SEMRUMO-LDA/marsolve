@@ -3041,3 +3041,121 @@ body.page--detalhe .category-cover {
     animation: none !important;
   }
 }
+
+
+/* ============================================================
+   Canto inferior esquerdo, contextual
+
+   A navegacao vive no diamante e no sidebar. Este canto deixa de
+   repetir links e passa a dizer o que se pode fazer neste ecra:
+   scroll na hero, filtros no portfolio, nada nas paginas internas.
+   ============================================================ */
+
+.corner-scroll,
+.corner-filters {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  justify-self: start;
+  align-self: end;
+  z-index: 30;
+}
+
+.corner-scroll {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--sans-font);
+  font-size: var(--nav-footer-text-size);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.corner-scroll::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 0.85em;
+  margin-left: 0.7em;
+  vertical-align: -0.1em;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.corner-scroll:hover {
+  opacity: 1;
+  transform: translateY(2px);
+}
+
+/* some quando o portfolio abre: o canto passa a ser dos filtros */
+body.selection-open .corner-scroll {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+/* — Filtros — */
+.corner-filters {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.corner-filter {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--sans-font);
+  font-size: var(--nav-footer-text-size);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-dark);
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.25s ease;
+  position: relative;
+}
+
+.corner-filter:hover {
+  opacity: 0.75;
+}
+
+.corner-filter.is-active {
+  opacity: 1;
+}
+
+.corner-filter.is-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1.5px;
+  background: currentColor;
+}
+
+/* na home os filtros pertencem ao estado do portfolio */
+body.page--home .corner-filters {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+
+body.page--home.selection-open .corner-filters {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.45s ease 0.24s, visibility 0s linear 0s;
+}
+
+/* cards escondidos pelo filtro */
+.selection-card[hidden],
+.selection-cards-slide[hidden] {
+  display: none;
+}

@@ -16,3 +16,6 @@ dist.zip
 # Logs
 *.log
 npm-debug.log*
+
+# Ficheiros entregues pelo Claude no chat
+Claude outputs/

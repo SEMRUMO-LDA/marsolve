@@ -109,9 +109,6 @@
               </a>
             </header>
 
-            <a href="portfolio.html" class="portfolio-btn link-underline" id="nav-portfolio-btn">Portfólio</a>
-            <a href="about.html" class="about-btn link-underline">Sobre</a>
-
             <div class="site-nav__actions">
               <button type="button" class="menu-btn" aria-label="Abrir menu" aria-expanded="false" id="menu-toggle-btn">
                 <span class="menu-btn__icon-box">
@@ -124,8 +121,14 @@
             </div>
           </nav>
 
-          <!-- Contacto no Canto Inferior Esquerdo -->
-          <a href="contact.html" class="bottom-left-contact link-underline">Contacto</a>
+          <!-- Canto inferior esquerdo: contextual.
+               Na hero convida ao scroll; com o portfolio aberto, filtra. -->
+          <button type="button" class="corner-scroll" id="scroll-cue">Scroll</button>
+
+          <div class="corner-filters" role="group" aria-label="Filtrar obras">
+            <button type="button" class="corner-filter is-active" data-filter="todos" aria-pressed="true">Todos</button>
+            <button type="button" class="corner-filter" data-filter="execucao" aria-pressed="false">Obras em execução</button>
+          </div>
 
           <!-- Hero Section -->
           <div class="hero-section">
@@ -192,71 +195,71 @@
             <div class="selection-cards-track" id="selection-track">
               <!-- Slide 1: 4 Cards -->
               <div class="selection-cards-slide" data-slide-index="0">
-                <a href="beira-mar.html" class="selection-card" data-category="coastal">
+                <a href="beira-mar.html" class="selection-card" data-category="coastal" data-status="execucao">
                   <span class="selection-card__panel">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia A</span>
-                    <span class="selection-card__desc">Moradias costeiras &amp;<br/>frente de mar</span>
+                    <span class="selection-card__title">Vilamoura</span>
+                    <span class="selection-card__desc">Constru&ccedil;&atilde;o de moradia</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/bythesea-card.avif" type="image/avif">
                       <source srcset="assets/bythesea-card.webp" type="image/webp">
-                      <img src="assets/bythesea-card.jpg" alt="Moradia A">
+                      <img src="assets/bythesea-card.jpg" alt="Vilamoura">
                     </picture>
                   </span>
                 </a>
-                <a href="contact.html" class="selection-card" data-category="villas">
+                <a href="contact.html" class="selection-card" data-category="villas" data-status="concluida">
                   <span class="selection-card__panel">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia B</span>
-                    <span class="selection-card__desc">Villas de luxo &amp;<br/>condomínios privados</span>
+                    <span class="selection-card__title">Albufeira</span>
+                    <span class="selection-card__desc">Constru&ccedil;&atilde;o de moradia</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/evergreen-card.avif" type="image/avif">
                       <source srcset="assets/evergreen-card.webp" type="image/webp">
-                      <img src="assets/evergreen-card.jpg" alt="Moradia B">
+                      <img src="assets/evergreen-card.jpg" alt="Albufeira">
                     </picture>
                   </span>
                 </a>
-                <a href="contact.html" class="selection-card" data-category="urban">
+                <a href="contact.html" class="selection-card" data-category="urban" data-status="execucao">
                   <span class="selection-card__panel">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia C</span>
-                    <span class="selection-card__desc">Apartamentos &amp;<br/>reabilitação urbana</span>
+                    <span class="selection-card__title">Silves</span>
+                    <span class="selection-card__desc">Constru&ccedil;&atilde;o de moradia</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/urban-living-card.avif" type="image/avif">
                       <source srcset="assets/urban-living-card.webp" type="image/webp">
-                      <img src="assets/urban-living-card.jpg" alt="Moradia C">
+                      <img src="assets/urban-living-card.jpg" alt="Silves">
                     </picture>
                   </span>
                 </a>
-                <a href="contact.html" class="selection-card" data-category="premium">
+                <a href="contact.html" class="selection-card" data-category="premium" data-status="concluida">
                   <span class="selection-card__panel">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia D</span>
-                    <span class="selection-card__desc">Projetos únicos &amp;<br/>arquitetura de autor</span>
+                    <span class="selection-card__title">Lagos</span>
+                    <span class="selection-card__desc">Constru&ccedil;&atilde;o de moradia</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/rare-gems-card.avif" type="image/avif">
                       <source srcset="assets/rare-gems-card.webp" type="image/webp">
-                      <img src="assets/rare-gems-card.jpg" alt="Moradia D">
+                      <img src="assets/rare-gems-card.jpg" alt="Lagos">
                     </picture>
                   </span>
                 </a>
@@ -264,71 +267,71 @@
 
               <!-- Slide 2: Próximos 4 Projetos (Slide para a direita) -->
               <div class="selection-cards-slide" data-slide-index="1">
-                <a href="contact.html" class="selection-card" data-category="coastal">
+                <a href="contact.html" class="selection-card" data-category="coastal" data-status="concluida">
                   <span class="selection-card__panel" style="--card-color: #2F4F54;">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia E</span>
-                    <span class="selection-card__desc">Villas contemporâneas &amp;<br/>vista panorâmica golfe</span>
+                    <span class="selection-card__title">Carvoeiro</span>
+                    <span class="selection-card__desc">Constru&ccedil;&atilde;o de moradia</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/hero-visual.avif" type="image/avif">
                       <source srcset="assets/hero-visual.webp" type="image/webp">
-                      <img src="assets/hero-visual.jpg" alt="Moradia E">
+                      <img src="assets/hero-visual.jpg" alt="Carvoeiro">
                     </picture>
                   </span>
                 </a>
-                <a href="contact.html" class="selection-card" data-category="villas">
+                <a href="contact.html" class="selection-card" data-category="villas" data-status="execucao">
                   <span class="selection-card__panel" style="--card-color: #3C4A3E;">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia F</span>
-                    <span class="selection-card__desc">Herdades privadas &amp;<br/>arquitetura bioclimática</span>
+                    <span class="selection-card__title">Albufeira</span>
+                    <span class="selection-card__desc">Constru&ccedil;&atilde;o de 4 moradias</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/evergreen-card.avif" type="image/avif">
                       <source srcset="assets/evergreen-card.webp" type="image/webp">
-                      <img src="assets/evergreen-card.jpg" alt="Moradia F">
+                      <img src="assets/evergreen-card.jpg" alt="Albufeira">
                     </picture>
                   </span>
                 </a>
-                <a href="contact.html" class="selection-card" data-category="urban">
+                <a href="contact.html" class="selection-card" data-category="urban" data-status="execucao">
                   <span class="selection-card__panel" style="--card-color: #4D3F38;">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia G</span>
-                    <span class="selection-card__desc">Edifícios residenciais &amp;<br/>frações exclusivas</span>
+                    <span class="selection-card__title">P&ecirc;ra</span>
+                    <span class="selection-card__desc">Constru&ccedil;&atilde;o de 7 moradias</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/urban-living-card.avif" type="image/avif">
                       <source srcset="assets/urban-living-card.webp" type="image/webp">
-                      <img src="assets/urban-living-card.jpg" alt="Moradia G">
+                      <img src="assets/urban-living-card.jpg" alt="Pera">
                     </picture>
                   </span>
                 </a>
-                <a href="contact.html" class="selection-card" data-category="premium">
+                <a href="contact.html" class="selection-card" data-category="premium" data-status="concluida">
                   <span class="selection-card__panel" style="--card-color: #5C3D4A;">
                     <svg class="selection-card__symbol" viewBox="0 0 40 50" fill="none">
                       <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
                       <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
                     </svg>
-                    <span class="selection-card__title">Moradia H</span>
-                    <span class="selection-card__desc">Restauro senhorial &amp;<br/>património algarvio</span>
+                    <span class="selection-card__title">Arma&ccedil;&atilde;o de P&ecirc;ra</span>
+                    <span class="selection-card__desc">Reabilita&ccedil;&atilde;o do Casino</span>
                   </span>
                   <span class="selection-card__cover">
                     <picture>
                       <source srcset="assets/rare-gems-card.avif" type="image/avif">
                       <source srcset="assets/rare-gems-card.webp" type="image/webp">
-                      <img src="assets/rare-gems-card.jpg" alt="Moradia H">
+                      <img src="assets/rare-gems-card.jpg" alt="Armacao de Pera">
                     </picture>
                   </span>
                 </a>

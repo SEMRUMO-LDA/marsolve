@@ -398,6 +398,66 @@
     });
   }
 
+  // — Canto inferior esquerdo: scroll na hero —
+  const scrollCue = document.getElementById('scroll-cue');
+  if (scrollCue) {
+    scrollCue.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      togglePortfolioSelection();
+    });
+  }
+
+  // — Filtros das obras —
+  // Os cards escondidos saem do fluxo, por isso o carrossel tem de voltar
+  // ao primeiro slide: com poucos resultados o segundo pode ficar vazio.
+  const filterBtns = document.querySelectorAll('.corner-filter');
+  if (filterBtns.length) {
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const filtro = btn.getAttribute('data-filter');
+
+        filterBtns.forEach(b => {
+          const activo = b === btn;
+          b.classList.toggle('is-active', activo);
+          b.setAttribute('aria-pressed', activo ? 'true' : 'false');
+        });
+
+        aplicarFiltro(filtro);
+      });
+    });
+  }
+
+  // — Filtrar e reagrupar —
+  // Os cards estao distribuidos por slides fixos de quatro. Esconder alguns
+  // deixaria buracos e obras da mesma seleccao espalhadas por duas paginas,
+  // por isso os visiveis sao redistribuidos desde o inicio.
+  const todosOsCards = [...document.querySelectorAll('.selection-card')];
+  const slides = [...document.querySelectorAll('.selection-cards-slide')];
+  const POR_SLIDE = 4;
+
+  function aplicarFiltro(filtro) {
+    if (!slides.length) return;
+
+    const visiveis = todosOsCards.filter(card =>
+      filtro === 'todos' || card.getAttribute('data-status') === filtro);
+
+    todosOsCards.forEach(card => { card.hidden = !visiveis.includes(card); });
+
+    // recolocar por ordem, quatro a quatro
+    visiveis.forEach((card, i) => {
+      const destino = slides[Math.floor(i / POR_SLIDE)];
+      if (destino) destino.appendChild(card);
+    });
+
+    const usados = Math.max(Math.ceil(visiveis.length / POR_SLIDE), 1);
+    slides.forEach((slide, i) => { slide.hidden = i >= usados; });
+    totalSlides = usados;
+    updateCarousel(0);
+  }
+
   // — 4-by-4 Portfolio Carousel Slider Logic —
   const carouselTrack = document.getElementById('selection-track');
   const carouselPrev = document.getElementById('carousel-prev');
@@ -405,7 +465,7 @@
   const carouselDots = document.querySelectorAll('.selection-slide-dot');
   const pageIndicator = document.getElementById('slide-page-indicator');
   let currentSlide = 0;
-  const totalSlides = 2;
+  let totalSlides = slides.length || 2;
 
   function updateCarousel(slideIndex) {
     currentSlide = Math.max(0, Math.min(slideIndex, totalSlides - 1));
