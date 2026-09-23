@@ -148,9 +148,10 @@
   // Close selection when clicking the minimized page
   if (pageStage) {
     pageStage.addEventListener('click', (e) => {
-      // na home os cards vivem dentro do page-stage: um clique num card
-      // deve seguir o link, nao fechar a selecao
-      if (e.target.closest && e.target.closest('.home-selection')) return;
+      // na home os cards e a moldura vivem dentro do page-stage: cliques neles
+      // devem seguir o seu proprio comportamento, nao fechar a selecao
+      if (e.target.closest && e.target.closest(
+            '.home-selection, .site-nav, .selection-controls, .bottom-left-contact')) return;
       if (body.classList.contains('selection-open')) {
         if (isPortfolioPage) {
           closeSelection();
@@ -227,7 +228,13 @@
 
   // — Portfolio triggers —
   function togglePortfolioSelection(e) {
-    if (e) e.preventDefault();
+    if (e) {
+      e.preventDefault();
+      // sem isto o clique sobe ate ao pageStage, que ve selection-open a true
+      // e fecha logo a seguir: da hero nada parecia acontecer, e ja aberto
+      // voltava atras
+      e.stopPropagation();
+    }
     closeNavMenu();
     if (isPortfolioPage) {
       updateCarousel(0);
@@ -248,15 +255,19 @@
     btn.addEventListener('click', togglePortfolioSelection);
   });
 
-  if (window.location.hash === '#portfolio' && !isPortfolioPage) {
+  // #portfolio na home abre o estado; noutras paginas leva a pagina dedicada
+  function handlePortfolioHash() {
+    if (window.location.hash !== '#portfolio' || isPortfolioPage) return;
+    if (isHomePage && document.getElementById('home-selection')) {
+      updateCarousel(0);
+      openSelection();
+      return;
+    }
     window.location.href = 'portfolio.html';
   }
 
-  window.addEventListener('hashchange', () => {
-    if (window.location.hash === '#portfolio' && !isPortfolioPage) {
-      window.location.href = 'portfolio.html';
-    }
-  });
+  // a chamada inicial fica no init: aqui o carrossel ainda nao esta declarado
+  window.addEventListener('hashchange', handlePortfolioHash);
 
   // — Scroll na home leva ao portfólio —
   // A home é um ecrã fixo (html,body têm overflow:hidden), por isso o gesto
@@ -301,6 +312,8 @@
 
     window.addEventListener('wheel', (e) => {
       if (!gestureAllowed()) return;
+      // gesto sobretudo horizontal pertence ao carrossel, nao a selecao
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
       // acumula na direcao do gesto; inverter o sentido zera a contagem
       if ((wheelAccum > 0 && e.deltaY < 0) || (wheelAccum < 0 && e.deltaY > 0)) wheelAccum = 0;
       wheelAccum += e.deltaY;
@@ -317,14 +330,20 @@
     }, { passive: true });
 
     let swipeStartY = null;
+    let swipeStartX = null;
     window.addEventListener('touchstart', (e) => {
       swipeStartY = e.changedTouches[0].screenY;
+      swipeStartX = e.changedTouches[0].screenX;
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
       if (swipeStartY === null) return;
       const travelled = swipeStartY - e.changedTouches[0].screenY;
+      const sideways = Math.abs(swipeStartX - e.changedTouches[0].screenX);
       swipeStartY = null;
+      swipeStartX = null;
+      // o mesmo criterio do trackpad: gesto lateral e do carrossel
+      if (sideways > Math.abs(travelled)) return;
       if (!gestureAllowed()) return;
       if (!isOpen() && travelled > SWIPE_THRESHOLD) showSelection();
       else if (isOpen() && travelled < -SWIPE_THRESHOLD) hideSelection();
@@ -391,6 +410,32 @@
     });
   });
 
+  // — Gesto horizontal: trackpad —
+  // Num portatil o "swipe" lateral nao gera eventos de toque, gera wheel com
+  // deltaX. Sem isto so as setas mudavam de pagina.
+  function carouselInteractive() {
+    if (isPortfolioPage) return true;
+    return body.classList.contains('selection-open') &&
+           !!document.getElementById('home-selection');
+  }
+
+  let hAccum = 0;
+  let hTimer = null;
+  const H_THRESHOLD = 60;
+
+  window.addEventListener('wheel', (e) => {
+    if (!carouselInteractive()) return;
+    // so tratamos o gesto quando e claramente horizontal, para nao competir
+    // com o scroll vertical que abre e fecha a selecao na home
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    if ((hAccum > 0 && e.deltaX < 0) || (hAccum < 0 && e.deltaX > 0)) hAccum = 0;
+    hAccum += e.deltaX;
+    clearTimeout(hTimer);
+    hTimer = setTimeout(() => { hAccum = 0; }, 200);
+    if (hAccum >= H_THRESHOLD) { hAccum = 0; updateCarousel(currentSlide + 1); }
+    else if (hAccum <= -H_THRESHOLD) { hAccum = 0; updateCarousel(currentSlide - 1); }
+  }, { passive: true });
+
   // Swipe support on touch devices
   let touchStartX = 0;
   let touchEndX = 0;
@@ -446,6 +491,7 @@
     if (preloaderStarted) return;
     preloaderStarted = true;
     runPreloader();
+    handlePortfolioHash();
   }
 
   if (document.readyState !== 'loading') {
