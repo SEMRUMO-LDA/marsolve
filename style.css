@@ -2980,3 +2980,64 @@ body.page--home.selection-open .home-selection .selection-controls {
     transform: none;
   }
 }
+
+
+/* ============================================================
+   Transicao entre paginas (View Transitions)
+
+   O card e a pagina de detalhe mostram a mesma fotografia. Dar-lhes o
+   mesmo view-transition-name faz o browser interpolar uma na outra, em
+   vez de cortar de um ecra para o outro.
+
+   E melhoria progressiva pura: um browser que nao suporte a regra
+   ignora-a e a navegacao acontece como sempre aconteceu.
+   ============================================================ */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* o par: capa do card <-> capa do detalhe */
+.selection-card[href="beira-mar.html"] .selection-card__cover {
+  view-transition-name: capa-moradia-a;
+}
+
+body.page--detalhe .category-cover {
+  view-transition-name: capa-moradia-a;
+}
+
+/* o elemento que se move deve ficar por cima do resto durante o percurso */
+::view-transition-group(capa-moradia-a) {
+  z-index: 10;
+}
+
+::view-transition-old(capa-moradia-a),
+::view-transition-new(capa-moradia-a) {
+  /* a imagem preenche a caixa nos dois lados, por isso nao deve ser
+     esticada durante a interpolacao */
+  object-fit: cover;
+  height: 100%;
+}
+
+/* o resto da pagina faz um cruzamento simples, mais rapido que o elemento
+   partilhado, para o olho seguir a fotografia e nao a moldura */
+::view-transition-old(root) {
+  animation-duration: 260ms;
+}
+
+::view-transition-new(root) {
+  animation-duration: 340ms;
+}
+
+::view-transition-group(capa-moradia-a) {
+  animation-duration: 520ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
