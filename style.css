@@ -234,25 +234,6 @@ html.preloader-done .site-preloader {
 }
 
 /* — Selection Menu — */
-#selection-menu {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  background: var(--selection-bg);
-  visibility: hidden;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
-}
-
-body.selection-open #selection-menu {
-  visibility: visible;
-  pointer-events: auto;
-  opacity: 1;
-}
 
 /* — Selection Cards Carousel (4 por slide com deslizamento para a direita) — */
 .selection-carousel-wrapper {
@@ -337,8 +318,6 @@ body.selection-open #selection-menu {
   cursor: default;
   pointer-events: none;
 }
-
-
 
 /* Indicators */
 /* setas e paginacao vivem juntas numa barra centrada por baixo dos cards,
@@ -680,8 +659,6 @@ body.page--portfolio .selection-card {
   height: 100%;
   max-height: 100%;
 }
-
-
 
 body.page--portfolio .selection-nav-arrow:hover:not(:disabled) {
   transform: scale(1.08);
@@ -2811,7 +2788,6 @@ body.is-ready .site-preloader {
   }
 }
 
-
 /* ============================================================
    Transição hero <-> portfólio (home)
 
@@ -2981,7 +2957,6 @@ body.page--home.selection-open .home-selection .selection-controls {
   }
 }
 
-
 /* ============================================================
    Transicao entre paginas (View Transitions)
 
@@ -2997,22 +2972,54 @@ body.page--home.selection-open .home-selection .selection-controls {
   navigation: auto;
 }
 
-/* o par: capa do card <-> capa do detalhe */
-.selection-card[href="beira-mar.html"] .selection-card__cover {
-  view-transition-name: capa-moradia-a;
+/* o par: capa do card <-> capa do detalhe, uma por obra */
+.selection-card[href="obra-vilamoura.html"] .selection-card__cover,
+body[data-obra="vilamoura"] .category-cover {
+  view-transition-name: capa-vilamoura;
 }
 
-body.page--detalhe .category-cover {
-  view-transition-name: capa-moradia-a;
+.selection-card[href="obra-albufeira-4-moradias.html"] .selection-card__cover,
+body[data-obra="albufeira-4-moradias"] .category-cover {
+  view-transition-name: capa-albufeira-4-moradias;
+}
+
+.selection-card[href="obra-pera-7-moradias.html"] .selection-card__cover,
+body[data-obra="pera-7-moradias"] .category-cover {
+  view-transition-name: capa-pera-7-moradias;
+}
+
+.selection-card[href="obra-casino-armacao-de-pera.html"] .selection-card__cover,
+body[data-obra="casino-armacao-de-pera"] .category-cover {
+  view-transition-name: capa-casino-armacao-de-pera;
+}
+
+.selection-card[href="obra-marina-de-albufeira.html"] .selection-card__cover,
+body[data-obra="marina-de-albufeira"] .category-cover {
+  view-transition-name: capa-marina-de-albufeira;
+}
+
+.selection-card[href="obra-turismo-rural-albufeira.html"] .selection-card__cover,
+body[data-obra="turismo-rural-albufeira"] .category-cover {
+  view-transition-name: capa-turismo-rural-albufeira;
+}
+
+.selection-card[href="obra-maria-nova-lounge-hotel.html"] .selection-card__cover,
+body[data-obra="maria-nova-lounge-hotel"] .category-cover {
+  view-transition-name: capa-maria-nova-lounge-hotel;
+}
+
+.selection-card[href="obra-unik-fitness-club.html"] .selection-card__cover,
+body[data-obra="unik-fitness-club"] .category-cover {
+  view-transition-name: capa-unik-fitness-club;
 }
 
 /* o elemento que se move deve ficar por cima do resto durante o percurso */
-::view-transition-group(capa-moradia-a) {
+::view-transition-group(*) {
   z-index: 10;
 }
 
-::view-transition-old(capa-moradia-a),
-::view-transition-new(capa-moradia-a) {
+::view-transition-old(root),
+::view-transition-new(root) {
   /* a imagem preenche a caixa nos dois lados, por isso nao deve ser
      esticada durante a interpolacao */
   object-fit: cover;
@@ -3029,7 +3036,7 @@ body.page--detalhe .category-cover {
   animation-duration: 340ms;
 }
 
-::view-transition-group(capa-moradia-a) {
+::view-transition-group(*) {
   animation-duration: 520ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -3041,7 +3048,6 @@ body.page--detalhe .category-cover {
     animation: none !important;
   }
 }
-
 
 /* ============================================================
    Canto inferior esquerdo, contextual
@@ -3158,4 +3164,74 @@ body.page--home.selection-open .corner-filters {
 .selection-card[hidden],
 .selection-cards-slide[hidden] {
   display: none;
+}
+
+/* — Ficha da obra — */
+.obra-titulo {
+  font-family: var(--sans-font);
+  font-size: var(--hero-h1-size);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: var(--brand-dark);
+  margin-bottom: 1.4em;
+  text-wrap: balance;
+}
+
+.obra-ficha {
+  margin-top: 4vw;
+  border-top: 1px solid rgba(35, 31, 32, 0.1);
+  padding-top: 3vw;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: 4vw;
+  align-items: start;
+}
+
+.obra-dados {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.obra-dados div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.obra-dados dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(35, 31, 32, 0.45);
+}
+
+.obra-dados dd {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--brand-dark);
+}
+
+.obra-descricao {
+  margin: 0;
+  font-size: clamp(1rem, 1.35vw, 1.35rem);
+  line-height: 1.65;
+  color: #555;
+  max-width: 62ch;
+}
+
+@media (max-width: 900px) {
+  .obra-ficha {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.2rem;
+  }
+  .obra-dados {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1.8rem;
+  }
 }
