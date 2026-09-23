@@ -93,6 +93,12 @@ img {
   -webkit-user-drag: none;
 }
 
+/* <picture> nao gera caixa propria: a <img> continua a ser filha
+   de layout do contentor original, preservando height/width 100% */
+picture {
+  display: contents;
+}
+
 a {
   text-decoration: none;
   color: inherit;
