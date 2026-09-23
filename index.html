@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt" data-home-theme="terracotta">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,35 +14,6 @@
     if (sessionStorage.getItem('marsolve_visited')) {
       document.documentElement.classList.add('preloader-done');
     }
-    function setHomeTheme(theme) {
-      document.documentElement.setAttribute('data-home-theme', theme);
-      document.body.setAttribute('data-home-theme', theme);
-      var stage = document.getElementById('page-stage');
-      if (stage) {
-        if (theme === 'white') {
-          stage.classList.remove('page-stage--terracotta');
-          stage.classList.add('page-stage--white');
-        } else {
-          stage.classList.remove('page-stage--white');
-          stage.classList.add('page-stage--terracotta');
-        }
-      }
-      var btns = document.querySelectorAll('.theme-switch__btn');
-      btns.forEach(function(b) {
-        var active = b.getAttribute('data-theme') === theme;
-        b.classList.toggle('is-active', active);
-      });
-      try {
-        localStorage.setItem('marsolve_theme', theme);
-      } catch(e) {}
-    }
-    (function() {
-      var savedTheme = 'terracotta';
-      try {
-        savedTheme = localStorage.getItem('marsolve_theme') || 'terracotta';
-      } catch(e) {}
-      document.documentElement.setAttribute('data-home-theme', savedTheme);
-    })();
   </script>
 </head>
 <body class="page--home" data-home-theme="terracotta">
@@ -135,18 +106,6 @@
 
           <!-- Contacto no Canto Inferior Esquerdo -->
           <a href="contact.html" class="bottom-left-contact link-underline">Contacto</a>
-
-          <!-- Theme Toggle Switcher -->
-          <div class="theme-switch" id="theme-switch" role="group" aria-label="Escolha a cor de fundo">
-            <button type="button" class="theme-switch__btn is-active" data-theme="terracotta" onclick="setHomeTheme('terracotta')">
-              <span class="theme-switch__dot theme-switch__dot--terracotta"></span>
-              <span class="theme-switch__label">Terracota</span>
-            </button>
-            <button type="button" class="theme-switch__btn" data-theme="white" onclick="setHomeTheme('white')">
-              <span class="theme-switch__dot theme-switch__dot--white"></span>
-              <span class="theme-switch__label">Branco</span>
-            </button>
-          </div>
 
           <!-- Hero Section -->
           <div class="hero-section">

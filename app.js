@@ -345,56 +345,12 @@
     });
   });
 
-  // — Theme Switcher (Terracotta / White) —
-  function initThemeSwitcher() {
-    const themeSwitch = document.getElementById('theme-switch');
-    if (!themeSwitch) return;
-
-    const buttons = themeSwitch.querySelectorAll('.theme-switch__btn');
-    const savedTheme = localStorage.getItem('marsolve_theme') || 'terracotta';
-
-    function setTheme(theme) {
-      document.documentElement.setAttribute('data-home-theme', theme);
-      document.body.setAttribute('data-home-theme', theme);
-
-      const pageStage = document.getElementById('page-stage');
-      if (pageStage) {
-        if (theme === 'white') {
-          pageStage.classList.remove('page-stage--terracotta');
-          pageStage.classList.add('page-stage--white');
-        } else {
-          pageStage.classList.remove('page-stage--white');
-          pageStage.classList.add('page-stage--terracotta');
-        }
-      }
-
-      buttons.forEach(btn => {
-        const isActive = btn.getAttribute('data-theme') === theme;
-        btn.classList.toggle('is-active', isActive);
-        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      });
-
-      localStorage.setItem('marsolve_theme', theme);
-    }
-
-    setTheme(savedTheme);
-
-    buttons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetTheme = btn.getAttribute('data-theme');
-        setTheme(targetTheme);
-      });
-    });
-  }
-
   // — Init —
   let preloaderStarted = false;
   function initPreloader() {
     if (preloaderStarted) return;
     preloaderStarted = true;
     runPreloader();
-    initThemeSwitcher();
   }
 
   if (document.readyState !== 'loading') {
