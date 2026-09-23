@@ -31,6 +31,9 @@
   /* altura do carrossel e faixa reservada em baixo para a pill */
   --carousel-h: 75svh;
   --carousel-pill-band: 58px;
+  /* folga vertical entre os cards e a moldura; ligada à altura da janela,
+     que é a dimensão que manda no ritmo vertical */
+  --card-inset: clamp(20px, 2.6vh, 44px);
   --grid-gap: 2.6vw;
   --grid-columns: 12;
 
@@ -47,7 +50,9 @@
   --text-size: 1.1vw;
   --hero-h1-size: 1.65vw;
 
-  --selection-card-title-size: 3.24vw;
+  /* o titulo e vertical: corre na altura do card, por isso tem de respeitar
+     tambem a altura da janela. So com vw, transbordava em ecras baixos. */
+  --selection-card-title-size: min(3.24vw, 4.2vh);
   --selection-card-desc-size: 0.9vw;
   --selection-card-symbol-width: 2.66vw;
   --selection-card-padding: 1.85vw;
@@ -276,8 +281,8 @@ body.selection-open #selection-menu {
   /* o padding inferior reserva a faixa da pill; sendo relativo à altura
      do wrapper, serve a home e o portfolio sem calculos separados */
   /* largura toda: os cards respiram melhor e as duas paginas ficam iguais.
-     O padding inferior reserva a faixa dos controlos. */
-  padding: 0 0 var(--carousel-pill-band);
+     Em baixo, a faixa dos controlos mais a mesma folga do topo. */
+  padding: var(--card-inset) 0 calc(var(--carousel-pill-band) + var(--card-inset));
   box-sizing: border-box;
 }
 
@@ -2149,7 +2154,7 @@ body.page--internal .selection-preview-bar__link:hover,
     grid-template-columns: repeat(2, 1fr);
     height: auto;
     /* sem recuo lateral, como no desktop; em baixo fica a faixa dos controlos */
-    padding: 0 0 var(--carousel-pill-band);
+    padding: var(--card-inset) 0 calc(var(--carousel-pill-band) + var(--card-inset));
     overflow-y: auto;
   }
 
