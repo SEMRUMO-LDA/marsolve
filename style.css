@@ -536,17 +536,20 @@ body.selection-open .bottom-left-contact {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-family: var(--sans-font);
-  /* O texto corre na vertical, por isso o comprimento importa tanto como a
-     altura disponivel: "Armacao de Pera" ocupa o triplo de "Pera". Cada card
-     declara --chars e o tamanho ajusta-se, em vez de cortar em silencio
-     quando se acrescenta uma obra de nome longo.
+  /* O texto corre na vertical, por isso o que manda no tamanho e a altura
+     disponivel dividida pelo numero de caracteres que la tem de caber.
 
      A medida e a altura do proprio painel (cqh), nao a do ecra: o carrossel
      nem sempre consegue os 75svh que pede -- num ecra baixo e largo a moldura
      nao deixa -- e contra o ecra o titulo pedia mais altura do que o card
      tinha para dar. 98cqh deixa metade do painel para o titulo, que e o que
-     sobra depois do losango e da legenda. */
-  font-size: min(var(--selection-card-title-size), calc(98cqh / var(--chars, 10)));
+     sobra depois do losango e da legenda.
+
+     O divisor e o mesmo para todos os cards e nao o comprimento de cada nome:
+     assim as localidades tem todas o mesmo tamanho, lado a lado. Dez e o
+     comprimento maximo que cabe -- um nome mais comprido do que isso tem de
+     ser encurtado, como foi o "Armacao de Pera". */
+  font-size: min(var(--selection-card-title-size), calc(98cqh / 10));
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
