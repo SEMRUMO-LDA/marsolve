@@ -30,3 +30,6 @@ _*.jpg
 _*.png
 _*.css
 _*.html
+
+# originais fora do git: pesados e so servem para derivar
+assets/originais/
