@@ -20,8 +20,9 @@
   --card-ink: var(--white);
   --logo-filtro: brightness(0) invert(1);
 
-  /* o fundo da area dos projectos */
-  --selection-bg: var(--brand-dark);
+  /* A cor da area dos projectos esta nos cards, nao no fundo: o fundo e
+     branco e sao os cards que a trazem. */
+  --selection-bg: var(--white);
 
   --sans-font: 'Gantari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --display-font: 'Gantari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -624,13 +625,9 @@ body.selection-open .bottom-left-contact {
 /* — Standalone Portfolio Page Layout — */
 body.page--portfolio {
   background: var(--selection-bg);
-  color: var(--white);
+  color: var(--brand-dark);
   height: 100svh;
   overflow: hidden;
-}
-
-body.page--portfolio .logo-img {
-  filter: brightness(0) invert(1);
 }
 
 body.page--portfolio .portfolio-stage {
@@ -2875,7 +2872,7 @@ body.page--home #page-stage {
 
 body.page--home.selection-open #page-stage {
   background: var(--selection-bg);
-  color: var(--white);
+  color: var(--brand-dark);
 }
 
 /* — Moldura: fica no sítio, recolore com ligeiro atraso — */
@@ -2893,12 +2890,16 @@ body.page--home.selection-open .portfolio-btn,
 body.page--home.selection-open .about-btn,
 body.page--home.selection-open .bottom-left-contact,
 body.page--home.selection-open .menu-btn {
-  color: var(--white);
+  color: var(--brand-dark);
 }
 
-/* o PNG do logotipo ja e terracota; a home inverte-o para branco e agora o
-   portfolio tambem e escuro, por isso a inversao mantem-se dos dois lados da
-   transicao e nao ha nada a desfazer */
+/* o PNG do logotipo ja e terracota; a home inverte-o para branco. No fundo
+   branco do portfolio basta desfazer a inversao. Usa-se a identidade
+   brightness(1) invert(0) em vez de none, porque none nao interpola e o
+   filtro saltaria em vez de transitar. */
+body.page--home.selection-open .logo-img {
+  filter: brightness(1) invert(0);
+}
 
 /* o sublinhado do Portfólio desenha-se, confirmando onde se aterrou */
 body.page--home .portfolio-btn {
@@ -3247,11 +3248,12 @@ body.page--home.selection-open .corner-filters {
   padding: 0;
 }
 
-/* A cor e da area do site, nao da obra. O portfolio e as paginas das obras
-   sao a mesma area e partilham o Ivory Black; a hero tem o terracota, o Sobre
-   o azul, o Contacto o branco -- nunca duas paginas com a mesma cor. Sobre
-   preto a tinta e sempre clara, por isso nao ha excepcoes de tinta nem de
-   logotipo como havia quando uma obra calhava em amarelo. */
+/* A cor e da area do site, nao da obra. Os projectos sao o Ivory Black: e a
+   cor dos cards no portfolio -- onde o fundo e branco e a cor esta neles --
+   e e a cor com que a pagina da obra abre, antes de ceder ao branco. A hero
+   tem o terracota, o Sobre o azul, o Contacto o branco; nunca duas areas com
+   a mesma cor. Sobre preto a tinta e sempre clara, por isso nao ha excepcoes
+   de tinta nem de logotipo como havia quando uma obra calhava em amarelo. */
 .selection-card,
 body.page--detalhe {
   --card-color: var(--brand-dark);
