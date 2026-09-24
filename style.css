@@ -3332,7 +3332,10 @@ body.page--detalhe.obra-claro .menu-btn {
 
 .obra-hero__fixo {
   position: sticky;
-  top: 0;
+  /* colada exactamente onde ja esta: com top:0 so prendia depois de a pagina
+     ter subido a linha do logotipo, e via-se a imagem a escorregar antes de
+     comecar a crescer */
+  top: var(--obra-hero-topo, 93px);
   height: var(--obra-hero-altura);
   container-type: size;
 }

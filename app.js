@@ -447,13 +447,32 @@
         - (botao ? botao.offsetHeight : 46) + window.innerHeight * 0.038;
     };
 
+    // onde a abertura ja esta pousada: a linha do logotipo mais a folga
+    const topoDaHero = () => {
+      const nav = document.querySelector('.site-nav');
+      const folga = parseFloat(getComputedStyle(grelhaObra).rowGap) || 0;
+      return (nav ? nav.offsetHeight : 70) + folga;
+    };
+
     let medidas = null;
     const medir = () => {
       const alturaEcra = grelhaObra.clientHeight;
-      if (artigo) artigo.style.setProperty('--obra-hero-altura', faixaDaHero().toFixed(1) + 'px');
+      if (artigo) {
+        artigo.style.setProperty('--obra-hero-altura', faixaDaHero().toFixed(1) + 'px');
+        artigo.style.setProperty('--obra-hero-topo', topoDaHero().toFixed(1) + 'px');
+      }
       medidas = {
         alturaEcra,
-        abertura: palco ? { topo: topoEm(palco), curso: palco.offsetHeight - fixo.offsetHeight } : null,
+        abertura: palco ? {
+          // a que altura de scroll a abertura fica presa. O offsetTop conta a
+          // partir da caixa de padding e o top da sticky tambem, por isso a
+          // moldura de cima entra nas duas contas e tem de sair de uma: com as
+          // folgas certas isto da zero, ou seja cresce desde o primeiro pixel.
+          topo: Math.max(0, topoEm(palco)
+            - (parseFloat(getComputedStyle(grelhaObra).paddingTop) || 0)
+            - (parseFloat(getComputedStyle(fixo).top) || 0)),
+          curso: palco.offsetHeight - fixo.offsetHeight
+        } : null,
         galeria: galeria ? {
           topo: topoEm(galeria),
           altura: galeria.offsetHeight,
