@@ -419,7 +419,7 @@
     const palco = document.querySelector('.obra-hero__palco');
     const fixo = document.querySelector('.obra-hero__fixo');
     const galeria = document.querySelector('.obra-galeria');
-    const fila = document.querySelector('.obra-galeria__fila');
+    const colunas = [...document.querySelectorAll('.obra-galeria__coluna')];
     const seguinte = document.querySelector('.obra-seguinte');
     const ligacao = document.querySelector('.obra-seguinte__link');
 
@@ -478,12 +478,8 @@
         galeria: galeria ? {
           topo: topoEm(galeria),
           altura: galeria.offsetHeight,
-          // o quanto a fila tem de andar para mostrar o que sobra dela
-          curso: Math.max(0, fila.scrollWidth - galeria.clientWidth),
-          inclinacao: Math.tan(Math.abs(parseFloat(
-            getComputedStyle(fila).rotate) || 0) * Math.PI / 180),
-          // distancia entre o centro da fila e o centro do ecra, no inicio
-          meio: fila.scrollWidth / 2 - galeria.clientWidth / 2
+          // o quanto cada coluna desliza de ponta a ponta da passagem
+          amplitude: Math.min(220, alturaEcra * 0.28)
         } : null,
         seguinte: seguinte ? { topo: topoEm(seguinte), altura: seguinte.offsetHeight } : null
       };
@@ -512,20 +508,13 @@
         document.body.classList.toggle('obra-claro', y > h * 0.34);
       }
 
-      if (medidas.galeria) {
+      if (medidas.galeria && colunas.length) {
         const g = medidas.galeria;
-        if (g.curso <= 0) {
-          // poucas fotos: a fila cabe toda, fica so centrada
-          fila.style.translate = ((galeria.clientWidth - fila.scrollWidth) / 2).toFixed(1) + 'px 0px';
-        } else {
-        // 0 quando a galeria entra por baixo, 1 quando sai por cima
-        const p = entre((y + h - g.topo) / (h + g.altura), 0, 1);
-        const dx = p * g.curso;
-        // A fila esta inclinada, logo quanto mais para a direita e a parte que
-        // calha ao centro do ecra, mais alta ela esta. Sem compensar em y, a
-        // fila saia da faixa visivel ao fim de alguns milhares de pixeis.
-        const dy = (dx - g.meio) * g.inclinacao;
-        fila.style.translate = (-dx).toFixed(1) + 'px ' + dy.toFixed(1) + 'px';
+        // -1 quando a galeria entra por baixo, +1 quando sai por cima
+        const p = entre((y + h - g.topo) / (h + g.altura), 0, 1) * 2 - 1;
+        for (const col of colunas) {
+          const ritmo = parseFloat(col.style.getPropertyValue('--ritmo')) || 0;
+          col.style.translate = '0px ' + (-p * g.amplitude * ritmo * 4).toFixed(1) + 'px';
         }
       }
 

@@ -47,8 +47,6 @@
      da pagina) e o curso de scroll que a capa leva a crescer */
   --obra-hero-altura: calc(100svh - var(--grid-padding) * 2 - 12vh);
   --obra-abertura-curso: 150svh;
-  /* a inclinacao da fila da galeria */
-  --galeria-angulo: -5deg;
   --nav-footer-text-size: 1.1vw;
   /* filtros e paginacao partilham a barra de baixo, logo a mesma escala */
   --corner-text-size: clamp(11px, 0.96vw, 15px);
@@ -3456,52 +3454,62 @@ body.page--detalhe.obra-claro .menu-btn {
 .obra-texto p + p { margin-top: 1.1em; }
 
 /* — Galeria — */
-/* Em grelha, dezanove fotos de obra sao dezanove miniaturas iguais. Numa fila
-   inclinada que anda de lado conforme a pagina desce, ve-se uma de cada vez e
-   percebe-se que ha mais. A fila esta a -6 graus e cada foto a +6, para as
-   fotos ficarem direitas e so o alinhamento entre elas ser que sobe. */
+/* Nem grelha nem fila: colunas desencontradas, cada uma a andar ao seu ritmo
+   com o scroll. Cada foto guarda a proporcao real, que e o que faz isto
+   parecer uma pilha de fotografias e nao uma tabela. Com duas fotos sao duas
+   colunas, com seis ou mais sao tres -- por isso tambem funciona com poucas. */
 .obra-galeria {
-  margin-top: 6vw;
-  /* A fila e muito mais larga do que a pagina: e cortada de lado. Em altura
-     basta caber a inclinacao ao longo da largura do ecra -- o JS compensa a
-     descida que a rotacao provoca, senao as fotos fugiam para fora da faixa
-     a medida que a fila anda. */
-  overflow-x: clip;
-  overflow-y: clip;
-  padding-block: clamp(56px, 6vw, 104px);
-  /* sai da coluna de texto e usa a moldura toda */
-  margin-inline: calc(var(--grid-padding) * -1);
-  padding-inline: var(--grid-padding);
+  margin-top: 7vw;
+  display: grid;
+  /* colunas de larguras ligeiramente diferentes: iguais voltavam a ler-se
+     como uma grelha */
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.86fr) minmax(0, 1.04fr);
+  gap: var(--grid-gap);
+  align-items: start;
+  /* as colunas deslizam para cima e para baixo: isto impede que o
+     deslizamento empurre a pagina */
+  overflow: clip;
+  padding-block: 8vh;
 }
 
-.obra-galeria__fila {
+.obra-galeria[data-colunas="1"] { grid-template-columns: minmax(0, 1fr); }
+.obra-galeria[data-colunas="2"] { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); }
+
+.obra-galeria__coluna {
   display: flex;
-  align-items: center;
-  gap: clamp(14px, 1.6vw, 32px);
-  width: max-content;
-  rotate: var(--galeria-angulo);
+  flex-direction: column;
+  gap: 6vh;
+  margin-top: var(--recuo, 0);
   will-change: translate;
 }
 
 .obra-galeria__item {
-  flex: 0 0 auto;
-  width: clamp(230px, 26vw, 460px);
   margin: 0;
   overflow: hidden;
-  rotate: calc(var(--galeria-angulo) * -1);
   background: rgba(35, 31, 32, 0.04);
 }
 
 .obra-galeria__item img {
   width: 100%;
-  height: clamp(170px, 19vw, 330px);
+  height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.7s cubic-bezier(0.18, 0.13, 0, 0.99);
+  transition: transform 0.8s cubic-bezier(0.18, 0.13, 0, 0.99);
 }
 
 .obra-galeria__item:hover img {
   transform: scale(1.04);
+}
+
+@media (max-width: 900px) {
+  .obra-galeria {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3vw;
+    padding-block: 4vh;
+  }
+  .obra-galeria__coluna { gap: 3vh; }
+  /* no telemovel o desencontro so estorva */
+  .obra-galeria__coluna:nth-child(3) { display: contents; }
 }
 
 /* — Obra seguinte — */
@@ -3655,9 +3663,5 @@ body.obra-fim .menu-btn {
 }
 
 @media (max-width: 650px) {
-  .obra-galeria {
-    grid-template-columns: 1fr;
-    gap: 3vw;
-  }
 }
 
