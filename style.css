@@ -1540,11 +1540,11 @@ body.page--internal .selection-preview-bar__link:hover,
   min-width: 360px;
   max-width: 100vw;
   height: 100%;
-  /* A gaveta e terracota como a hero. A tinta e o realce vivem aqui, numa
-     variavel so, para o painel inteiro mudar de cor num sitio. */
-  background-color: var(--brand-primary);
-  --gaveta-tinta: var(--white);
-  --gaveta-realce: var(--brand-gold);
+  /* A gaveta fica branca. A tinta e o realce vivem aqui, numa variavel so,
+     por isso o painel inteiro muda de cor mexendo nestas tres linhas. */
+  background-color: var(--white);
+  --gaveta-tinta: var(--brand-dark);
+  --gaveta-realce: var(--brand-blue);
   color: var(--gaveta-tinta);
   display: flex;
   flex-direction: column;
