@@ -43,6 +43,12 @@
   --hero-visual-width: clamp(440px, 44vw, 720px);
   --hero-visual-aspect: 16 / 9;
   --hero-content-width: 48vw;
+  /* a abertura da obra: a altura util da moldura, e o curso de scroll que a
+     capa leva a crescer */
+  --obra-hero-altura: calc(100svh - var(--grid-padding) * 2);
+  --obra-abertura-curso: 150svh;
+  /* a inclinacao da fila da galeria */
+  --galeria-angulo: -5deg;
   --nav-footer-text-size: 1.1vw;
   /* filtros e paginacao partilham a barra de baixo, logo a mesma escala */
   --corner-text-size: clamp(11px, 0.96vw, 15px);
@@ -3316,18 +3322,29 @@ body.page--detalhe.obra-claro .corner-proxima {
 }
 
 .obra-hero {
-  /* um ecra, descontando a moldura, a linha do logotipo e as folgas */
-  min-height: calc(100svh - var(--grid-padding) * 2 - var(--grid-row-gap) * 2 - 4.9vw);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1.1vw;
+  position: relative;
 }
 
-/* o mesmo padrao, quase invisivel, sobre a cor da obra; usado como mascara
-   para o traco seguir a tinta em vez de ser sempre escuro */
-.obra-hero::before {
+/* O palco e mais alto do que o ecra. E dessa diferenca que vem a distancia
+   de scroll: o bloco de dentro fica colado ao topo enquanto o palco passa,
+   e nesse tempo a capa cresce da caixa da hero ate a moldura toda. */
+.obra-hero__palco {
+  height: calc(var(--obra-hero-altura) + var(--obra-abertura-curso));
+}
+
+.obra-hero__fixo {
+  position: sticky;
+  top: 0;
+  height: var(--obra-hero-altura);
+  display: grid;
+  place-items: center;
+  container-type: size;
+  overflow: clip;
+}
+
+/* O padrao do manual, quase invisivel, sobre a cor da obra; mascara para o
+   traco seguir a tinta em vez de ser sempre escuro. */
+.obra-hero__fixo::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -3336,36 +3353,23 @@ body.page--detalhe.obra-claro .corner-proxima {
   mask-image: url('assets/padrao-losangos.svg');
   -webkit-mask-size: 120px 152px;
   mask-size: 120px 152px;
-  opacity: 0.07;
+  opacity: calc(0.07 * (1 - var(--abertura, 0)));
   pointer-events: none;
-  transition: opacity 0.6s ease;
 }
 
-body.obra-claro .obra-hero::before { opacity: 0; }
-
-.obra-hero {
-  position: relative;
-}
-
-.obra-hero__palco {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  justify-items: center;
-  align-items: center;
-  width: 100%;
-  overflow: visible;
-}
-
-/* a mesma caixa da imagem da hero: a capa vem do card e assenta aqui */
+/* A capa: uma so declaracao de geometria, interpolada por --abertura, que o
+   JS escreve de 0 a 1. O CSS e que sabe as medidas; o JS so conta o scroll. */
 .obra-hero .category-cover {
+  --capa-w0: var(--hero-visual-width);
+  --capa-h0: calc(var(--hero-visual-width) * 9 / 16);
+  grid-area: 1 / 1;
+  place-self: center;
   position: relative;
   z-index: 2;
-  width: var(--hero-visual-width);
-  aspect-ratio: var(--hero-visual-aspect);
-  max-height: 48vh;
+  width: calc(var(--capa-w0) + (100cqw - var(--capa-w0)) * var(--abertura, 0));
+  height: calc(var(--capa-h0) + (100cqh - var(--capa-h0)) * var(--abertura, 0));
   overflow: hidden;
-  border-radius: 0 0 clamp(24px, 2.8vw, 42px) 0;
+  border-radius: 0 0 calc(clamp(24px, 2.8vw, 42px) * (1 - var(--abertura, 0))) 0;
 }
 
 .category-cover img {
@@ -3376,8 +3380,10 @@ body.obra-claro .obra-hero::before { opacity: 0; }
   display: block;
 }
 
-.obra-hero .category-cover img {
-  border-radius: 0 0 clamp(24px, 2.8vw, 42px) 0;
+.obra-hero .marquee {
+  grid-area: 1 / 1;
+  z-index: 1;
+  opacity: calc(1 - var(--abertura, 0) * 2.4);
 }
 
 /* o nome atras da foto segue a tinta da obra: claro sobre as cores
@@ -3390,7 +3396,12 @@ body.obra-claro .obra-hero::before { opacity: 0; }
 .obra-hero .marquee-text { opacity: 0.16; }
 .obra-hero .marquee-sep { opacity: 0.3; }
 
+/* a legenda fica logo por baixo da caixa inicial da capa e sai de cena mal a
+   imagem comeca a crescer */
 .obra-hero__titulo {
+  grid-area: 1 / 1;
+  place-self: center;
+  z-index: 3;
   width: min(var(--hero-content-width), calc(100vw - var(--grid-padding) * 2));
   margin: 0;
   text-align: center;
@@ -3400,6 +3411,8 @@ body.obra-claro .obra-hero::before { opacity: 0; }
   line-height: 1.45;
   letter-spacing: -0.005em;
   color: inherit;
+  transform: translateY(calc(var(--capa-h0, 18vw) / 2 + 2.4vw));
+  opacity: calc(1 - var(--abertura, 0) * 3.5);
 }
 
 .obra-hero__titulo em {
@@ -3461,23 +3474,45 @@ body.obra-claro .obra-hero::before { opacity: 0; }
 .obra-texto p + p { margin-top: 1.1em; }
 
 /* — Galeria — */
+/* Em grelha, dezanove fotos de obra sao dezanove miniaturas iguais. Numa fila
+   inclinada que anda de lado conforme a pagina desce, ve-se uma de cada vez e
+   percebe-se que ha mais. A fila esta a -6 graus e cada foto a +6, para as
+   fotos ficarem direitas e so o alinhamento entre elas ser que sobe. */
 .obra-galeria {
-  margin-top: 4vw;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-  gap: clamp(10px, 1.1vw, 22px);
+  margin-top: 6vw;
+  /* A fila e muito mais larga do que a pagina: e cortada de lado. Em altura
+     basta caber a inclinacao ao longo da largura do ecra -- o JS compensa a
+     descida que a rotacao provoca, senao as fotos fugiam para fora da faixa
+     a medida que a fila anda. */
+  overflow-x: clip;
+  overflow-y: clip;
+  padding-block: clamp(56px, 6vw, 104px);
+  /* sai da coluna de texto e usa a moldura toda */
+  margin-inline: calc(var(--grid-padding) * -1);
+  padding-inline: var(--grid-padding);
+}
+
+.obra-galeria__fila {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 32px);
+  width: max-content;
+  rotate: var(--galeria-angulo);
+  will-change: translate;
 }
 
 .obra-galeria__item {
+  flex: 0 0 auto;
+  width: clamp(230px, 26vw, 460px);
   margin: 0;
   overflow: hidden;
+  rotate: calc(var(--galeria-angulo) * -1);
   background: rgba(35, 31, 32, 0.04);
 }
 
 .obra-galeria__item img {
   width: 100%;
-  height: 100%;
-  aspect-ratio: 4 / 3;
+  height: clamp(170px, 19vw, 330px);
   object-fit: cover;
   display: block;
   transition: transform 0.7s cubic-bezier(0.18, 0.13, 0, 0.99);
@@ -3487,22 +3522,133 @@ body.obra-claro .obra-hero::before { opacity: 0; }
   transform: scale(1.04);
 }
 
-/* O conteudo corre por baixo da barra fixa; sem isto o texto passava por
-   cima do link e do diamante e ficava ilegivel. */
-body.page--detalhe #page-stage::after {
+/* — Obra seguinte — */
+/* O fim de uma obra e o principio da outra: a capa seguinte ocupa o ecra e
+   insistir no scroll leva la. O medidor enche com essa insistencia e esvazia
+   se a pessoa desistir. */
+.obra-seguinte {
+  margin-top: 8vw;
+  margin-inline: calc(var(--grid-padding) * -1);
+  height: 92svh;
+  position: relative;
+  overflow: hidden;
+}
+
+.obra-seguinte__link {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  color: var(--white);
+}
+
+.obra-seguinte__capa {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.obra-seguinte__capa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.06);
+  transition: transform 0.9s cubic-bezier(0.18, 0.13, 0, 0.99);
+}
+
+.obra-seguinte__link:hover .obra-seguinte__capa img { transform: scale(1); }
+
+.obra-seguinte__capa::after {
   content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: calc(var(--grid-padding) + var(--nav-action-height) + 3vw);
-  background: linear-gradient(to top,
-    var(--veu-cor) 40%,
-    color-mix(in srgb, var(--veu-cor) 92%, transparent) 66%,
-    color-mix(in srgb, var(--veu-cor) 0%, transparent) 100%);
-  transition: background-color 0.85s var(--standard-easing);
+  position: absolute;
+  inset: 0;
+  background: rgba(35, 31, 32, 0.42);
+}
+
+.obra-seguinte__texto {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.obra-seguinte__rotulo {
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.obra-seguinte__nome {
+  font-family: var(--sans-font);
+  font-size: clamp(2.4rem, 6vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.obra-seguinte__tipo {
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  opacity: 0.85;
+}
+
+.obra-seguinte__medidor {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--grid-padding) + var(--nav-action-height));
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  width: min(280px, 60vw);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.obra-seguinte--visivel .obra-seguinte__medidor { opacity: 1; }
+
+.obra-seguinte__medidor-barra {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.28);
+  position: relative;
+}
+
+.obra-seguinte__medidor-barra::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--insistencia, 0) * 100%);
+  background: var(--white);
+}
+
+.obra-seguinte__medidor-texto {
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* o canto e a seccao do fim levam ao mesmo sitio: quando a seccao aparece,
+   o canto sai de cena */
+body.obra-fim .corner-proxima {
+  opacity: 0;
   pointer-events: none;
-  z-index: 90;
+}
+
+/* sobre a fotografia da obra seguinte, o diamante tem de ser branco mesmo
+   com a pagina ja em fundo claro */
+body.obra-fim .menu-btn {
+  color: var(--white);
 }
 
 /* — Canto: proxima obra — */
@@ -3510,6 +3656,7 @@ body.page--detalhe #page-stage::after {
    portfolio, mesmo com a pagina a correr por baixo. */
 .corner-proxima {
   position: fixed;
+  transition: opacity 0.35s ease, color 0.5s ease;
   left: var(--grid-padding);
   bottom: var(--grid-padding);
   z-index: 100;

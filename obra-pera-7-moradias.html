@@ -44,17 +44,19 @@
           <article class="obra">
 
             <!-- A abertura e a hero: fundo da cor do card, a foto ao centro e
-                 o nome da localidade a correr por tras. Com o scroll o fundo
-                 cede ao branco e a ficha le-se sobre ele. -->
+                 o nome da localidade a correr por tras. O palco e mais alto do
+                 que o ecra: e essa altura que da ao scroll a distancia para a
+                 foto crescer ate a moldura. -->
             <header class="obra-hero">
               <div class="obra-hero__palco">
-                <div class="category-cover">
-                  <picture>
-                    <source srcset="assets/obras/pera-7-moradias/web/capa.avif" type="image/avif">
-                    <source srcset="assets/obras/pera-7-moradias/web/capa.webp" type="image/webp">
-                    <img src="assets/obras/pera-7-moradias/web/capa.jpg" alt="Construção de 7 Moradias em Pêra" width="1024" height="683">
-                  </picture>
-                </div>
+                <div class="obra-hero__fixo">
+                  <div class="category-cover">
+                    <picture>
+                      <source srcset="assets/obras/pera-7-moradias/web/capa.avif" type="image/avif">
+                      <source srcset="assets/obras/pera-7-moradias/web/capa.webp" type="image/webp">
+                      <img src="assets/obras/pera-7-moradias/web/capa.jpg" alt="Construção de 7 Moradias em Pêra" width="1024" height="683">
+                    </picture>
+                  </div>
               <div class="marquee" aria-hidden="true">
                 <div class="marquee-scroll">
                     <div class="marquee-collection">
@@ -71,8 +73,9 @@
                     </div>
                 </div>
               </div>
+                  <h1 class="obra-hero__titulo">Constru&ccedil;&atilde;o de 7 moradias, <em>P&ecirc;ra</em></h1>
+                </div>
               </div>
-              <h1 class="obra-hero__titulo">Constru&ccedil;&atilde;o de 7 moradias, <em>P&ecirc;ra</em></h1>
             </header>
 
             <section class="obra-ficha">
@@ -87,41 +90,66 @@
             </section>
 
           <section class="obra-galeria" aria-label="Galeria da obra">
-            <figure class="obra-galeria__item">
-              <picture>
-                <source srcset="assets/obras/pera-7-moradias/web/02.avif" type="image/avif">
-                <source srcset="assets/obras/pera-7-moradias/web/02.webp" type="image/webp">
-                <img src="assets/obras/pera-7-moradias/web/02.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 1" loading="lazy">
-              </picture>
-            </figure>
-            <figure class="obra-galeria__item">
-              <picture>
-                <source srcset="assets/obras/pera-7-moradias/web/03.avif" type="image/avif">
-                <source srcset="assets/obras/pera-7-moradias/web/03.webp" type="image/webp">
-                <img src="assets/obras/pera-7-moradias/web/03.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 2" loading="lazy">
-              </picture>
-            </figure>
-            <figure class="obra-galeria__item">
-              <picture>
-                <source srcset="assets/obras/pera-7-moradias/web/04.avif" type="image/avif">
-                <source srcset="assets/obras/pera-7-moradias/web/04.webp" type="image/webp">
-                <img src="assets/obras/pera-7-moradias/web/04.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 3" loading="lazy">
-              </picture>
-            </figure>
-            <figure class="obra-galeria__item">
-              <picture>
-                <source srcset="assets/obras/pera-7-moradias/web/05.avif" type="image/avif">
-                <source srcset="assets/obras/pera-7-moradias/web/05.webp" type="image/webp">
-                <img src="assets/obras/pera-7-moradias/web/05.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 4" loading="lazy">
-              </picture>
-            </figure>
+            <div class="obra-galeria__fila">
+              <figure class="obra-galeria__item">
+                <picture>
+                  <source srcset="assets/obras/pera-7-moradias/web/02.avif" type="image/avif">
+                  <source srcset="assets/obras/pera-7-moradias/web/02.webp" type="image/webp">
+                  <img src="assets/obras/pera-7-moradias/web/02.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 1" loading="lazy">
+                </picture>
+              </figure>
+              <figure class="obra-galeria__item">
+                <picture>
+                  <source srcset="assets/obras/pera-7-moradias/web/03.avif" type="image/avif">
+                  <source srcset="assets/obras/pera-7-moradias/web/03.webp" type="image/webp">
+                  <img src="assets/obras/pera-7-moradias/web/03.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 2" loading="lazy">
+                </picture>
+              </figure>
+              <figure class="obra-galeria__item">
+                <picture>
+                  <source srcset="assets/obras/pera-7-moradias/web/04.avif" type="image/avif">
+                  <source srcset="assets/obras/pera-7-moradias/web/04.webp" type="image/webp">
+                  <img src="assets/obras/pera-7-moradias/web/04.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 3" loading="lazy">
+                </picture>
+              </figure>
+              <figure class="obra-galeria__item">
+                <picture>
+                  <source srcset="assets/obras/pera-7-moradias/web/05.avif" type="image/avif">
+                  <source srcset="assets/obras/pera-7-moradias/web/05.webp" type="image/webp">
+                  <img src="assets/obras/pera-7-moradias/web/05.jpg" alt="Construção de 7 Moradias em Pêra &mdash; imagem 4" loading="lazy">
+                </picture>
+              </figure>
+            </div>
           </section>
+
+            <!-- O fim da pagina e o principio da seguinte: insistir no scroll
+                 aqui leva la, sem ter de voltar ao portfolio. -->
+            <section class="obra-seguinte" aria-label="Obra seguinte">
+              <a class="obra-seguinte__link" href="obra-casino-armacao-de-pera.html" data-obra-seguinte="casino-armacao-de-pera">
+                <span class="obra-seguinte__capa">
+                  <picture>
+                    <source srcset="assets/obras/casino-armacao-de-pera/web/capa.avif" type="image/avif">
+                    <source srcset="assets/obras/casino-armacao-de-pera/web/capa.webp" type="image/webp">
+                    <img src="assets/obras/casino-armacao-de-pera/web/capa.jpg" alt="" loading="lazy">
+                  </picture>
+                </span>
+                <span class="obra-seguinte__texto">
+                  <span class="obra-seguinte__rotulo">Obra seguinte</span>
+                  <span class="obra-seguinte__nome">Arma&ccedil;&atilde;o de P&ecirc;ra</span>
+                  <span class="obra-seguinte__tipo">Reabilita&ccedil;&atilde;o do casino</span>
+                </span>
+                <span class="obra-seguinte__medidor" aria-hidden="true">
+                  <span class="obra-seguinte__medidor-barra"></span>
+                  <span class="obra-seguinte__medidor-texto">Continuar a fazer scroll</span>
+                </span>
+              </a>
+            </section>
 
           </article>
         </div>
 
-        <!-- Canto inferior esquerdo: encadeia as obras em vez de obrigar a
-             voltar ao portfolio. -->
+        <!-- Canto inferior esquerdo: o mesmo destino, para quem nao quer
+             descer a pagina toda. Some quando a seccao do fim aparece. -->
         <a class="corner-proxima" href="obra-casino-armacao-de-pera.html">
           <span class="corner-proxima__rotulo">Pr&oacute;xima obra</span>
           <span class="corner-proxima__nome">Arma&ccedil;&atilde;o de P&ecirc;ra &middot; Reabilita&ccedil;&atilde;o do casino</span>

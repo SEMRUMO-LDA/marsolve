@@ -408,22 +408,145 @@
     });
   }
 
-  // — Pagina da obra: a cor cede ao branco —
-  // A abertura e a hero da obra, com o fundo da cor do card. Passado o
-  // primeiro ecra o assunto deixa de ser a imagem e passa a ser o texto,
-  // por isso o fundo vai a branco e a ficha le-se sobre ele.
+  // — Pagina da obra —
+  // Tres coisas conduzidas pelo scroll, todas na mesma passagem por quadro:
+  // a capa a crescer, a galeria a andar de lado, e o fim da pagina a levar a
+  // obra seguinte. O JS so conta; as medidas estao todas no CSS.
   const grelhaObra = document.querySelector('body.page--detalhe .page-grid');
   if (grelhaObra) {
-    let pedido = null;
-    const avaliar = () => {
-      pedido = null;
-      document.body.classList.toggle('obra-claro',
-        grelhaObra.scrollTop > grelhaObra.clientHeight * 0.34);
+    const artigo = document.querySelector('.obra');
+    const palco = document.querySelector('.obra-hero__palco');
+    const fixo = document.querySelector('.obra-hero__fixo');
+    const galeria = document.querySelector('.obra-galeria');
+    const fila = document.querySelector('.obra-galeria__fila');
+    const seguinte = document.querySelector('.obra-seguinte');
+    const ligacao = document.querySelector('.obra-seguinte__link');
+
+    const entre = (v, min, max) => Math.max(min, Math.min(max, v));
+
+    // distancia do topo do elemento ao topo do conteudo que rola
+    const topoEm = (el) => {
+      let y = 0;
+      for (let n = el; n && n !== grelhaObra; n = n.offsetParent) y += n.offsetTop;
+      return y;
     };
-    grelhaObra.addEventListener('scroll', () => {
-      if (pedido === null) pedido = requestAnimationFrame(avaliar);
+
+    let medidas = null;
+    const medir = () => {
+      const alturaEcra = grelhaObra.clientHeight;
+      medidas = {
+        alturaEcra,
+        abertura: palco ? { topo: topoEm(palco), curso: palco.offsetHeight - fixo.offsetHeight } : null,
+        galeria: galeria ? {
+          topo: topoEm(galeria),
+          altura: galeria.offsetHeight,
+          // o quanto a fila tem de andar para mostrar o que sobra dela
+          curso: Math.max(0, fila.scrollWidth - galeria.clientWidth),
+          inclinacao: Math.tan(Math.abs(parseFloat(
+            getComputedStyle(fila).rotate) || 0) * Math.PI / 180),
+          // distancia entre o centro da fila e o centro do ecra, no inicio
+          meio: fila.scrollWidth / 2 - galeria.clientWidth / 2
+        } : null,
+        seguinte: seguinte ? { topo: topoEm(seguinte), altura: seguinte.offsetHeight } : null
+      };
+    };
+
+    let insistencia = 0;         // 0 a 1: quanto se insistiu no scroll no fim
+    const INSISTENCIA_NECESSARIA = 900;
+    let acumulado = 0;
+    let aNavegar = false;
+
+    const pintar = () => {
+      pedido = null;
+      if (!medidas) medir();
+      const y = grelhaObra.scrollTop;
+      const h = medidas.alturaEcra;
+
+      if (medidas.abertura) {
+        const a = medidas.abertura;
+        const p = a.curso > 0 ? entre((y - a.topo) / a.curso, 0, 1) : 0;
+        artigo.style.setProperty('--abertura', p.toFixed(4));
+        // o fundo so cede ao branco depois de a capa ter crescido
+        document.body.classList.toggle('obra-claro', y > a.topo + a.curso + h * 0.25);
+      } else {
+        document.body.classList.toggle('obra-claro', y > h * 0.34);
+      }
+
+      if (medidas.galeria) {
+        const g = medidas.galeria;
+        if (g.curso <= 0) {
+          // poucas fotos: a fila cabe toda, fica so centrada
+          fila.style.translate = ((galeria.clientWidth - fila.scrollWidth) / 2).toFixed(1) + 'px 0px';
+        } else {
+        // 0 quando a galeria entra por baixo, 1 quando sai por cima
+        const p = entre((y + h - g.topo) / (h + g.altura), 0, 1);
+        const dx = p * g.curso;
+        // A fila esta inclinada, logo quanto mais para a direita e a parte que
+        // calha ao centro do ecra, mais alta ela esta. Sem compensar em y, a
+        // fila saia da faixa visivel ao fim de alguns milhares de pixeis.
+        const dy = (dx - g.meio) * g.inclinacao;
+        fila.style.translate = (-dx).toFixed(1) + 'px ' + dy.toFixed(1) + 'px';
+        }
+      }
+
+      if (medidas.seguinte) {
+        const sg = medidas.seguinte;
+        const visivel = y + h > sg.topo + sg.altura * 0.35;
+        seguinte.classList.toggle('obra-seguinte--visivel', visivel);
+        document.body.classList.toggle('obra-fim', visivel);
+        if (!noFundo()) { acumulado = 0; aplicarInsistencia(0); }
+      }
+    };
+
+    const noFundo = () =>
+      grelhaObra.scrollTop >= grelhaObra.scrollHeight - grelhaObra.clientHeight - 4;
+
+    const aplicarInsistencia = (v) => {
+      if (v === insistencia) return;
+      insistencia = v;
+      if (seguinte) seguinte.style.setProperty('--insistencia', v.toFixed(3));
+    };
+
+    // Chegado ao fim, continuar a fazer scroll leva a obra seguinte. Nao basta
+    // um empurrao: e preciso insistir, senao quem chega ao fundo por acaso era
+    // levado para outra pagina sem querer.
+    const insistir = (delta) => {
+      if (aNavegar || !ligacao || !noFundo() || delta <= 0) return;
+      acumulado = Math.min(INSISTENCIA_NECESSARIA, acumulado + Math.min(delta, 60));
+      aplicarInsistencia(acumulado / INSISTENCIA_NECESSARIA);
+      if (acumulado >= INSISTENCIA_NECESSARIA) {
+        aNavegar = true;
+        window.location.href = ligacao.getAttribute('href');
+      }
+    };
+
+    let pedido = null;
+    const agendar = () => { if (pedido === null) pedido = requestAnimationFrame(pintar); };
+
+    grelhaObra.addEventListener('scroll', agendar, { passive: true });
+    grelhaObra.addEventListener('wheel', (e) => insistir(e.deltaY), { passive: true });
+
+    let toqueY = null;
+    grelhaObra.addEventListener('touchstart', (e) => { toqueY = e.touches[0].clientY; }, { passive: true });
+    grelhaObra.addEventListener('touchmove', (e) => {
+      if (toqueY === null) return;
+      const y = e.touches[0].clientY;
+      insistir((toqueY - y) * 1.8);
+      toqueY = y;
     }, { passive: true });
-    avaliar();
+
+    // a insistencia esvazia sozinha se a pessoa parar
+    setInterval(() => {
+      if (acumulado > 0 && !aNavegar) {
+        acumulado = Math.max(0, acumulado - 28);
+        aplicarInsistencia(acumulado / INSISTENCIA_NECESSARIA);
+      }
+    }, 120);
+
+    window.addEventListener('resize', () => { medidas = null; agendar(); });
+    window.addEventListener('load', () => { medidas = null; agendar(); });
+    medir();
+    pintar();
   }
 
   // — Filtros das obras —
