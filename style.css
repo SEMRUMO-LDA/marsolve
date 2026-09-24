@@ -65,7 +65,7 @@
      tambem a altura da janela. So com vw, transbordava em ecras baixos. */
   --selection-card-title-size: min(3.24vw, 3.8vh);
   --selection-card-desc-size: 0.9vw;
-  --selection-card-symbol-width: 2.66vw;
+  --selection-card-symbol-width: 1.9vw;
   --selection-card-padding: 1.85vw;
   --selection-card-panel-ratio: 1.85;
   --selection-card-cover-ratio: 1.2;
@@ -1555,20 +1555,18 @@ body.page--internal .selection-preview-bar__link:hover,
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
 }
 
-/* O padrao de losangos do manual. Como mascara e nao como imagem: assim a
-   cor e a forca sao daqui, e o mesmo ficheiro serve o menu claro e a
-   abertura das obras, que tanto e escura como amarela. */
+/* O padrao da marca, no ficheiro que a cliente forneceu. Ja traz a sua cor e
+   a sua opacidade, por isso entra como imagem e nao como mascara. Cobre o
+   painel inteiro sem repetir: e um painel desenhado, nao um mosaico. */
 .nav-menu__panel::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-color: var(--brand-dark);
-  -webkit-mask-image: url('assets/padrao-losangos.svg');
-  mask-image: url('assets/padrao-losangos.svg');
-  -webkit-mask-size: 120px 152px;
-  mask-size: 120px 152px;
-  opacity: 0.06;
+  background-image: url('assets/pattern-menu.svg');
+  background-repeat: no-repeat;
+  background-position: top right;
+  background-size: cover;
   pointer-events: none;
 }
 
@@ -2097,7 +2095,7 @@ body.page--internal .selection-preview-bar__link:hover,
     --hero-h1-size: 2.4vw;
     --selection-card-title-size: 4.5vw;
     --selection-card-desc-size: 1.4vw;
-    --selection-card-symbol-width: 3.5vw;
+    --selection-card-symbol-width: 2.6vw;
     --selection-card-padding: 2.5vw;
   }
 
