@@ -19,3 +19,14 @@ npm-debug.log*
 
 # Ficheiros entregues pelo Claude no chat
 Claude outputs/
+
+# Originais descarregados do site antigo — reproduzíveis por
+# scripts/descarregar-fotos.sh. O que o site serve está em web/.
+assets/obras/*/*.jpg
+assets/obras/*/*.jpeg
+
+# ficheiros de trabalho temporarios (contact sheets, etc.)
+_*.jpg
+_*.png
+_*.css
+_*.html

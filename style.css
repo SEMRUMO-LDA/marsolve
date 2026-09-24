@@ -52,7 +52,7 @@
 
   /* o titulo e vertical: corre na altura do card, por isso tem de respeitar
      tambem a altura da janela. So com vw, transbordava em ecras baixos. */
-  --selection-card-title-size: min(3.24vw, 4.2vh);
+  --selection-card-title-size: min(3.24vw, 3.8vh);
   --selection-card-desc-size: 0.9vw;
   --selection-card-symbol-width: 2.66vw;
   --selection-card-padding: 1.85vw;
@@ -513,7 +513,11 @@ body.selection-open .bottom-left-contact {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-family: var(--sans-font);
-  font-size: var(--selection-card-title-size);
+  /* O texto corre na vertical, por isso o comprimento importa tanto como a
+     altura disponivel: "Marina de Albufeira" ocupa o dobro de "Pera". Cada
+     card declara --chars e o tamanho ajusta-se, em vez de cortar em silencio
+     quando se acrescenta uma obra de nome longo. */
+  font-size: min(var(--selection-card-title-size), calc(35vh / var(--chars, 10)));
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -3233,5 +3237,44 @@ body.page--home.selection-open .corner-filters {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 1.8rem;
+  }
+}
+
+
+/* — Galeria da obra — */
+.obra-galeria {
+  margin-top: 5vw;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 1.2vw;
+}
+
+.obra-galeria__item {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0.6vw;
+  background: rgba(35, 31, 32, 0.04);
+}
+
+.obra-galeria__item img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.18, 0.13, 0, 0.99);
+}
+
+.obra-galeria__item:hover img {
+  transform: scale(1.04);
+}
+
+@media (max-width: 650px) {
+  .obra-galeria {
+    grid-template-columns: 1fr;
+    gap: 3vw;
+  }
+  .obra-galeria__item {
+    border-radius: 2vw;
   }
 }
