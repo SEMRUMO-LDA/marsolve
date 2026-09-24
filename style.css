@@ -3483,9 +3483,9 @@ body.page--detalhe.obra-claro .menu-btn {
   height: 100%;
   object-fit: cover;
   display: block;
-  /* a folga que o deslizamento consome: 8% de cada lado contra os 6% que o
+  /* a folga que o deslizamento consome: 14% de cada lado contra os 11% que o
      JS desloca, para nunca descobrir a moldura */
-  scale: 1.16;
+  scale: 1.28;
   will-change: translate;
 }
 

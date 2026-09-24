@@ -509,7 +509,7 @@
       // -1 quando a moldura entra por baixo, +1 quando sai por cima
       for (const f of medidas.fotos) {
         const p = entre((y + h - f.topo) / (h + f.altura), 0, 1) * 2 - 1;
-        f.img.style.translate = '0 ' + (p * 6).toFixed(2) + '%';
+        f.img.style.translate = '0 ' + (p * 11).toFixed(2) + '%';
       }
 
       if (medidas.seguinte) {
