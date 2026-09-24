@@ -14,7 +14,7 @@
 <body class="is-ready page--internal page--detalhe" data-obra="unik-fitness-club">
 
   <!-- Main Page -->
-  <div id="page-stage" style="background: #ffffff; color: var(--brand-dark);">
+  <div id="page-stage">
     <main>
       <div class="page-grid page-grid--scrollable">
 
@@ -41,29 +41,38 @@
         <!-- Contacto no Canto Inferior Esquerdo (Alinhado com Sobre) -->
 
         <div class="internal-content obra-content fade-in-up">
-          <article class="obra" data-category="premium">
+          <article class="obra">
 
-            <!-- A abertura e o card do portfolio em ponto grande: mesma cor,
-                 mesmo losango, mesmo nome na vertical. A capa e a mesma
-                 imagem e transita de um para o outro. -->
-            <header class="obra-abertura">
-              <div class="obra-painel">
-                <svg class="obra-painel__simbolo" viewBox="0 0 40 50" fill="none" aria-hidden="true">
-              <path d="M20 0 L35 15 L20 30 L5 15 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.6"/>
-              <path d="M20 10 L30 20 L20 30 L10 20 Z" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
-            </svg>
-                <h1 class="obra-titulo">
-                  <span class="obra-titulo__local" style="--chars: 9">Albufeira</span>
-                  <span class="obra-titulo__obra">UNiK Fitness Club</span>
-                </h1>
+            <!-- A abertura e a hero: fundo da cor do card, a foto ao centro e
+                 o nome da localidade a correr por tras. Com o scroll o fundo
+                 cede ao branco e a ficha le-se sobre ele. -->
+            <header class="obra-hero">
+              <div class="obra-hero__palco">
+                <div class="category-cover">
+                  <picture>
+                    <source srcset="assets/obras/unik-fitness-club/web/capa.avif" type="image/avif">
+                    <source srcset="assets/obras/unik-fitness-club/web/capa.webp" type="image/webp">
+                    <img src="assets/obras/unik-fitness-club/web/capa.jpg" alt="UNiK Fitness Club, Albufeira" width="1024" height="683">
+                  </picture>
+                </div>
+              <div class="marquee" aria-hidden="true">
+                <div class="marquee-scroll">
+                    <div class="marquee-collection">
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                    </div>
+                    <div class="marquee-collection" aria-hidden="true">
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Albufeira</span><span class="marquee-sep">&#9671;</span></span>
+                    </div>
+                </div>
               </div>
-              <div class="category-cover">
-                <picture>
-                  <source srcset="assets/obras/unik-fitness-club/web/capa.avif" type="image/avif">
-                  <source srcset="assets/obras/unik-fitness-club/web/capa.webp" type="image/webp">
-                  <img src="assets/obras/unik-fitness-club/web/capa.jpg" alt="UNiK Fitness Club, Albufeira">
-                </picture>
               </div>
+              <h1 class="obra-hero__titulo">UNiK Fitness Club, <em>Albufeira</em></h1>
             </header>
 
             <section class="obra-ficha">

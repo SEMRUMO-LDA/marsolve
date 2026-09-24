@@ -3216,110 +3216,155 @@ body.page--home.selection-open .corner-filters {
 
 /* — Ficha da obra — */
 .obra-content {
-  /* largura toda da moldura: a abertura e a continuacao do card, nao um
-     documento centrado */
   grid-column: 1 / -1;
   grid-row: 2;
   padding: 0;
 }
 
-/* Espaco para a barra de baixo, que e fixa. Tem de ficar no proprio
-   contentor que rola -- posto no filho, o browser corta-o e o fim da pagina
-   fica preso debaixo do link. */
-body.page--detalhe .page-grid {
-  /* A linha do meio era 1fr, ou seja a altura do ecra, e o conteudo mais
-     comprido transbordava dela; o browser nao conta esse transbordo todo e o
-     fim da pagina ficava preso debaixo da barra fixa. Com auto, a linha mede
-     o que la esta. */
-  grid-template-rows: auto auto auto;
-  padding-bottom: calc(var(--grid-padding) + var(--nav-action-height) + 4vw);
+/* A cor e da obra, nao da categoria: ha duas obras "coastal" e nao tem a
+   mesma cor. Estavam em style= nos cards do segundo slide, agora estao
+   aqui, num sitio so, servindo o card e a pagina da obra. */
+.selection-card[href="obra-vilamoura.html"] .selection-card__panel,
+body[data-obra="vilamoura"] { --card-color: #C0584A; }
+.selection-card[href="obra-albufeira-4-moradias.html"] .selection-card__panel,
+body[data-obra="albufeira-4-moradias"] { --card-color: #1A8A8D; }
+.selection-card[href="obra-pera-7-moradias.html"] .selection-card__panel,
+body[data-obra="pera-7-moradias"] { --card-color: #231F20; }
+.selection-card[href="obra-casino-armacao-de-pera.html"] .selection-card__panel,
+body[data-obra="casino-armacao-de-pera"] { --card-color: #8B6B3D; }
+.selection-card[href="obra-marina-de-albufeira.html"] .selection-card__panel,
+body[data-obra="marina-de-albufeira"] { --card-color: #2F4F54; }
+.selection-card[href="obra-turismo-rural-albufeira.html"] .selection-card__panel,
+body[data-obra="turismo-rural-albufeira"] { --card-color: #3C4A3E; }
+.selection-card[href="obra-maria-nova-lounge-hotel.html"] .selection-card__panel,
+body[data-obra="maria-nova-lounge-hotel"] { --card-color: #4D3F38; }
+.selection-card[href="obra-unik-fitness-club.html"] .selection-card__panel,
+body[data-obra="unik-fitness-club"] { --card-color: #5C3D4A; }
+
+/* ============================================================
+   Abertura da obra
+
+   Clicar num card nao devia levar a um documento: devia levar ao mesmo
+   sitio de onde se veio, agora dedicado aquela obra. Por isso a pagina
+   abre como a hero -- fundo cheio da cor do card, a foto ao centro na
+   mesma caixa, o nome a correr por tras onde estava o "Building Further".
+   Com o scroll o fundo cede ao branco e a ficha le-se sobre ele.
+   ============================================================ */
+body.page--detalhe {
+  --veu-cor: var(--card-color);
 }
 
-/* — Abertura: o card em ponto grande — */
-.obra-abertura {
-  display: grid;
-  grid-template-columns: minmax(200px, 0.42fr) minmax(0, 1fr);
-  height: min(66svh, 640px);
-  min-height: 340px;
+body.page--detalhe.obra-claro {
+  --veu-cor: var(--white);
 }
 
-.obra[data-category="coastal"] { --card-color: var(--category-coastal); }
-.obra[data-category="villas"]  { --card-color: var(--category-villas); }
-.obra[data-category="urban"]   { --card-color: var(--category-urban); }
-.obra[data-category="premium"] { --card-color: var(--category-premium); }
-
-.obra-painel {
-  position: relative;
-  /* a mesma grelha do painel do card, para o losango, o nome e a legenda
-     caírem nos mesmos cantos */
-  container-type: size;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto 1fr auto;
-  align-items: start;
-  padding: var(--selection-card-padding);
+body.page--detalhe #page-stage {
   background: var(--card-color);
   color: var(--white);
+  transition: background-color 0.85s var(--standard-easing), color 0.5s ease;
 }
 
-.obra-painel__simbolo {
-  grid-column: 1;
-  grid-row: 1;
-  width: var(--selection-card-symbol-width);
-  height: auto;
+body.page--detalhe.obra-claro #page-stage {
+  background: var(--white);
+  color: var(--brand-dark);
 }
 
-/* o h1 nao desenha nada: serve para o nome e a legenda continuarem a ser um
-   titulo so, mesmo caindo em cantos opostos do painel */
-.obra-titulo {
-  display: contents;
-  margin: 0;
+/* o logotipo e nativamente terracota: branco sobre a cor, ele proprio
+   sobre o branco */
+body.page--detalhe .logo-img {
+  filter: brightness(0) invert(1);
+  transition: filter 0.5s ease;
 }
 
-.obra-titulo__local {
-  grid-column: 2;
-  grid-row: 1 / -1;
-  align-self: end;
-  justify-self: end;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-family: var(--sans-font);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  /* como no card: e o comprimento do nome que manda, medido contra o painel */
-  font-size: min(5vw, calc(92cqh / var(--chars, 10)));
+body.page--detalhe.obra-claro .logo-img {
+  filter: none;
 }
 
-.obra-titulo__obra {
-  grid-column: 1;
-  grid-row: 3;
-  align-self: end;
-  font-family: var(--sans-font);
-  font-size: clamp(0.95rem, 1.15vw, 1.3rem);
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.86);
+body.page--detalhe .menu-btn,
+body.page--detalhe .corner-proxima {
+  color: var(--white);
+  transition: color 0.5s ease;
 }
 
-.category-cover {
+body.page--detalhe.obra-claro .menu-btn,
+body.page--detalhe.obra-claro .corner-proxima {
+  color: var(--brand-dark);
+}
+
+.obra-hero {
+  /* um ecra, descontando a moldura, a linha do logotipo e as folgas */
+  min-height: calc(100svh - var(--grid-padding) * 2 - var(--grid-row-gap) * 2 - 4.9vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.1vw;
+}
+
+.obra-hero__palco {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  overflow: visible;
+}
+
+/* a mesma caixa da imagem da hero: a capa vem do card e assenta aqui */
+.obra-hero .category-cover {
+  position: relative;
+  z-index: 2;
+  width: var(--hero-visual-width);
+  aspect-ratio: var(--hero-visual-aspect);
+  max-height: 48vh;
   overflow: hidden;
-  min-width: 0;
+  border-radius: 0 0 clamp(24px, 2.8vw, 42px) 0;
 }
 
 .category-cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
+}
+
+.obra-hero .category-cover img {
+  border-radius: 0 0 clamp(24px, 2.8vw, 42px) 0;
+}
+
+/* sobre a cor do card, o nome atras da foto e branco esbatido */
+.obra-hero .marquee-text,
+.obra-hero .marquee-sep {
+  color: var(--white);
+}
+
+.obra-hero .marquee-text { opacity: 0.16; }
+.obra-hero .marquee-sep { opacity: 0.3; }
+
+.obra-hero__titulo {
+  width: min(var(--hero-content-width), calc(100vw - var(--grid-padding) * 2));
+  margin: 0;
+  text-align: center;
+  font-family: var(--sans-font);
+  font-size: var(--hero-h1-size, var(--h5-size));
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  color: inherit;
+}
+
+.obra-hero__titulo em {
+  font-family: var(--serif-font);
+  font-style: italic;
 }
 
 /* — Ficha — */
 /* Feita para aguentar uma frase ou cinco paragrafos: a coluna do texto cresce
    sozinha e a dos dados aceita os campos que houver. */
 .obra-ficha {
-  margin-top: 3.4vw;
+  margin-top: 7vw;
   padding-top: 2.6vw;
   border-top: 1px solid rgba(35, 31, 32, 0.12);
   display: grid;
@@ -3405,9 +3450,10 @@ body.page--detalhe #page-stage::after {
   bottom: 0;
   height: calc(var(--grid-padding) + var(--nav-action-height) + 3vw);
   background: linear-gradient(to top,
-    #ffffff 40%,
-    rgba(255, 255, 255, 0.92) 66%,
-    rgba(255, 255, 255, 0) 100%);
+    var(--veu-cor) 40%,
+    color-mix(in srgb, var(--veu-cor) 92%, transparent) 66%,
+    color-mix(in srgb, var(--veu-cor) 0%, transparent) 100%);
+  transition: background-color 0.85s var(--standard-easing);
   pointer-events: none;
   z-index: 90;
 }

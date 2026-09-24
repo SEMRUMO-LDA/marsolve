@@ -408,6 +408,24 @@
     });
   }
 
+  // — Pagina da obra: a cor cede ao branco —
+  // A abertura e a hero da obra, com o fundo da cor do card. Passado o
+  // primeiro ecra o assunto deixa de ser a imagem e passa a ser o texto,
+  // por isso o fundo vai a branco e a ficha le-se sobre ele.
+  const grelhaObra = document.querySelector('body.page--detalhe .page-grid');
+  if (grelhaObra) {
+    let pedido = null;
+    const avaliar = () => {
+      pedido = null;
+      document.body.classList.toggle('obra-claro',
+        grelhaObra.scrollTop > grelhaObra.clientHeight * 0.34);
+    };
+    grelhaObra.addEventListener('scroll', () => {
+      if (pedido === null) pedido = requestAnimationFrame(avaliar);
+    }, { passive: true });
+    avaliar();
+  }
+
   // — Filtros das obras —
   // Os cards escondidos saem do fluxo, por isso o carrossel tem de voltar
   // ao primeiro slide: com poucos resultados o segundo pode ficar vazio.
