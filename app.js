@@ -475,8 +475,11 @@
     if (carouselPrev) carouselPrev.disabled = (currentSlide === 0);
     if (carouselNext) carouselNext.disabled = (currentSlide === totalSlides - 1);
 
+    // Com um filtro activo pode sobrar so uma pagina: os pontos a mais sao
+    // escondidos para a pill nao prometer paginas que nao existem.
     carouselDots.forEach((dot, idx) => {
       dot.classList.toggle('active', idx === currentSlide);
+      dot.hidden = idx >= totalSlides;
     });
 
     if (pageIndicator) {
