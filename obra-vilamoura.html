@@ -50,30 +50,40 @@
             <header class="obra-hero">
               <div class="obra-hero__palco">
                 <div class="obra-hero__fixo">
-                  <div class="category-cover">
-                    <picture>
-                      <source srcset="assets/obras/vilamoura/web/capa.avif" type="image/avif">
-                      <source srcset="assets/obras/vilamoura/web/capa.webp" type="image/webp">
-                      <img src="assets/obras/vilamoura/web/capa.jpg" alt="Construção de Moradia em Vilamoura" width="1024" height="683">
-                    </picture>
+                  <!-- as mesmas classes da hero da home: a abertura da obra e
+                       a hero, nao uma imitacao dela -->
+                  <div class="hero-section">
+                    <div class="hero-top">
+                      <div class="hero-visual category-cover">
+                        <picture>
+                          <source srcset="assets/obras/vilamoura/web/capa.avif" type="image/avif">
+                          <source srcset="assets/obras/vilamoura/web/capa.webp" type="image/webp">
+                          <img class="hero-opening-media" src="assets/obras/vilamoura/web/capa.jpg" alt="Construção de Moradia em Vilamoura" width="1024" height="683">
+                        </picture>
+                      </div>
+                      <div class="marquee" aria-hidden="true">
+                        <div class="marquee-scroll">
+                          <div class="marquee-collection">
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                          <div class="marquee-collection" aria-hidden="true">
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="hero-bottom">
+                      <div class="hero-content">
+                        <h1>Constru&ccedil;&atilde;o de moradia, <em>Vilamoura</em></h1>
+                      </div>
+                    </div>
                   </div>
-              <div class="marquee" aria-hidden="true">
-                <div class="marquee-scroll">
-                    <div class="marquee-collection">
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                    </div>
-                    <div class="marquee-collection" aria-hidden="true">
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Vilamoura</span><span class="marquee-sep">&#9671;</span></span>
-                    </div>
-                </div>
-              </div>
-                  <h1 class="obra-hero__titulo">Constru&ccedil;&atilde;o de moradia, <em>Vilamoura</em></h1>
                 </div>
               </div>
             </header>
@@ -115,12 +125,6 @@
           </article>
         </div>
 
-        <!-- Canto inferior esquerdo: o mesmo destino, para quem nao quer
-             descer a pagina toda. Some quando a seccao do fim aparece. -->
-        <a class="corner-proxima" href="obra-albufeira-4-moradias.html">
-          <span class="corner-proxima__rotulo">Pr&oacute;xima obra</span>
-          <span class="corner-proxima__nome">Albufeira &middot; Constru&ccedil;&atilde;o de 4 moradias</span>
-        </a>
 
       </div>
     </main>

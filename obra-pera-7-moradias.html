@@ -50,30 +50,40 @@
             <header class="obra-hero">
               <div class="obra-hero__palco">
                 <div class="obra-hero__fixo">
-                  <div class="category-cover">
-                    <picture>
-                      <source srcset="assets/obras/pera-7-moradias/web/capa.avif" type="image/avif">
-                      <source srcset="assets/obras/pera-7-moradias/web/capa.webp" type="image/webp">
-                      <img src="assets/obras/pera-7-moradias/web/capa.jpg" alt="Construção de 7 Moradias em Pêra" width="1024" height="683">
-                    </picture>
+                  <!-- as mesmas classes da hero da home: a abertura da obra e
+                       a hero, nao uma imitacao dela -->
+                  <div class="hero-section">
+                    <div class="hero-top">
+                      <div class="hero-visual category-cover">
+                        <picture>
+                          <source srcset="assets/obras/pera-7-moradias/web/capa.avif" type="image/avif">
+                          <source srcset="assets/obras/pera-7-moradias/web/capa.webp" type="image/webp">
+                          <img class="hero-opening-media" src="assets/obras/pera-7-moradias/web/capa.jpg" alt="Construção de 7 Moradias em Pêra" width="1024" height="683">
+                        </picture>
+                      </div>
+                      <div class="marquee" aria-hidden="true">
+                        <div class="marquee-scroll">
+                          <div class="marquee-collection">
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                          <div class="marquee-collection" aria-hidden="true">
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="hero-bottom">
+                      <div class="hero-content">
+                        <h1>Constru&ccedil;&atilde;o de 7 moradias, <em>P&ecirc;ra</em></h1>
+                      </div>
+                    </div>
                   </div>
-              <div class="marquee" aria-hidden="true">
-                <div class="marquee-scroll">
-                    <div class="marquee-collection">
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                    </div>
-                    <div class="marquee-collection" aria-hidden="true">
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">P&ecirc;ra</span><span class="marquee-sep">&#9671;</span></span>
-                    </div>
-                </div>
-              </div>
-                  <h1 class="obra-hero__titulo">Constru&ccedil;&atilde;o de 7 moradias, <em>P&ecirc;ra</em></h1>
                 </div>
               </div>
             </header>
@@ -148,12 +158,6 @@
           </article>
         </div>
 
-        <!-- Canto inferior esquerdo: o mesmo destino, para quem nao quer
-             descer a pagina toda. Some quando a seccao do fim aparece. -->
-        <a class="corner-proxima" href="obra-casino-armacao-de-pera.html">
-          <span class="corner-proxima__rotulo">Pr&oacute;xima obra</span>
-          <span class="corner-proxima__nome">Arma&ccedil;&atilde;o de P&ecirc;ra &middot; Reabilita&ccedil;&atilde;o do casino</span>
-        </a>
 
       </div>
     </main>

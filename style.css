@@ -43,9 +43,9 @@
   --hero-visual-width: clamp(440px, 44vw, 720px);
   --hero-visual-aspect: 16 / 9;
   --hero-content-width: 48vw;
-  /* a abertura da obra: a altura util da moldura, e o curso de scroll que a
-     capa leva a crescer */
-  --obra-hero-altura: calc(100svh - var(--grid-padding) * 2);
+  /* a abertura da obra: a faixa da hero (o JS afina-a com as medidas reais
+     da pagina) e o curso de scroll que a capa leva a crescer */
+  --obra-hero-altura: calc(100svh - var(--grid-padding) * 2 - 12vh);
   --obra-abertura-curso: 150svh;
   /* a inclinacao da fila da galeria */
   --galeria-angulo: -5deg;
@@ -3310,14 +3310,12 @@ body.page--detalhe.obra-claro .logo-img {
   filter: none;
 }
 
-body.page--detalhe .menu-btn,
-body.page--detalhe .corner-proxima {
+body.page--detalhe .menu-btn {
   color: var(--card-ink);
   transition: color 0.5s ease;
 }
 
-body.page--detalhe.obra-claro .menu-btn,
-body.page--detalhe.obra-claro .corner-proxima {
+body.page--detalhe.obra-claro .menu-btn {
   color: var(--brand-dark);
 }
 
@@ -3336,8 +3334,6 @@ body.page--detalhe.obra-claro .corner-proxima {
   position: sticky;
   top: 0;
   height: var(--obra-hero-altura);
-  display: grid;
-  place-items: center;
   container-type: size;
   overflow: clip;
 }
@@ -3353,71 +3349,67 @@ body.page--detalhe.obra-claro .corner-proxima {
   mask-image: url('assets/padrao-losangos.svg');
   -webkit-mask-size: 120px 152px;
   mask-size: 120px 152px;
-  opacity: calc(0.07 * (1 - var(--abertura, 0)));
+  opacity: calc(0.05 * (1 - var(--abertura, 0)));
   pointer-events: none;
 }
 
-/* A capa: uma so declaracao de geometria, interpolada por --abertura, que o
-   JS escreve de 0 a 1. O CSS e que sabe as medidas; o JS so conta o scroll. */
-.obra-hero .category-cover {
+/* A capa e a mesma caixa da hero: por isso a abertura usa as classes da
+   hero e so lhe acrescenta o crescimento. Uma so declaracao de geometria,
+   interpolada por --abertura, que o JS escreve de 0 a 1. O CSS e que sabe as
+   medidas; o JS so conta o scroll. */
+.obra-hero .hero-section {
+  width: 100%;
+  height: 100%;
+}
+
+.obra-hero .hero-visual {
   --capa-w0: var(--hero-visual-width);
   --capa-h0: calc(var(--hero-visual-width) * 9 / 16);
-  grid-area: 1 / 1;
-  place-self: center;
-  position: relative;
-  z-index: 2;
   width: calc(var(--capa-w0) + (100cqw - var(--capa-w0)) * var(--abertura, 0));
   height: calc(var(--capa-h0) + (100cqh - var(--capa-h0)) * var(--abertura, 0));
-  overflow: hidden;
+  /* na home a imagem nunca passa de meio ecra; aqui e suposto passar */
+  max-height: none;
+  aspect-ratio: auto;
   border-radius: 0 0 calc(clamp(24px, 2.8vw, 42px) * (1 - var(--abertura, 0))) 0;
 }
 
-.category-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
+.obra-hero .hero-visual img {
+  border-radius: 0 0 calc(clamp(24px, 2.8vw, 42px) * (1 - var(--abertura, 0))) 0;
+}
+
+/* A legenda da home tem duas linhas e a das obras quase sempre uma. Como a
+   coluna e centrada, essa diferenca baixava a imagem uns dezassete pixeis e
+   notava-se ao passar de uma pagina para a outra. Reservar sempre duas linhas
+   poe a imagem no mesmo sitio, seja qual for o comprimento da legenda. */
+.obra-hero .hero-content h1 {
+  min-height: calc(2 * 1.45 * var(--hero-h1-size, var(--h5-size)));
+}
+
+/* A legenda sai de cena e deixa de ocupar lugar, para a imagem no fim ficar
+   centrada na moldura e nao desviada pela altura de um texto invisivel. */
+.obra-hero .hero-bottom {
+  max-height: calc((1 - var(--abertura, 0)) * 14vh);
+  overflow: clip;
+  opacity: calc(1 - var(--abertura, 0) * 3.5);
 }
 
 .obra-hero .marquee {
-  grid-area: 1 / 1;
-  z-index: 1;
   opacity: calc(1 - var(--abertura, 0) * 2.4);
 }
 
-/* o nome atras da foto segue a tinta da obra: claro sobre as cores
-   escuras, escuro sobre o amarelo */
+/* o nome atras da foto segue a tinta da obra: claro sobre as cores escuras,
+   escuro sobre o amarelo, com a mesma forca que na home */
 .obra-hero .marquee-text,
 .obra-hero .marquee-sep {
   color: currentColor;
 }
 
-.obra-hero .marquee-text { opacity: 0.16; }
-.obra-hero .marquee-sep { opacity: 0.3; }
+.obra-hero .marquee-text { opacity: 0.22; }
+.obra-hero .marquee-sep { opacity: 0.35; }
 
-/* a legenda fica logo por baixo da caixa inicial da capa e sai de cena mal a
-   imagem comeca a crescer */
-.obra-hero__titulo {
-  grid-area: 1 / 1;
-  place-self: center;
-  z-index: 3;
-  width: min(var(--hero-content-width), calc(100vw - var(--grid-padding) * 2));
-  margin: 0;
-  text-align: center;
-  font-family: var(--sans-font);
-  font-size: var(--hero-h1-size, var(--h5-size));
-  font-weight: 400;
-  line-height: 1.45;
-  letter-spacing: -0.005em;
+.obra-hero .hero-content h1,
+.obra-hero .hero-content h1 em {
   color: inherit;
-  transform: translateY(calc(var(--capa-h0, 18vw) / 2 + 2.4vw));
-  opacity: calc(1 - var(--abertura, 0) * 3.5);
-}
-
-.obra-hero__titulo em {
-  font-family: var(--serif-font);
-  font-style: italic;
 }
 
 /* — Ficha — */
@@ -3640,64 +3632,11 @@ body.page--detalhe.obra-claro .corner-proxima {
 
 /* o canto e a seccao do fim levam ao mesmo sitio: quando a seccao aparece,
    o canto sai de cena */
-body.obra-fim .corner-proxima {
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* sobre a fotografia da obra seguinte, o diamante tem de ser branco mesmo
    com a pagina ja em fundo claro */
 body.obra-fim .menu-btn {
   color: var(--white);
 }
-
-/* — Canto: proxima obra — */
-/* Fixo como o diamante e na mesma linha, para a moldura ser a mesma que no
-   portfolio, mesmo com a pagina a correr por baixo. */
-.corner-proxima {
-  position: fixed;
-  transition: opacity 0.35s ease, color 0.5s ease;
-  left: var(--grid-padding);
-  bottom: var(--grid-padding);
-  z-index: 100;
-  height: var(--nav-action-height);
-  display: flex;
-  align-items: center;
-  gap: 0.85em;
-  font-family: var(--sans-font);
-  font-size: var(--corner-text-size);
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--brand-dark);
-  transition: opacity 0.25s ease;
-}
-
-.corner-proxima__rotulo {
-  font-weight: 500;
-  opacity: 0.4;
-}
-
-.corner-proxima__nome {
-  position: relative;
-}
-
-.corner-proxima__nome::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  height: 1.5px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.corner-proxima:hover .corner-proxima__nome::after { transform: scaleX(1); }
 
 @media (max-width: 900px) {
   .obra-abertura {
@@ -3730,6 +3669,5 @@ body.obra-fim .menu-btn {
     grid-template-columns: 1fr;
     gap: 3vw;
   }
-  .corner-proxima__rotulo { display: none; }
 }
 

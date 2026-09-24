@@ -431,9 +431,26 @@
       return y;
     };
 
+    // A faixa da abertura tem de ser exactamente a mesma da hero da home,
+    // senao a imagem aparece mais abaixo e nota-se logo. A hero vive na linha
+    // do meio da grelha; aqui nao ha linhas, por isso a altura e medida a
+    // partir das mesmas pecas: a moldura, a linha do logotipo, as folgas, a
+    // barra de baixo, e o puxao de 3.8vh que a hero da a si propria.
+    const faixaDaHero = () => {
+      const nav = document.querySelector('.site-nav');
+      const botao = document.querySelector('.menu-btn');
+      const est = getComputedStyle(grelhaObra);
+      const util = grelhaObra.clientHeight
+        - parseFloat(est.paddingTop) - parseFloat(est.paddingBottom);
+      const folga = parseFloat(est.rowGap) || 0;
+      return util - (nav ? nav.offsetHeight : 70) - folga * 2
+        - (botao ? botao.offsetHeight : 46) + window.innerHeight * 0.038;
+    };
+
     let medidas = null;
     const medir = () => {
       const alturaEcra = grelhaObra.clientHeight;
+      if (artigo) artigo.style.setProperty('--obra-hero-altura', faixaDaHero().toFixed(1) + 'px');
       medidas = {
         alturaEcra,
         abertura: palco ? { topo: topoEm(palco), curso: palco.offsetHeight - fixo.offsetHeight } : null,
