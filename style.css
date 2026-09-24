@@ -3256,11 +3256,14 @@ body.page--detalhe {
   --logo-filtro: none;
 }
 
-/* o Sobre inverte-se da mesma maneira, mas no Mosaic Blue: mesmo gesto que
-   a obra, outra cor. O logotipo fica na sua cor em ambas. */
+/* O Sobre nao se inverte: abre num campo azul cheio, com letra branca,
+   como a entrada abre no terracota. E depois faz o que mais nenhuma pagina
+   faz -- cede ao branco enquanto a foto cresce. E essa viragem que o separa
+   da obra, que ja abre invertida e nunca muda de cor. */
 body.page--sobre {
   --card-color: var(--brand-blue);
-  --card-ink: var(--brand-blue);
+  --card-ink: var(--white);
+  --logo-filtro: brightness(0) invert(1);
 }
 
 /* ============================================================
@@ -3273,14 +3276,25 @@ body.page--sobre {
    campo terracota e letra branca, a obra tem campo branco e letra
    terracota. Com o scroll a foto cresce ate encher o ecra.
    ============================================================ */
-/* Nenhuma pagina interna muda de cor com o scroll: abrem ja invertidas e
-   ficam assim. O fundo e sempre branco -- muda a tinta, terracota na obra
-   e azul no Sobre -- e o que se move e so a imagem a crescer. A tinta
-   escurece quando a imagem chega ao maximo, para a ficha se ler. */
+/* A obra abre ja em branco e fica assim: nao ha cor a desvanecer, a
+   inversao e que e o efeito. A tinta escurece quando a foto chega ao
+   maximo, para a ficha se ler. O Sobre e a excepcao, logo a seguir. */
 body.page--detalhe #page-stage {
   background: var(--white);
   color: var(--card-ink);
   transition: color 0.35s ease;
+}
+
+/* a viragem do Sobre: comeca no ultimo terco da abertura, para o azul nao
+   passar a maior parte do caminho desmaiado, e chega a branco no instante
+   em que a foto chega ao tamanho maximo */
+body.page--sobre {
+  --mistura: clamp(0, calc((var(--abertura, 0) - 0.62) / 0.38), 1);
+}
+
+body.page--sobre #page-stage {
+  background: color-mix(in srgb,
+    var(--white) calc(var(--mistura) * 100%), var(--card-color));
 }
 
 body.page--detalhe.obra-claro #page-stage {

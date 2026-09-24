@@ -498,9 +498,11 @@
         const a = medidas.abertura;
         const p = a.curso > 0 ? entre((y - a.topo) / a.curso, 0, 1) : 0;
         raiz.style.setProperty('--abertura', p.toFixed(4));
-        // o fundo ja e branco desde o inicio: o que muda aqui e so a tinta,
-        // que passa da cor da pagina (terracota, ou azul no Sobre) para o
-        // preto, quando a imagem chega ao maximo e comeca a ficha.
+        // numa obra o fundo ja e branco desde o inicio e o que muda aqui e
+        // so a tinta, do terracota para o preto. No Sobre o fundo tambem
+        // esta a virar do azul para o branco (no CSS): a tinta nao se pode
+        // misturar, por isso troca de uma vez a meio dessa viragem, onde o
+        // fundo ja e claro.
         document.body.classList.toggle('obra-claro', p > 0.81);
       } else {
         document.body.classList.toggle('obra-claro', y > h * 0.34);
