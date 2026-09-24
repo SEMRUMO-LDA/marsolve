@@ -410,16 +410,15 @@
 
   // — Pagina da obra —
   // Tres coisas conduzidas pelo scroll, todas na mesma passagem por quadro:
-  // a capa a crescer, a galeria a andar de lado, e o fim da pagina a levar a
-  // obra seguinte. O JS so conta; as medidas estao todas no CSS.
+  // a capa a crescer, as fotos a deslizar dentro das molduras, e o fim da
+  // pagina a levar a obra seguinte. O JS so conta; as medidas sao do CSS.
   const grelhaObra = document.querySelector('body.page--detalhe .page-grid');
   if (grelhaObra) {
     const raiz = document.documentElement;
     const artigo = document.querySelector('.obra');
     const palco = document.querySelector('.obra-hero__palco');
     const fixo = document.querySelector('.obra-hero__fixo');
-    const galeria = document.querySelector('.obra-galeria');
-    const colunas = [...document.querySelectorAll('.obra-galeria__coluna')];
+    const fotos = [...document.querySelectorAll('.obra-galeria__item img')];
     const seguinte = document.querySelector('.obra-seguinte');
     const ligacao = document.querySelector('.obra-seguinte__link');
 
@@ -475,12 +474,11 @@
             - (parseFloat(getComputedStyle(fixo).top) || 0)),
           curso: palco.offsetHeight - fixo.offsetHeight
         } : null,
-        galeria: galeria ? {
-          topo: topoEm(galeria),
-          altura: galeria.offsetHeight,
-          // o quanto cada coluna desliza de ponta a ponta da passagem
-          amplitude: Math.min(220, alturaEcra * 0.28)
-        } : null,
+        // cada moldura tem a sua propria passagem pelo ecra
+        fotos: fotos.map(img => {
+          const moldura = img.closest('.obra-galeria__item');
+          return { img: img, topo: topoEm(moldura), altura: moldura.offsetHeight };
+        }),
         seguinte: seguinte ? { topo: topoEm(seguinte), altura: seguinte.offsetHeight } : null
       };
     };
@@ -508,14 +506,10 @@
         document.body.classList.toggle('obra-claro', y > h * 0.34);
       }
 
-      if (medidas.galeria && colunas.length) {
-        const g = medidas.galeria;
-        // -1 quando a galeria entra por baixo, +1 quando sai por cima
-        const p = entre((y + h - g.topo) / (h + g.altura), 0, 1) * 2 - 1;
-        for (const col of colunas) {
-          const ritmo = parseFloat(col.style.getPropertyValue('--ritmo')) || 0;
-          col.style.translate = '0px ' + (-p * g.amplitude * ritmo * 4).toFixed(1) + 'px';
-        }
+      // -1 quando a moldura entra por baixo, +1 quando sai por cima
+      for (const f of medidas.fotos) {
+        const p = entre((y + h - f.topo) / (h + f.altura), 0, 1) * 2 - 1;
+        f.img.style.translate = '0 ' + (p * 6).toFixed(2) + '%';
       }
 
       if (medidas.seguinte) {

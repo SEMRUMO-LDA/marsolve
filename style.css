@@ -3454,36 +3454,25 @@ body.page--detalhe.obra-claro .menu-btn {
 .obra-texto p + p { margin-top: 1.1em; }
 
 /* — Galeria — */
-/* Nem grelha nem fila: colunas desencontradas, cada uma a andar ao seu ritmo
-   com o scroll. Cada foto guarda a proporcao real, que e o que faz isto
-   parecer uma pilha de fotografias e nao uma tabela. Com duas fotos sao duas
-   colunas, com seis ou mais sao tres -- por isso tambem funciona com poucas. */
+/* As molduras nao se mexem: estao pousadas na grelha de doze colunas, uma por
+   linha, ora a esquerda ora a direita, com uma mais larga de quatro em
+   quatro. O que se mexe e a imagem dentro de cada moldura -- esta sempre um
+   pouco maior do que a caixa e desliza dentro dela conforme a moldura
+   atravessa o ecra. E um gesto calmo e nao empurra nada: ao contrario da fila
+   inclinada, funciona igual com duas fotos ou com dezanove. */
 .obra-galeria {
   margin-top: 7vw;
   display: grid;
-  /* colunas de larguras ligeiramente diferentes: iguais voltavam a ler-se
-     como uma grelha */
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.86fr) minmax(0, 1.04fr);
-  gap: var(--grid-gap);
-  align-items: start;
-  /* as colunas deslizam para cima e para baixo: isto impede que o
-     deslizamento empurre a pagina */
-  overflow: clip;
-  padding-block: 8vh;
-}
-
-.obra-galeria[data-colunas="1"] { grid-template-columns: minmax(0, 1fr); }
-.obra-galeria[data-colunas="2"] { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); }
-
-.obra-galeria__coluna {
-  display: flex;
-  flex-direction: column;
-  gap: 6vh;
-  margin-top: var(--recuo, 0);
-  will-change: translate;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  row-gap: 5vw;
 }
 
 .obra-galeria__item {
+  grid-column: var(--de, 2) / var(--ate, 6);
+  /* uma por linha: sem isto a grelha encaixa duas lado a lado e volta a
+     parecer uma tabela */
+  grid-row: var(--linha, auto);
   margin: 0;
   overflow: hidden;
   background: rgba(35, 31, 32, 0.04);
@@ -3494,22 +3483,20 @@ body.page--detalhe.obra-claro .menu-btn {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.8s cubic-bezier(0.18, 0.13, 0, 0.99);
-}
-
-.obra-galeria__item:hover img {
-  transform: scale(1.04);
+  /* a folga que o deslizamento consome: 8% de cada lado contra os 6% que o
+     JS desloca, para nunca descobrir a moldura */
+  scale: 1.16;
+  will-change: translate;
 }
 
 @media (max-width: 900px) {
   .obra-galeria {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 3vw;
-    padding-block: 4vh;
+    row-gap: 8vw;
   }
-  .obra-galeria__coluna { gap: 3vh; }
-  /* no telemovel o desencontro so estorva */
-  .obra-galeria__coluna:nth-child(3) { display: contents; }
+  /* no telemovel a largura nao chega para o desencontro: ficam todas iguais */
+  .obra-galeria__item {
+    grid-column: 1 / -1;
+  }
 }
 
 /* — Obra seguinte — */
