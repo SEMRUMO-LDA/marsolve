@@ -1555,19 +1555,21 @@ body.page--internal .selection-preview-bar__link:hover,
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
 }
 
-/* O padrao da marca, no ficheiro que a cliente forneceu. Ja traz a sua cor e
-   a sua opacidade, por isso entra como imagem e nao como mascara. Repete-se
-   em mosaico: as emendas nao fecham ao milimetro, mas a esta opacidade nao
-   se veem, e em mosaico o desenho fica na escala certa para o painel. */
+/* O padrao do menu, em mosaico que fecha (scripts/gerar-padrao-menu.py).
+   O ficheiro que veio do designer -- assets/pattern-menu.svg -- e uma
+   composicao: as formas saem do viewBox e nao voltam a entrar do outro lado,
+   por isso via-se onde o mosaico se juntava. Este assenta numa malha
+   regular e cada forma e desenhada tambem deslocada de uma largura e de uma
+   altura, logo o que sai por um lado entra pelo outro no mesmo sitio. */
 .nav-menu__panel::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url('assets/pattern-menu.svg');
+  background-image: url('assets/padrao-menu.svg');
   background-repeat: repeat;
   background-position: top right;
-  background-size: 230px 314px;
+  background-size: 200px 270px;
   pointer-events: none;
 }
 
