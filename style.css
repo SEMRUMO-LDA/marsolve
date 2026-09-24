@@ -3335,23 +3335,8 @@ body.page--detalhe.obra-claro .menu-btn {
   top: 0;
   height: var(--obra-hero-altura);
   container-type: size;
-  overflow: clip;
 }
 
-/* O padrao do manual, quase invisivel, sobre a cor da obra; mascara para o
-   traco seguir a tinta em vez de ser sempre escuro. */
-.obra-hero__fixo::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: currentColor;
-  -webkit-mask-image: url('assets/padrao-losangos.svg');
-  mask-image: url('assets/padrao-losangos.svg');
-  -webkit-mask-size: 120px 152px;
-  mask-size: 120px 152px;
-  opacity: calc(0.05 * (1 - var(--abertura, 0)));
-  pointer-events: none;
-}
 
 /* A capa e a mesma caixa da hero: por isso a abertura usa as classes da
    hero e so lhe acrescenta o crescimento. Uma so declaracao de geometria,
