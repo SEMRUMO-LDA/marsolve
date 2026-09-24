@@ -3077,6 +3077,19 @@ body[data-obra="unik-fitness-club"] .category-cover {
   z-index: 30;
 }
 
+/* Tudo o que vive na barra de baixo -- filtros, paginacao, o convite ao
+   scroll -- fica centrado na mesma linha do diamante. O botao do menu tem
+   --nav-action-height de altura e assenta na moldura, por isso basta dar a
+   mesma caixa aos outros: assentam na moldura tambem e os centros coincidem,
+   em vez de ficarem alinhados pela base, que punha o texto 15px abaixo. */
+.corner-scroll,
+.corner-filters,
+.selection-controls {
+  min-height: var(--nav-action-height);
+  display: flex;
+  align-items: center;
+}
+
 .corner-scroll {
   border: none;
   background: none;
