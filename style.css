@@ -35,6 +35,8 @@
      que é a dimensão que manda no ritmo vertical */
   --card-inset: clamp(20px, 2.6vh, 44px);
   --grid-gap: 2.6vw;
+  /* entre linhas a folga e menor: e a altura que escasseia, nao a largura */
+  --grid-row-gap: clamp(20px, 1.6vw, 40px);
   --grid-columns: 12;
 
   --logo-width: 18vw;
@@ -44,6 +46,7 @@
   --nav-footer-text-size: 1.1vw;
   /* filtros e paginacao partilham a barra de baixo, logo a mesma escala */
   --corner-text-size: clamp(11px, 0.96vw, 15px);
+  --corner-line: calc(var(--corner-text-size) * 1.2);
   --nav-action-height: 3.2vw;
   --menu-btn-width: 3.5vw;
   --marquee-size: 9.5vw;
@@ -59,6 +62,7 @@
   --selection-card-symbol-width: 2.66vw;
   --selection-card-padding: 1.85vw;
   --selection-card-panel-ratio: 1.85;
+  --selection-card-cover-ratio: 1.2;
 }
 
 /* — Reset — */
@@ -241,7 +245,10 @@ html.preloader-done .site-preloader {
 .selection-carousel-wrapper {
   position: relative;
   width: 100%;
-  height: var(--carousel-h);
+  /* 75svh e a altura desejada, nao uma imposicao: num ecra baixo e largo a
+     moldura e as duas barras nao deixam tanto espaco, e o carrossel subia
+     por cima do logotipo em vez de encolher */
+  height: min(var(--carousel-h), 100%);
   overflow: hidden;
   z-index: 4;
 }
@@ -261,11 +268,10 @@ html.preloader-done .site-preloader {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--grid-gap);
-  /* o padding inferior reserva a faixa da pill; sendo relativo à altura
-     do wrapper, serve a home e o portfolio sem calculos separados */
-  /* largura toda: os cards respiram melhor e as duas paginas ficam iguais.
-     Em baixo, a faixa dos controlos mais a mesma folga do topo. */
-  padding: var(--card-inset) 0 calc(var(--carousel-pill-band) + var(--card-inset));
+  /* Folga igual em cima e em baixo. A faixa que aqui estava reservada para a
+     pill deixou de fazer falta: os controlos passaram para a barra da
+     moldura, e a faixa so encolhia os cards. */
+  padding: var(--card-inset) 0;
   box-sizing: border-box;
 }
 
@@ -290,7 +296,7 @@ html.preloader-done .site-preloader {
   width: 28px;
   height: 28px;
   /* a area de toque fica, mas deixa de contar para a altura da linha */
-  margin-block: calc((1.15em - 28px) / 2);
+  margin-block: calc((var(--corner-line) - 28px) / 2);
   border: none;
   background: none;
   box-shadow: none;
@@ -371,6 +377,7 @@ html.preloader-done .site-preloader {
 .selection-slide-label {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
+  line-height: 1.2;
   font-weight: 700;
   color: var(--brand-dark);
   letter-spacing: 0.14em;
@@ -454,6 +461,8 @@ body.selection-open .bottom-left-contact {
 
 .selection-card__panel {
   position: relative;
+  /* o titulo mede-se contra este painel, nao contra o ecra */
+  container-type: size;
   flex: var(--selection-card-panel-ratio) 1 0;
   min-height: 0;
   display: grid;
@@ -466,11 +475,14 @@ body.selection-open .bottom-left-contact {
 
 .selection-card__cover {
   position: relative;
-  flex: 0 0 auto;
+  /* A capa media-se em vh, o painel repartia o que sobrava: num ecra baixo a
+     capa ficava com metade do card e o titulo vertical, que se mede contra o
+     painel, encolhia a olhos vistos. Passam os dois a repartir o card na
+     mesma proporcao, seja qual for a altura do ecra. */
+  flex: var(--selection-card-cover-ratio) 1 0;
+  min-height: 0;
   width: 100%;
-  aspect-ratio: 1024 / 585;
   overflow: hidden;
-  height: clamp(140px, 26vh, 320px);
 }
 
 .selection-card__cover::after {
@@ -521,10 +533,16 @@ body.selection-open .bottom-left-contact {
   transform: rotate(180deg);
   font-family: var(--sans-font);
   /* O texto corre na vertical, por isso o comprimento importa tanto como a
-     altura disponivel: "Marina de Albufeira" ocupa o dobro de "Pera". Cada
-     card declara --chars e o tamanho ajusta-se, em vez de cortar em silencio
-     quando se acrescenta uma obra de nome longo. */
-  font-size: min(var(--selection-card-title-size), calc(35vh / var(--chars, 10)));
+     altura disponivel: "Armacao de Pera" ocupa o triplo de "Pera". Cada card
+     declara --chars e o tamanho ajusta-se, em vez de cortar em silencio
+     quando se acrescenta uma obra de nome longo.
+
+     A medida e a altura do proprio painel (cqh), nao a do ecra: o carrossel
+     nem sempre consegue os 75svh que pede -- num ecra baixo e largo a moldura
+     nao deixa -- e contra o ecra o titulo pedia mais altura do que o card
+     tinha para dar. 98cqh deixa metade do painel para o titulo, que e o que
+     sobra depois do losango e da legenda. */
+  font-size: min(var(--selection-card-title-size), calc(98cqh / var(--chars, 10)));
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -610,7 +628,7 @@ body.page--portfolio .portfolio-stage {
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   grid-template-rows: auto minmax(0, 1fr) auto;
   column-gap: var(--grid-gap);
-  row-gap: var(--grid-gap);
+  row-gap: var(--grid-row-gap);
   align-content: stretch;
   width: 100%;
   height: 100svh;
@@ -1031,7 +1049,7 @@ body.page--internal .selection-preview-bar__link:hover,
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   grid-template-rows: auto minmax(0, 1fr) auto;
   column-gap: var(--grid-gap);
-  row-gap: var(--grid-gap);
+  row-gap: var(--grid-row-gap);
   align-content: stretch;
   width: 100%;
   height: 100svh;
@@ -2143,7 +2161,7 @@ body.page--internal .selection-preview-bar__link:hover,
     grid-template-columns: repeat(2, 1fr);
     height: auto;
     /* sem recuo lateral, como no desktop; em baixo fica a faixa dos controlos */
-    padding: var(--card-inset) 0 calc(var(--carousel-pill-band) + var(--card-inset));
+    padding: var(--card-inset) 0;
     overflow-y: auto;
   }
 
@@ -3085,7 +3103,11 @@ body[data-obra="unik-fitness-club"] .category-cover {
 .corner-scroll,
 .corner-filters,
 .selection-controls {
-  min-height: var(--nav-action-height);
+  /* O diamante tem --nav-action-height e e o elemento mais alto da barra;
+     dando a mesma caixa aos outros, a linha de baixo da grelha passa a medir
+     o que a barra realmente ocupa. Assim os centros coincidem com o do
+     diamante e o carrossel deixa de lhe disputar o espaco. */
+  height: var(--nav-action-height);
   display: flex;
   align-items: center;
 }
@@ -3096,6 +3118,7 @@ body[data-obra="unik-fitness-club"] .category-cover {
   padding: 0;
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
+  line-height: 1.2;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -3141,6 +3164,7 @@ body.selection-open .corner-scroll {
   padding: 0;
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
+  line-height: 1.2;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
