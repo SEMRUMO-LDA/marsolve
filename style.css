@@ -42,6 +42,8 @@
   --hero-visual-aspect: 16 / 9;
   --hero-content-width: 48vw;
   --nav-footer-text-size: 1.1vw;
+  /* filtros e paginacao partilham a barra de baixo, logo a mesma escala */
+  --corner-text-size: clamp(11px, 0.96vw, 15px);
   --nav-action-height: 3.2vw;
   --menu-btn-width: 3.5vw;
   --marquee-size: 9.5vw;
@@ -287,6 +289,8 @@ html.preloader-done .site-preloader {
   transform: none;
   width: 28px;
   height: 28px;
+  /* a area de toque fica, mas deixa de contar para a altura da linha */
+  margin-block: calc((1.15em - 28px) / 2);
   border: none;
   background: none;
   box-shadow: none;
@@ -323,10 +327,13 @@ html.preloader-done .site-preloader {
 /* setas e paginacao vivem juntas numa barra centrada por baixo dos cards,
    para nada ficar por cima das imagens */
 .selection-controls {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Estavam pousados no fundo do carrossel, cuja altura varia com o ecra, por
+     isso desalinhavam dos filtros -- a mesma barra, duas ancoras diferentes.
+     Agora partilham a linha de baixo da grelha e assentam ambos na moldura. */
+  grid-column: 1 / -1;
+  grid-row: 3;
+  justify-self: center;
+  align-self: end;
   z-index: 25;
   display: flex;
   align-items: center;
@@ -363,10 +370,10 @@ html.preloader-done .site-preloader {
 
 .selection-slide-label {
   font-family: var(--sans-font);
-  font-size: 0.75rem;
+  font-size: var(--corner-text-size);
   font-weight: 700;
   color: var(--brand-dark);
-  letter-spacing: 0.09em;
+  letter-spacing: 0.14em;
   margin-left: 0.25rem;
 }
 
@@ -2930,12 +2937,12 @@ body.page--home:not(.selection-open) .home-selection .selection-card {
 }
 
 /* setas e indicadores acompanham os cards */
-.home-selection .selection-controls {
+body.page--home .selection-controls {
   opacity: 0;
   transition: opacity 400ms ease 420ms;
 }
 
-body.page--home.selection-open .home-selection .selection-controls {
+body.page--home.selection-open .selection-controls {
   opacity: 1;
 }
 
@@ -2949,7 +2956,7 @@ body.page--home.selection-open .home-selection .selection-controls {
   body.page--home .portfolio-btn::after,
   .home-selection,
   .home-selection .selection-card,
-  .home-selection .selection-controls {
+  body.page--home .selection-controls {
     transition-duration: 1ms !important;
     transition-delay: 0ms !important;
   }
@@ -3075,7 +3082,7 @@ body[data-obra="unik-fitness-club"] .category-cover {
   background: none;
   padding: 0;
   font-family: var(--sans-font);
-  font-size: var(--nav-footer-text-size);
+  font-size: var(--corner-text-size);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -3120,7 +3127,7 @@ body.selection-open .corner-scroll {
   background: none;
   padding: 0;
   font-family: var(--sans-font);
-  font-size: var(--nav-footer-text-size);
+  font-size: var(--corner-text-size);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
