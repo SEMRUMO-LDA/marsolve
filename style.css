@@ -1556,17 +1556,18 @@ body.page--internal .selection-preview-bar__link:hover,
 }
 
 /* O padrao da marca, no ficheiro que a cliente forneceu. Ja traz a sua cor e
-   a sua opacidade, por isso entra como imagem e nao como mascara. Cobre o
-   painel inteiro sem repetir: e um painel desenhado, nao um mosaico. */
+   a sua opacidade, por isso entra como imagem e nao como mascara. Repete-se
+   em mosaico: as emendas nao fecham ao milimetro, mas a esta opacidade nao
+   se veem, e em mosaico o desenho fica na escala certa para o painel. */
 .nav-menu__panel::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   background-image: url('assets/pattern-menu.svg');
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-position: top right;
-  background-size: cover;
+  background-size: 230px 314px;
   pointer-events: none;
 }
 
