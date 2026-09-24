@@ -3233,17 +3233,60 @@ body.page--home.selection-open .corner-filters {
   padding: 0;
 }
 
-/* O terracota e a cor da casa: a hero, os cards do portfolio e a abertura de
-   cada obra. O Sobre tem o azul, o Contacto o branco. O Ivory Black nao pinta
-   areas -- e a cor da letra, em todo o lado. */
-.selection-card,
+/* ------------------------------------------------------------
+   Uma cor por sitio
+
+   O terracota e so da casa -- a hero. Era ai que estava a confusao:
+   clicar num card levava a uma pagina com o mesmo desenho e a mesma
+   cor, e a primeira vista parecia que nao se tinha saido do inicio.
+
+   As obras ficam com o Supreme Yellow e o Ivory Black, alternados pela
+   ordem em que aparecem; o Sobre com o Mosaic Blue; o portfolio e o
+   Contacto com o branco. Nenhum ecra repete a cor daquele de onde se veio.
+
+   A cor vive numa variavel so, --card-color, e o card e a pagina da obra
+   leem-na do mesmo sitio: e por isso que o fundo que se abre e sempre o
+   do card que se clicou.
+   ------------------------------------------------------------ */
+
+/* omissao, para uma obra sem cor atribuida */
 body.page--detalhe {
-  --card-color: var(--brand-primary);
+  --card-color: var(--brand-dark);
+}
+
+/* Supreme Yellow: a letra escurece e o logotipo passa a preto -- o terracota
+   sobre o amarelo nao se le. Quando o fundo cede ao branco, .obra-claro tira
+   o filtro e o logotipo volta a sua cor. */
+.selection-card[href="obra-vilamoura.html"],
+body[data-obra="vilamoura"],
+.selection-card[href="obra-pera-7-moradias.html"],
+body[data-obra="pera-7-moradias"],
+.selection-card[href="obra-marina-de-albufeira.html"],
+body[data-obra="marina-de-albufeira"],
+.selection-card[href="obra-maria-nova-lounge-hotel.html"],
+body[data-obra="maria-nova-lounge-hotel"] {
+  --card-color: var(--brand-gold);
+  --card-ink: var(--brand-dark);
+  --logo-filtro: brightness(0);
+}
+
+/* Ivory Black: letra branca, como na hero */
+.selection-card[href="obra-albufeira-4-moradias.html"],
+body[data-obra="albufeira-4-moradias"],
+.selection-card[href="obra-casino-armacao-de-pera.html"],
+body[data-obra="casino-armacao-de-pera"],
+.selection-card[href="obra-turismo-rural-albufeira.html"],
+body[data-obra="turismo-rural-albufeira"],
+.selection-card[href="obra-unik-fitness-club.html"],
+body[data-obra="unik-fitness-club"] {
+  --card-color: var(--brand-dark);
 }
 
 /* o Sobre e a sua propria area, e abre no azul */
 body.page--sobre {
   --card-color: var(--brand-blue);
+  --card-ink: var(--white);
+  --logo-filtro: brightness(0) invert(1);
 }
 
 /* ============================================================
