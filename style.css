@@ -20,7 +20,8 @@
   --card-ink: var(--white);
   --logo-filtro: brightness(0) invert(1);
 
-  --selection-bg: #F2EDEB;
+  /* o fundo da area dos projectos */
+  --selection-bg: var(--brand-dark);
 
   --sans-font: 'Gantari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   --display-font: 'Gantari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -304,7 +305,7 @@ html.preloader-done .site-preloader {
   border: none;
   background: none;
   box-shadow: none;
-  color: var(--brand-dark);
+  color: currentColor;
   opacity: 0.72;
   display: flex;
   align-items: center;
@@ -365,7 +366,8 @@ html.preloader-done .site-preloader {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: rgba(35, 31, 32, 0.25);
+  background: currentColor;
+  opacity: 0.3;
   border: none;
   cursor: pointer;
   padding: 0;
@@ -373,7 +375,8 @@ html.preloader-done .site-preloader {
 }
 
 .selection-slide-dot.active {
-  background: var(--brand-dark);
+  background: currentColor;
+  opacity: 1;
   width: 22px;
   border-radius: 999px;
 }
@@ -383,7 +386,7 @@ html.preloader-done .site-preloader {
   font-size: var(--corner-text-size);
   line-height: 1.2;
   font-weight: 700;
-  color: var(--brand-dark);
+  color: currentColor;
   letter-spacing: 0.14em;
   margin-left: 0.25rem;
 }
@@ -458,10 +461,6 @@ body.selection-open .bottom-left-contact {
   transition: filter 0.8s cubic-bezier(.18, .13, 0, .99);
 }
 
-.selection-card[data-category="coastal"] { --card-color: var(--brand-primary); }
-.selection-card[data-category="villas"] { --card-color: var(--brand-blue); }
-.selection-card[data-category="urban"] { --card-color: var(--brand-dark); }
-.selection-card[data-category="premium"] { --card-color: var(--brand-gold); }
 
 .selection-card__panel {
   position: relative;
@@ -625,9 +624,13 @@ body.selection-open .bottom-left-contact {
 /* — Standalone Portfolio Page Layout — */
 body.page--portfolio {
   background: var(--selection-bg);
-  color: var(--brand-dark);
+  color: var(--white);
   height: 100svh;
   overflow: hidden;
+}
+
+body.page--portfolio .logo-img {
+  filter: brightness(0) invert(1);
 }
 
 body.page--portfolio .portfolio-stage {
@@ -2872,6 +2875,7 @@ body.page--home #page-stage {
 
 body.page--home.selection-open #page-stage {
   background: var(--selection-bg);
+  color: var(--white);
 }
 
 /* — Moldura: fica no sítio, recolore com ligeiro atraso — */
@@ -2889,16 +2893,12 @@ body.page--home.selection-open .portfolio-btn,
 body.page--home.selection-open .about-btn,
 body.page--home.selection-open .bottom-left-contact,
 body.page--home.selection-open .menu-btn {
-  color: var(--brand-dark);
+  color: var(--white);
 }
 
-/* o PNG do logótipo já é terracota; a home inverte-o para branco.
-   No fundo claro basta desfazer a inversão. Usa-se a identidade
-   brightness(1) invert(0) em vez de none, porque none não interpola
-   e o filtro saltaria em vez de transitar. */
-body.page--home.selection-open .logo-img {
-  filter: brightness(1) invert(0);
-}
+/* o PNG do logotipo ja e terracota; a home inverte-o para branco e agora o
+   portfolio tambem e escuro, por isso a inversao mantem-se dos dois lados da
+   transicao e nao ha nada a desfazer */
 
 /* o sublinhado do Portfólio desenha-se, confirmando onde se aterrou */
 body.page--home .portfolio-btn {
@@ -3194,7 +3194,7 @@ body.selection-open .corner-scroll {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--brand-dark);
+  color: currentColor;
   cursor: pointer;
   opacity: 0.4;
   transition: opacity 0.25s ease;
@@ -3247,30 +3247,15 @@ body.page--home.selection-open .corner-filters {
   padding: 0;
 }
 
-/* A cor e da obra, nao da categoria: ha duas obras "coastal" e nao tem a
-   mesma cor. Estavam em style= nos cards do segundo slide, agora estao
-   aqui, num sitio so, servindo o card e a pagina da obra.
-
-   Sao oito obras e a marca tem quatro cores: cada uma serve duas, alternadas
-   para nunca ficarem lado a lado na grelha. Sobre o amarelo a tinta tem de
-   ser escura -- o branco nao se le -- e o logotipo passa a preto em vez de
-   branco. --card-color pinta, --card-ink escreve, --logo-filtro condiz. */
-.selection-card[href="obra-vilamoura.html"],
-body[data-obra="vilamoura"] { --card-color: var(--brand-primary); }
-.selection-card[href="obra-albufeira-4-moradias.html"],
-body[data-obra="albufeira-4-moradias"] { --card-color: var(--brand-blue); }
-.selection-card[href="obra-pera-7-moradias.html"],
-body[data-obra="pera-7-moradias"] { --card-color: var(--brand-dark); }
-.selection-card[href="obra-casino-armacao-de-pera.html"],
-body[data-obra="casino-armacao-de-pera"] { --card-color: var(--brand-gold); --card-ink: var(--brand-dark); --logo-filtro: brightness(0); }
-.selection-card[href="obra-marina-de-albufeira.html"],
-body[data-obra="marina-de-albufeira"] { --card-color: var(--brand-blue); }
-.selection-card[href="obra-turismo-rural-albufeira.html"],
-body[data-obra="turismo-rural-albufeira"] { --card-color: var(--brand-primary); }
-.selection-card[href="obra-maria-nova-lounge-hotel.html"],
-body[data-obra="maria-nova-lounge-hotel"] { --card-color: var(--brand-gold); --card-ink: var(--brand-dark); --logo-filtro: brightness(0); }
-.selection-card[href="obra-unik-fitness-club.html"],
-body[data-obra="unik-fitness-club"] { --card-color: var(--brand-dark); }
+/* A cor e da area do site, nao da obra. O portfolio e as paginas das obras
+   sao a mesma area e partilham o Ivory Black; a hero tem o terracota, o Sobre
+   o azul, o Contacto o branco -- nunca duas paginas com a mesma cor. Sobre
+   preto a tinta e sempre clara, por isso nao ha excepcoes de tinta nem de
+   logotipo como havia quando uma obra calhava em amarelo. */
+.selection-card,
+body.page--detalhe {
+  --card-color: var(--brand-dark);
+}
 
 /* ============================================================
    Abertura da obra
