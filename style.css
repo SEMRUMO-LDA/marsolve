@@ -1555,28 +1555,9 @@ body.page--internal .selection-preview-bar__link:hover,
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
 }
 
-/* O padrao do menu, em mosaico que fecha (scripts/gerar-padrao-menu.py).
-   O ficheiro que veio do designer -- assets/pattern-menu.svg -- e uma
-   composicao: as formas saem do viewBox e nao voltam a entrar do outro lado,
-   por isso via-se onde o mosaico se juntava. Este assenta numa malha
-   regular e cada forma e desenhada tambem deslocada de uma largura e de uma
-   altura, logo o que sai por um lado entra pelo outro no mesmo sitio. */
-.nav-menu__panel::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image: url('assets/padrao-menu.svg');
-  background-repeat: repeat;
-  background-position: top right;
-  background-size: 200px 270px;
-  pointer-events: none;
-}
-
-.nav-menu__panel > * {
-  position: relative;
-  z-index: 1;
-}
+/* A gaveta fica sem padrao por agora. O ficheiro do designer nao repete e o
+   que eu gerei nao era o desenho certo; fica para quando houver um que sirva.
+   O empilhamento deste painel fica como estava, sem camada por baixo. */
 
 .nav-menu__panel::-webkit-scrollbar {
   display: none;
