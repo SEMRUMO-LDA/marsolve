@@ -3280,22 +3280,24 @@ body[data-obra="unik-fitness-club"] { --card-color: var(--brand-dark); }
    mesma caixa, o nome a correr por tras onde estava o "Building Further".
    Com o scroll o fundo cede ao branco e a ficha le-se sobre ele.
    ============================================================ */
+/* O fundo deixa de saltar para branco a certa altura do scroll: vai virando
+   com a propria abertura e chega a branco no instante em que a imagem chega
+   ao tamanho maximo. So comeca a virar no ultimo terco, para a cor da obra
+   nao passar a maior parte do caminho desmaiada. */
 body.page--detalhe {
-  --veu-cor: var(--card-color);
-}
-
-body.page--detalhe.obra-claro {
-  --veu-cor: var(--white);
+  --mistura: clamp(0, calc((var(--abertura, 0) - 0.62) / 0.38), 1);
+  --veu-cor: var(--fundo-obra);
+  --fundo-obra: color-mix(in srgb,
+    var(--white) calc(var(--mistura) * 100%), var(--card-color));
 }
 
 body.page--detalhe #page-stage {
-  background: var(--card-color);
+  background: var(--fundo-obra);
   color: var(--card-ink);
-  transition: background-color 0.85s var(--standard-easing), color 0.5s ease;
+  transition: color 0.35s ease;
 }
 
 body.page--detalhe.obra-claro #page-stage {
-  background: var(--white);
   color: var(--brand-dark);
 }
 
@@ -3303,7 +3305,7 @@ body.page--detalhe.obra-claro #page-stage {
    sobre o branco */
 body.page--detalhe .logo-img {
   filter: var(--logo-filtro);
-  transition: filter 0.5s ease;
+  transition: filter 0.35s ease;
 }
 
 body.page--detalhe.obra-claro .logo-img {
@@ -3312,7 +3314,7 @@ body.page--detalhe.obra-claro .logo-img {
 
 body.page--detalhe .menu-btn {
   color: var(--card-ink);
-  transition: color 0.5s ease;
+  transition: color 0.35s ease;
 }
 
 body.page--detalhe.obra-claro .menu-btn {

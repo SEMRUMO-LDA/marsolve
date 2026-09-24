@@ -414,6 +414,7 @@
   // obra seguinte. O JS so conta; as medidas estao todas no CSS.
   const grelhaObra = document.querySelector('body.page--detalhe .page-grid');
   if (grelhaObra) {
+    const raiz = document.documentElement;
     const artigo = document.querySelector('.obra');
     const palco = document.querySelector('.obra-hero__palco');
     const fixo = document.querySelector('.obra-hero__fixo');
@@ -457,10 +458,11 @@
     let medidas = null;
     const medir = () => {
       const alturaEcra = grelhaObra.clientHeight;
-      if (artigo) {
-        artigo.style.setProperty('--obra-hero-altura', faixaDaHero().toFixed(1) + 'px');
-        artigo.style.setProperty('--obra-hero-topo', topoDaHero().toFixed(1) + 'px');
-      }
+      // as medidas vao para a raiz, e nao para o artigo: o fundo da pagina
+      // e pintado no #page-stage, que esta acima dele, e uma variavel so
+      // desce, nunca sobe
+      raiz.style.setProperty('--obra-hero-altura', faixaDaHero().toFixed(1) + 'px');
+      raiz.style.setProperty('--obra-hero-topo', topoDaHero().toFixed(1) + 'px');
       medidas = {
         alturaEcra,
         abertura: palco ? {
@@ -501,9 +503,11 @@
       if (medidas.abertura) {
         const a = medidas.abertura;
         const p = a.curso > 0 ? entre((y - a.topo) / a.curso, 0, 1) : 0;
-        artigo.style.setProperty('--abertura', p.toFixed(4));
-        // o fundo so cede ao branco depois de a capa ter crescido
-        document.body.classList.toggle('obra-claro', y > a.topo + a.curso + h * 0.25);
+        raiz.style.setProperty('--abertura', p.toFixed(4));
+        // o fundo acompanha a abertura (no CSS) e chega a branco quando a
+        // imagem chega ao maximo. A tinta nao se pode misturar, por isso
+        // troca de uma vez a meio dessa viragem, onde o fundo ja e claro.
+        document.body.classList.toggle('obra-claro', p > 0.81);
       } else {
         document.body.classList.toggle('obra-claro', y > h * 0.34);
       }
