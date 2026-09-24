@@ -3234,52 +3234,26 @@ body.page--home.selection-open .corner-filters {
 }
 
 /* ------------------------------------------------------------
-   Uma cor por sitio
+   Uma cor por sitio, por inversao
 
-   O terracota e so da casa -- a hero. Era ai que estava a confusao:
-   clicar num card levava a uma pagina com o mesmo desenho e a mesma
-   cor, e a primeira vista parecia que nao se tinha saido do inicio.
+   O terracota e a cor da casa e fica nos cards. O que separa a pagina da
+   obra da hero nao e outra cor -- e a mesma cor ao contrario: a hero e um
+   campo terracota com letra branca, a obra e um campo branco com letra
+   terracota. Mesma familia, leitura oposta. Percebe-se que se mudou de
+   sitio sem sair da marca, e sem por o amarelo ao lado do preto.
 
-   As obras ficam com o Supreme Yellow e o Ivory Black, alternados pela
-   ordem em que aparecem; o Sobre com o Mosaic Blue; o portfolio e o
-   Contacto com o branco. Nenhum ecra repete a cor daquele de onde se veio.
-
-   A cor vive numa variavel so, --card-color, e o card e a pagina da obra
-   leem-na do mesmo sitio: e por isso que o fundo que se abre e sempre o
-   do card que se clicou.
+   O Sobre fica com o Mosaic Blue, o portfolio e o Contacto com o branco.
    ------------------------------------------------------------ */
-
-/* omissao, para uma obra sem cor atribuida */
+.selection-card,
 body.page--detalhe {
-  --card-color: var(--brand-dark);
+  --card-color: var(--brand-primary);
 }
 
-/* Supreme Yellow: a letra escurece e o logotipo passa a preto -- o terracota
-   sobre o amarelo nao se le. Quando o fundo cede ao branco, .obra-claro tira
-   o filtro e o logotipo volta a sua cor. */
-.selection-card[href="obra-vilamoura.html"],
-body[data-obra="vilamoura"],
-.selection-card[href="obra-pera-7-moradias.html"],
-body[data-obra="pera-7-moradias"],
-.selection-card[href="obra-marina-de-albufeira.html"],
-body[data-obra="marina-de-albufeira"],
-.selection-card[href="obra-maria-nova-lounge-hotel.html"],
-body[data-obra="maria-nova-lounge-hotel"] {
-  --card-color: var(--brand-gold);
-  --card-ink: var(--brand-dark);
-  --logo-filtro: brightness(0);
-}
-
-/* Ivory Black: letra branca, como na hero */
-.selection-card[href="obra-albufeira-4-moradias.html"],
-body[data-obra="albufeira-4-moradias"],
-.selection-card[href="obra-casino-armacao-de-pera.html"],
-body[data-obra="casino-armacao-de-pera"],
-.selection-card[href="obra-turismo-rural-albufeira.html"],
-body[data-obra="turismo-rural-albufeira"],
-.selection-card[href="obra-unik-fitness-club.html"],
-body[data-obra="unik-fitness-club"] {
-  --card-color: var(--brand-dark);
+/* a obra abre invertida: o fundo e branco e a tinta e a cor do card. O
+   logotipo e nativamente terracota, por isso nao leva filtro nenhum. */
+body.page--detalhe {
+  --card-ink: var(--brand-primary);
+  --logo-filtro: none;
 }
 
 /* o Sobre e a sua propria area, e abre no azul */
@@ -3307,6 +3281,12 @@ body.page--detalhe {
   --veu-cor: var(--fundo-obra);
   --fundo-obra: color-mix(in srgb,
     var(--white) calc(var(--mistura) * 100%), var(--card-color));
+}
+
+/* uma obra ja abre em branco -- a inversao e o efeito, nao ha cor a
+   desvanecer. Quem ainda vira do azul para o branco e so o Sobre. */
+body.page--detalhe:not(.page--sobre) {
+  --fundo-obra: var(--white);
 }
 
 body.page--detalhe #page-stage {
