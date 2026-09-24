@@ -8,18 +8,18 @@
 
 /* — Custom Properties — */
 :root {
-  --brand-primary: #C0584A;
-  --brand-teal: #1A8A8D;
-  --brand-gold: #E7C826;
-  --brand-dark: #231F20;
-  --navy: var(--brand-primary);
-  --muted: #A07A72;
+  /* As quatro cores do manual da marca, com os valores do manual. Nao ha
+     outras: o que aqui nao estiver e engano. */
+  --brand-primary: #C7554A;   /* Grapefruit */
+  --brand-blue: #00758F;      /* Mosaic Blue */
+  --brand-gold: #E7C826;      /* Supreme Yellow */
+  --brand-dark: #231F20;      /* Ivory Black */
   --white: #FFFFFF;
 
-  --category-coastal: #C0584A;
-  --category-villas: #1A8A8D;
-  --category-urban: #231F20;
-  --category-premium: #8B6B3D;
+  /* tinta por omissao sobre a cor de uma obra; o amarelo troca-as */
+  --card-ink: var(--white);
+  --logo-filtro: brightness(0) invert(1);
+
   --selection-bg: #F2EDEB;
 
   --sans-font: 'Gantari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -414,7 +414,7 @@ html.preloader-done .site-preloader {
 }
 
 .bottom-left-contact--white:hover {
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 body:not(.is-ready) .bottom-left-contact {
@@ -448,16 +448,16 @@ body.selection-open .bottom-left-contact {
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  color: var(--white);
+  color: var(--card-ink);
   text-align: left;
   cursor: pointer;
   transition: filter 0.8s cubic-bezier(.18, .13, 0, .99);
 }
 
-.selection-card[data-category="coastal"] { --card-color: var(--category-coastal); }
-.selection-card[data-category="villas"] { --card-color: var(--category-villas); }
-.selection-card[data-category="urban"] { --card-color: var(--category-urban); }
-.selection-card[data-category="premium"] { --card-color: var(--category-premium); }
+.selection-card[data-category="coastal"] { --card-color: var(--brand-primary); }
+.selection-card[data-category="villas"] { --card-color: var(--brand-blue); }
+.selection-card[data-category="urban"] { --card-color: var(--brand-dark); }
+.selection-card[data-category="premium"] { --card-color: var(--brand-gold); }
 
 .selection-card__panel {
   position: relative;
@@ -558,7 +558,7 @@ body.selection-open .bottom-left-contact {
   font-size: var(--selection-card-desc-size);
   font-weight: 400;
   line-height: 1.35;
-  color: #fff;
+  color: currentColor;
   opacity: 0.8;
 }
 
@@ -775,7 +775,7 @@ body[data-home-theme="terracotta"] .portfolio-btn:hover,
 body[data-home-theme="terracotta"] .about-btn:hover,
 .page-stage--terracotta .portfolio-btn:hover,
 .page-stage--terracotta .about-btn:hover {
-  color: #E7C826;
+  color: var(--brand-gold);
 }
 
 html[data-home-theme="terracotta"] .bottom-left-contact,
@@ -787,7 +787,7 @@ body[data-home-theme="terracotta"] .bottom-left-contact,
 html[data-home-theme="terracotta"] .bottom-left-contact:hover,
 body[data-home-theme="terracotta"] .bottom-left-contact:hover,
 .page-stage--terracotta .bottom-left-contact:hover {
-  color: #E7C826;
+  color: var(--brand-gold);
 }
 
 html[data-home-theme="terracotta"] .hero-content h1,
@@ -829,7 +829,7 @@ html[data-home-theme="terracotta"] .menu-btn:hover,
 body[data-home-theme="terracotta"] .menu-btn:hover,
 .page-stage--terracotta .menu-btn:hover,
 .menu-btn--about:hover {
-  color: #E7C826;
+  color: var(--brand-gold);
 }
 
 /* — 2. WHITE THEME (Fundo Branco & Texto Escuro) — */
@@ -873,7 +873,7 @@ body[data-home-theme="white"] .portfolio-btn:hover,
 body[data-home-theme="white"] .about-btn:hover,
 .page-stage--white .portfolio-btn:hover,
 .page-stage--white .about-btn:hover {
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 html[data-home-theme="white"] .bottom-left-contact,
@@ -885,7 +885,7 @@ body[data-home-theme="white"] .bottom-left-contact,
 html[data-home-theme="white"] .bottom-left-contact:hover,
 body[data-home-theme="white"] .bottom-left-contact:hover,
 .page-stage--white .bottom-left-contact:hover {
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 html[data-home-theme="white"] .hero-content h1,
@@ -925,13 +925,13 @@ body[data-home-theme="white"] .menu-btn,
 html[data-home-theme="white"] .menu-btn:hover,
 body[data-home-theme="white"] .menu-btn:hover,
 .page-stage--white .menu-btn:hover {
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 /* — 3. MOSAIC BLUE THEME (Sobre / About Page) — */
 body.page--mosaic,
 .page-stage--mosaic {
-  background: #00758F !important;
+  background: var(--brand-blue) !important;
   color: #ffffff !important;
 }
 
@@ -953,7 +953,7 @@ body.page--mosaic,
 .page-stage--mosaic .about-btn:hover,
 .page-stage--mosaic .contact-btn:hover,
 .page-stage--mosaic .bottom-left-contact:hover {
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 .page-stage--mosaic .bottom-left-contact {
@@ -966,7 +966,7 @@ body.page--mosaic,
 }
 
 .page-stage--mosaic .menu-btn:hover {
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 /* — 4. INTERNAL PAGES (Opacidade de 20% na cor dos hiperlinks dos menus) — */
@@ -1039,7 +1039,7 @@ body.page--internal .selection-preview-bar__link:hover,
 .page--white:not(.page--home) .contact-btn:hover,
 .page--white:not(.page--home) .bottom-left-contact:hover {
   opacity: 1 !important;
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 /* — Theme Toggle Switcher — */
@@ -1132,7 +1132,7 @@ body.page--internal .selection-preview-bar__link:hover,
 .portfolio-btn:hover,
 .bottom-left-contact:hover,
 .selection-preview-bar__link:hover {
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 .portfolio-btn {
@@ -1221,7 +1221,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .our-selection-btn--white {
   --selection-btn-fill: #ffffff;
-  --selection-btn-hover-text: var(--category-coastal);
+  --selection-btn-hover-text: var(--brand-primary);
   --selection-btn-bg: transparent;
   border-color: #ffffff;
   color: #ffffff;
@@ -1229,7 +1229,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .our-selection-btn--white:hover {
   background-position: 0 0;
-  color: var(--category-coastal);
+  color: var(--brand-primary);
 }
 
 .our-selection-btn svg {
@@ -1272,7 +1272,7 @@ body.page--internal .selection-preview-bar__link:hover,
 .menu-btn--about:hover,
 .menu-btn--white:hover {
   background: transparent !important;
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 .menu-btn:focus, .menu-btn:focus-visible { outline: none !important; }
@@ -1300,7 +1300,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .menu-btn:hover .menu-btn__icon-box {
   transform: translateY(-2px) scale(1.12);
-  color: #E7C826 !important;
+  color: var(--brand-gold) !important;
 }
 
 .menu-btn:active .menu-btn__icon-box {
@@ -1534,10 +1534,7 @@ body.page--internal .selection-preview-bar__link:hover,
   max-width: 100vw;
   height: 100%;
   background-color: #ffffff;
-  background-image: url('assets/sidebar-pattern.png');
-  background-repeat: repeat;
-  background-position: top right;
-  background-size: 118px 150px;
+
   color: var(--brand-dark);
   display: flex;
   flex-direction: column;
@@ -1549,6 +1546,28 @@ body.page--internal .selection-preview-bar__link:hover,
   scrollbar-width: none;
   -ms-overflow-style: none;
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.15);
+}
+
+/* O padrao de losangos do manual. Como mascara e nao como imagem: assim a
+   cor e a forca sao daqui, e o mesmo ficheiro serve o menu claro e a
+   abertura das obras, que tanto e escura como amarela. */
+.nav-menu__panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--brand-dark);
+  -webkit-mask-image: url('assets/padrao-losangos.svg');
+  mask-image: url('assets/padrao-losangos.svg');
+  -webkit-mask-size: 120px 152px;
+  mask-size: 120px 152px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.nav-menu__panel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .nav-menu__panel::-webkit-scrollbar {
@@ -1584,8 +1603,8 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .nav-menu__close:hover {
   background: rgba(192, 88, 74, 0.08);
-  border-color: #C0584A;
-  color: #C0584A;
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
   transform: rotate(90deg);
 }
 
@@ -1619,7 +1638,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .drawer-nav__link:hover {
   transform: translateX(10px);
-  color: #00758F;
+  color: var(--brand-blue);
   opacity: 1;
 }
 
@@ -1627,7 +1646,7 @@ body.page--internal .selection-preview-bar__link:hover,
   font-family: var(--sans-font);
   font-size: 0.72rem;
   font-weight: 500;
-  color: #C0584A;
+  color: var(--brand-primary);
   opacity: 0.85;
   letter-spacing: 0.16em;
   min-width: 2rem;
@@ -1687,7 +1706,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .drawer-social-link:hover {
   opacity: 1;
-  color: #00758F;
+  color: var(--brand-blue);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -1716,7 +1735,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .drawer-footer__contact-item:hover {
   opacity: 1;
-  color: #00758F;
+  color: var(--brand-blue);
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -1749,7 +1768,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .drawer-legal-link:hover {
   opacity: 1;
-  color: #00758F;
+  color: var(--brand-blue);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -1863,7 +1882,7 @@ body.page--internal .selection-preview-bar__link:hover,
 .drawer-form select:focus,
 .drawer-form textarea:focus {
   background: #ffffff;
-  border-color: #C0584A;
+  border-color: var(--brand-primary);
   box-shadow: 0 0 0 3px rgba(192, 88, 74, 0.15);
 }
 
@@ -1880,7 +1899,7 @@ body.page--internal .selection-preview-bar__link:hover,
   width: 100%;
   padding: 0.9rem 1.4rem;
   margin-top: 0.3rem;
-  background: #C0584A;
+  background: var(--brand-primary);
   color: #ffffff;
   border: none;
   border-radius: 4px;
@@ -1922,7 +1941,7 @@ body.page--internal .selection-preview-bar__link:hover,
   height: 44px;
   line-height: 44px;
   border-radius: 50%;
-  background: #C0584A;
+  background: var(--brand-primary);
   color: #ffffff;
   font-size: 1.4rem;
   font-weight: bold;
@@ -2405,7 +2424,7 @@ body.is-ready .site-preloader {
 
 .value-card p {
   font-size: var(--text-size);
-  color: var(--muted);
+  color: var(--brand-dark);
   line-height: 1.6;
 }
 
@@ -2790,7 +2809,7 @@ body.is-ready .site-preloader {
   align-items: flex-start;
   gap: 1em;
   font-size: calc(var(--text-size) * 0.85);
-  color: var(--muted);
+  color: var(--brand-dark);
   cursor: pointer;
 }
 
@@ -3223,23 +3242,28 @@ body.page--home.selection-open .corner-filters {
 
 /* A cor e da obra, nao da categoria: ha duas obras "coastal" e nao tem a
    mesma cor. Estavam em style= nos cards do segundo slide, agora estao
-   aqui, num sitio so, servindo o card e a pagina da obra. */
-.selection-card[href="obra-vilamoura.html"] .selection-card__panel,
-body[data-obra="vilamoura"] { --card-color: #C0584A; }
-.selection-card[href="obra-albufeira-4-moradias.html"] .selection-card__panel,
-body[data-obra="albufeira-4-moradias"] { --card-color: #1A8A8D; }
-.selection-card[href="obra-pera-7-moradias.html"] .selection-card__panel,
-body[data-obra="pera-7-moradias"] { --card-color: #231F20; }
-.selection-card[href="obra-casino-armacao-de-pera.html"] .selection-card__panel,
-body[data-obra="casino-armacao-de-pera"] { --card-color: #8B6B3D; }
-.selection-card[href="obra-marina-de-albufeira.html"] .selection-card__panel,
-body[data-obra="marina-de-albufeira"] { --card-color: #2F4F54; }
-.selection-card[href="obra-turismo-rural-albufeira.html"] .selection-card__panel,
-body[data-obra="turismo-rural-albufeira"] { --card-color: #3C4A3E; }
-.selection-card[href="obra-maria-nova-lounge-hotel.html"] .selection-card__panel,
-body[data-obra="maria-nova-lounge-hotel"] { --card-color: #4D3F38; }
-.selection-card[href="obra-unik-fitness-club.html"] .selection-card__panel,
-body[data-obra="unik-fitness-club"] { --card-color: #5C3D4A; }
+   aqui, num sitio so, servindo o card e a pagina da obra.
+
+   Sao oito obras e a marca tem quatro cores: cada uma serve duas, alternadas
+   para nunca ficarem lado a lado na grelha. Sobre o amarelo a tinta tem de
+   ser escura -- o branco nao se le -- e o logotipo passa a preto em vez de
+   branco. --card-color pinta, --card-ink escreve, --logo-filtro condiz. */
+.selection-card[href="obra-vilamoura.html"],
+body[data-obra="vilamoura"] { --card-color: var(--brand-primary); }
+.selection-card[href="obra-albufeira-4-moradias.html"],
+body[data-obra="albufeira-4-moradias"] { --card-color: var(--brand-blue); }
+.selection-card[href="obra-pera-7-moradias.html"],
+body[data-obra="pera-7-moradias"] { --card-color: var(--brand-dark); }
+.selection-card[href="obra-casino-armacao-de-pera.html"],
+body[data-obra="casino-armacao-de-pera"] { --card-color: var(--brand-gold); --card-ink: var(--brand-dark); --logo-filtro: brightness(0); }
+.selection-card[href="obra-marina-de-albufeira.html"],
+body[data-obra="marina-de-albufeira"] { --card-color: var(--brand-blue); }
+.selection-card[href="obra-turismo-rural-albufeira.html"],
+body[data-obra="turismo-rural-albufeira"] { --card-color: var(--brand-primary); }
+.selection-card[href="obra-maria-nova-lounge-hotel.html"],
+body[data-obra="maria-nova-lounge-hotel"] { --card-color: var(--brand-gold); --card-ink: var(--brand-dark); --logo-filtro: brightness(0); }
+.selection-card[href="obra-unik-fitness-club.html"],
+body[data-obra="unik-fitness-club"] { --card-color: var(--brand-dark); }
 
 /* ============================================================
    Abertura da obra
@@ -3260,7 +3284,7 @@ body.page--detalhe.obra-claro {
 
 body.page--detalhe #page-stage {
   background: var(--card-color);
-  color: var(--white);
+  color: var(--card-ink);
   transition: background-color 0.85s var(--standard-easing), color 0.5s ease;
 }
 
@@ -3272,7 +3296,7 @@ body.page--detalhe.obra-claro #page-stage {
 /* o logotipo e nativamente terracota: branco sobre a cor, ele proprio
    sobre o branco */
 body.page--detalhe .logo-img {
-  filter: brightness(0) invert(1);
+  filter: var(--logo-filtro);
   transition: filter 0.5s ease;
 }
 
@@ -3282,7 +3306,7 @@ body.page--detalhe.obra-claro .logo-img {
 
 body.page--detalhe .menu-btn,
 body.page--detalhe .corner-proxima {
-  color: var(--white);
+  color: var(--card-ink);
   transition: color 0.5s ease;
 }
 
@@ -3299,6 +3323,28 @@ body.page--detalhe.obra-claro .corner-proxima {
   justify-content: center;
   align-items: center;
   gap: 1.1vw;
+}
+
+/* o mesmo padrao, quase invisivel, sobre a cor da obra; usado como mascara
+   para o traco seguir a tinta em vez de ser sempre escuro */
+.obra-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  -webkit-mask-image: url('assets/padrao-losangos.svg');
+  mask-image: url('assets/padrao-losangos.svg');
+  -webkit-mask-size: 120px 152px;
+  mask-size: 120px 152px;
+  opacity: 0.07;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+body.obra-claro .obra-hero::before { opacity: 0; }
+
+.obra-hero {
+  position: relative;
 }
 
 .obra-hero__palco {
@@ -3334,10 +3380,11 @@ body.page--detalhe.obra-claro .corner-proxima {
   border-radius: 0 0 clamp(24px, 2.8vw, 42px) 0;
 }
 
-/* sobre a cor do card, o nome atras da foto e branco esbatido */
+/* o nome atras da foto segue a tinta da obra: claro sobre as cores
+   escuras, escuro sobre o amarelo */
 .obra-hero .marquee-text,
 .obra-hero .marquee-sep {
-  color: var(--white);
+  color: currentColor;
 }
 
 .obra-hero .marquee-text { opacity: 0.16; }
