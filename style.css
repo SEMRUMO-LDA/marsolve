@@ -3215,24 +3215,116 @@ body.page--home.selection-open .corner-filters {
 }
 
 /* — Ficha da obra — */
-.obra-titulo {
-  font-family: var(--sans-font);
-  font-size: var(--hero-h1-size);
-  font-weight: 700;
-  text-align: center;
-  letter-spacing: -0.02em;
-  color: var(--brand-dark);
-  margin-bottom: 1.4em;
-  text-wrap: balance;
+.obra-content {
+  /* largura toda da moldura: a abertura e a continuacao do card, nao um
+     documento centrado */
+  grid-column: 1 / -1;
+  grid-row: 2;
+  padding: 0;
 }
 
-.obra-ficha {
-  margin-top: 4vw;
-  border-top: 1px solid rgba(35, 31, 32, 0.1);
-  padding-top: 3vw;
+/* Espaco para a barra de baixo, que e fixa. Tem de ficar no proprio
+   contentor que rola -- posto no filho, o browser corta-o e o fim da pagina
+   fica preso debaixo do link. */
+body.page--detalhe .page-grid {
+  /* A linha do meio era 1fr, ou seja a altura do ecra, e o conteudo mais
+     comprido transbordava dela; o browser nao conta esse transbordo todo e o
+     fim da pagina ficava preso debaixo da barra fixa. Com auto, a linha mede
+     o que la esta. */
+  grid-template-rows: auto auto auto;
+  padding-bottom: calc(var(--grid-padding) + var(--nav-action-height) + 4vw);
+}
+
+/* — Abertura: o card em ponto grande — */
+.obra-abertura {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
-  gap: 4vw;
+  grid-template-columns: minmax(200px, 0.42fr) minmax(0, 1fr);
+  height: min(66svh, 640px);
+  min-height: 340px;
+}
+
+.obra[data-category="coastal"] { --card-color: var(--category-coastal); }
+.obra[data-category="villas"]  { --card-color: var(--category-villas); }
+.obra[data-category="urban"]   { --card-color: var(--category-urban); }
+.obra[data-category="premium"] { --card-color: var(--category-premium); }
+
+.obra-painel {
+  position: relative;
+  /* a mesma grelha do painel do card, para o losango, o nome e a legenda
+     caírem nos mesmos cantos */
+  container-type: size;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
+  padding: var(--selection-card-padding);
+  background: var(--card-color);
+  color: var(--white);
+}
+
+.obra-painel__simbolo {
+  grid-column: 1;
+  grid-row: 1;
+  width: var(--selection-card-symbol-width);
+  height: auto;
+}
+
+/* o h1 nao desenha nada: serve para o nome e a legenda continuarem a ser um
+   titulo so, mesmo caindo em cantos opostos do painel */
+.obra-titulo {
+  display: contents;
+  margin: 0;
+}
+
+.obra-titulo__local {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: end;
+  justify-self: end;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--sans-font);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  /* como no card: e o comprimento do nome que manda, medido contra o painel */
+  font-size: min(5vw, calc(92cqh / var(--chars, 10)));
+}
+
+.obra-titulo__obra {
+  grid-column: 1;
+  grid-row: 3;
+  align-self: end;
+  font-family: var(--sans-font);
+  font-size: clamp(0.95rem, 1.15vw, 1.3rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.category-cover {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.category-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* — Ficha — */
+/* Feita para aguentar uma frase ou cinco paragrafos: a coluna do texto cresce
+   sozinha e a dos dados aceita os campos que houver. */
+.obra-ficha {
+  margin-top: 3.4vw;
+  padding-top: 2.6vw;
+  border-top: 1px solid rgba(35, 31, 32, 0.12);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
+  gap: var(--grid-gap);
   align-items: start;
 }
 
@@ -3240,63 +3332,53 @@ body.page--home.selection-open .corner-filters {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.4rem;
+  gap: 1.5rem;
 }
 
 .obra-dados div {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .obra-dados dt {
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(35, 31, 32, 0.45);
+  color: rgba(35, 31, 32, 0.4);
 }
 
 .obra-dados dd {
   margin: 0;
-  font-size: 1.05rem;
+  font-family: var(--sans-font);
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
   font-weight: 600;
   color: var(--brand-dark);
 }
 
-.obra-descricao {
-  margin: 0;
-  font-size: clamp(1rem, 1.35vw, 1.35rem);
-  line-height: 1.65;
-  color: #555;
+.obra-texto {
   max-width: 62ch;
+  font-size: clamp(1rem, 1.25vw, 1.3rem);
+  line-height: 1.7;
+  color: #4a4646;
 }
 
-@media (max-width: 900px) {
-  .obra-ficha {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2.2rem;
-  }
-  .obra-dados {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1.8rem;
-  }
-}
+.obra-texto p { margin: 0; }
+.obra-texto p + p { margin-top: 1.1em; }
 
-
-/* — Galeria da obra — */
+/* — Galeria — */
 .obra-galeria {
-  margin-top: 5vw;
+  margin-top: 4vw;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: 1.2vw;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: clamp(10px, 1.1vw, 22px);
 }
 
 .obra-galeria__item {
   margin: 0;
   overflow: hidden;
-  border-radius: 0.6vw;
   background: rgba(35, 31, 32, 0.04);
 }
 
@@ -3313,12 +3395,101 @@ body.page--home.selection-open .corner-filters {
   transform: scale(1.04);
 }
 
+/* O conteudo corre por baixo da barra fixa; sem isto o texto passava por
+   cima do link e do diamante e ficava ilegivel. */
+body.page--detalhe #page-stage::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--grid-padding) + var(--nav-action-height) + 3vw);
+  background: linear-gradient(to top,
+    #ffffff 40%,
+    rgba(255, 255, 255, 0.92) 66%,
+    rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 90;
+}
+
+/* — Canto: proxima obra — */
+/* Fixo como o diamante e na mesma linha, para a moldura ser a mesma que no
+   portfolio, mesmo com a pagina a correr por baixo. */
+.corner-proxima {
+  position: fixed;
+  left: var(--grid-padding);
+  bottom: var(--grid-padding);
+  z-index: 100;
+  height: var(--nav-action-height);
+  display: flex;
+  align-items: center;
+  gap: 0.85em;
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--brand-dark);
+  transition: opacity 0.25s ease;
+}
+
+.corner-proxima__rotulo {
+  font-weight: 500;
+  opacity: 0.4;
+}
+
+.corner-proxima__nome {
+  position: relative;
+}
+
+.corner-proxima__nome::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.corner-proxima:hover .corner-proxima__nome::after { transform: scaleX(1); }
+
+@media (max-width: 900px) {
+  .obra-abertura {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: auto;
+  }
+  .obra-painel {
+    /* sem altura para o nome correr na vertical, volta a horizontal */
+    min-height: 26svh;
+  }
+  .obra-titulo__local {
+    writing-mode: horizontal-tb;
+    transform: none;
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    font-size: clamp(2rem, 8vw, 3.4rem);
+  }
+  .obra-titulo__obra { grid-row: 3; }
+  .category-cover { aspect-ratio: 4 / 3; }
+  .obra-ficha {
+    grid-template-columns: 1fr;
+    gap: 2.4rem;
+  }
+}
+
 @media (max-width: 650px) {
   .obra-galeria {
     grid-template-columns: 1fr;
     gap: 3vw;
   }
-  .obra-galeria__item {
-    border-radius: 2vw;
-  }
+  .corner-proxima__rotulo { display: none; }
 }
+
