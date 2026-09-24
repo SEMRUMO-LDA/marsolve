@@ -3256,11 +3256,11 @@ body.page--detalhe {
   --logo-filtro: none;
 }
 
-/* o Sobre e a sua propria area, e abre no azul */
+/* o Sobre inverte-se da mesma maneira, mas no Mosaic Blue: mesmo gesto que
+   a obra, outra cor. O logotipo fica na sua cor em ambas. */
 body.page--sobre {
   --card-color: var(--brand-blue);
-  --card-ink: var(--white);
-  --logo-filtro: brightness(0) invert(1);
+  --card-ink: var(--brand-blue);
 }
 
 /* ============================================================
@@ -3268,29 +3268,17 @@ body.page--sobre {
 
    Clicar num card nao devia levar a um documento: devia levar ao mesmo
    sitio de onde se veio, agora dedicado aquela obra. Por isso a pagina
-   abre como a hero -- fundo cheio da cor do card, a foto ao centro na
-   mesma caixa, o nome a correr por tras onde estava o "Building Further".
-   Com o scroll o fundo cede ao branco e a ficha le-se sobre ele.
+   abre como a hero -- a foto ao centro na mesma caixa, o nome a correr por
+   tras onde estava o "Building Further" -- mas invertida: onde a hero tem
+   campo terracota e letra branca, a obra tem campo branco e letra
+   terracota. Com o scroll a foto cresce ate encher o ecra.
    ============================================================ */
-/* O fundo deixa de saltar para branco a certa altura do scroll: vai virando
-   com a propria abertura e chega a branco no instante em que a imagem chega
-   ao tamanho maximo. So comeca a virar no ultimo terco, para a cor da obra
-   nao passar a maior parte do caminho desmaiada. */
-body.page--detalhe {
-  --mistura: clamp(0, calc((var(--abertura, 0) - 0.62) / 0.38), 1);
-  --veu-cor: var(--fundo-obra);
-  --fundo-obra: color-mix(in srgb,
-    var(--white) calc(var(--mistura) * 100%), var(--card-color));
-}
-
-/* uma obra ja abre em branco -- a inversao e o efeito, nao ha cor a
-   desvanecer. Quem ainda vira do azul para o branco e so o Sobre. */
-body.page--detalhe:not(.page--sobre) {
-  --fundo-obra: var(--white);
-}
-
+/* Nenhuma pagina interna muda de cor com o scroll: abrem ja invertidas e
+   ficam assim. O fundo e sempre branco -- muda a tinta, terracota na obra
+   e azul no Sobre -- e o que se move e so a imagem a crescer. A tinta
+   escurece quando a imagem chega ao maximo, para a ficha se ler. */
 body.page--detalhe #page-stage {
-  background: var(--fundo-obra);
+  background: var(--white);
   color: var(--card-ink);
   transition: color 0.35s ease;
 }
