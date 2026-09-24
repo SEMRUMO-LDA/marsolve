@@ -10,26 +10,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Gantari:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,700&amp;family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,600;1,8..60,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=6">
 </head>
-<body class="is-ready page--mosaic page--internal" style="background: #00758F;">
+<body class="is-ready page--internal page--detalhe page--sobre">
 
   <!-- Selection Menu (Our Selection overlay) -->
   <div id="selection-shell">
 
     <!-- Main Page -->
-    <div id="page-stage" class="page-stage--mosaic" style="background: #00758F; color: white;">
+    <div id="page-stage">
       <main>
         <div class="page-grid page-grid--scrollable">
 
           <!-- Navigation -->
-          <nav class="site-nav" aria-label="Primary" style="color: white;">
+          <nav class="site-nav" aria-label="Primary">
             <header class="logo">
-              <a href="index.html" aria-label="Marsolve - home" style="color: white;">
-                <img class="logo-img logo-img--white" src="assets/logo-horizontal.png" alt="Marsolve" width="1084" height="125">
+              <a href="index.html" aria-label="Marsolve - home">
+                <img class="logo-img" src="assets/logo-horizontal.png" alt="Marsolve" width="1084" height="125">
               </a>
             </header>
 
             <div class="site-nav__actions animate">
-              <button type="button" class="menu-btn menu-btn--about" aria-label="Abrir menu" aria-expanded="false" id="menu-toggle-btn">
+              <button type="button" class="menu-btn" aria-label="Abrir menu" aria-expanded="false" id="menu-toggle-btn">
                 <span class="menu-btn__icon-box">
                   <svg class="menu-btn__svg" viewBox="0 0 418.76 799.46" fill="none" aria-hidden="true">
                     <rect fill="currentColor" x="106.39" y="734.12" width="205.98" height="65.34" rx="10.07" ry="10.07"/>
@@ -42,96 +42,97 @@
 
           <!-- Contacto no Canto Inferior Esquerdo -->
 
-          <div class="internal-content fade-in-up">
-            
-            <!-- Category Hero Style -->
-            <section class="category-hero">
-              <div class="category-cover" style="width: 100%; aspect-ratio: 16/9; overflow: hidden; border-radius: 1vw;">
-                <picture>
-                  <source srcset="assets/obras/marina-de-albufeira/web/capa.avif" type="image/avif">
-                  <source srcset="assets/obras/marina-de-albufeira/web/capa.webp" type="image/webp">
-                  <img src="assets/obras/marina-de-albufeira/web/capa.jpg" style="width:100%; height:100%; object-fit:cover;" alt="Marsolve Construção Algarve">
-                </picture>
-              </div>
-            </section>
+          <div class="internal-content obra-content fade-in-up">
+          <article class="obra">
 
-            <!-- Introdução -->
-            <section class="about-intro" style="margin-top: 5vw; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5vw;">
-              <p class="section-label" style="color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; font-size: calc(var(--text-size) * 0.85); margin-bottom: 1.5em;">(Quem Somos)</p>
-              <h2 class="about-intro__title" style="font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.55); font-weight: 300; line-height: 1.45; color: white;">
-                A <span style="font-style: italic; font-weight: 700; color: white;">MARSOLVE</span> é uma empresa de construção civil de grande referência na região do Algarve, com mais de 10 anos de experiência consolidada no mercado. Reconhecida como sinónimo de qualidade e garantia, a empresa dedica-se não só à construção civil, mas também a áreas como a topografia e a prestação de serviços complementares de limpeza e gestão de propriedades.
-              </h2>
-            </section>
-
-            <!-- O que os distingue -->
-            <section class="about-distinction" style="margin-top: 5vw; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5vw;">
-              <div class="about-distinction-grid">
-                <div>
-                  <p class="section-label" style="color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; font-size: calc(var(--text-size) * 0.85); margin-bottom: 1em;">(Diferenciação)</p>
-                  <h3 style="font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.4); font-style: italic; font-weight: 700; color: white; line-height: 1.25;">O que os distingue</h3>
+            <!-- A mesma abertura das paginas das obras: a foto na caixa da
+                 hero, a crescer com o scroll, e o fundo a ceder ao branco. -->
+            <header class="obra-hero">
+              <div class="obra-hero__palco">
+                <div class="obra-hero__fixo">
+                  <div class="hero-section">
+                    <div class="hero-top">
+                      <div class="hero-visual">
+                        <picture>
+                          <source srcset="assets/obras/marina-de-albufeira/web/capa.avif" type="image/avif">
+                          <source srcset="assets/obras/marina-de-albufeira/web/capa.webp" type="image/webp">
+                          <img class="hero-opening-media" src="assets/obras/marina-de-albufeira/web/capa.jpg" alt="Obra da Marsolve no Algarve" width="1024" height="683">
+                        </picture>
+                      </div>
+                      <div class="marquee" aria-hidden="true">
+                        <div class="marquee-scroll">
+                          <div class="marquee-collection">
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                          <div class="marquee-collection" aria-hidden="true">
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Quem somos</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="hero-bottom">
+                      <div class="hero-content">
+                        <h1>Constru&ccedil;&atilde;o civil no Algarve, <em>h&aacute; mais de 10 anos</em></h1>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p style="font-size: calc(var(--text-size) * 1.15); color: rgba(255,255,255,0.92); line-height: 1.7; margin-bottom: 1.5em; font-weight: 400;">
-                    O grande fator de diferenciação da <strong>MARSOLVE</strong> face à concorrência reside na sua capacidade de gerir eficazmente os projetos e manter uma interação muito próxima com o cliente. O objetivo principal é garantir que o serviço prestado corresponde de forma exata às necessidades e desejos de cada cliente.
-                  </p>
-                  <p style="font-size: calc(var(--text-size) * 1.05); color: rgba(255,255,255,0.8); line-height: 1.7; font-weight: 400;">
-                    Esta abordagem tem permitido estabelecer e manter uma excelente relação de confiança com promotores, parceiros, trabalhadores e clientes (contando já com o testemunho positivo de entidades de renome como o <strong>Grupo AP Hotels &amp; Resorts</strong>).
-                  </p>
-                </div>
+              </div>
+            </header>
+
+            <section class="sobre-bloco">
+              <p class="sobre-rotulo">(Quem somos)</p>
+              <div class="sobre-texto">
+                <p class="sobre-destaque">A <em>MARSOLVE</em> &eacute; uma empresa de constru&ccedil;&atilde;o civil de grande refer&ecirc;ncia na regi&atilde;o do Algarve, com mais de 10 anos de experi&ecirc;ncia consolidada no mercado. Reconhecida como sin&oacute;nimo de qualidade e garantia, a empresa dedica-se n&atilde;o s&oacute; &agrave; constru&ccedil;&atilde;o civil, mas tamb&eacute;m a &aacute;reas como a topografia e a presta&ccedil;&atilde;o de servi&ccedil;os complementares de limpeza e gest&atilde;o de propriedades.</p>
               </div>
             </section>
 
-            <!-- Visão e Valores -->
-            <section class="about-values" style="margin-top: 6vw; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 5vw;">
-              <div>
-                <p class="section-label" style="color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; font-size: calc(var(--text-size) * 0.85); margin-bottom: 1em;">(Princípios &amp; Propósito)</p>
-                <h3 style="font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.4); font-style: italic; font-weight: 700; color: white; line-height: 1.25; margin-bottom: 1em;">Visão e Valores</h3>
-                <p style="font-size: calc(var(--text-size) * 1.1); color: rgba(255,255,255,0.85); line-height: 1.7; max-width: 52em; margin-bottom: 3.5vw;">
-                  A visão da empresa é clara: ser a primeira escolha na área da construção para os diversos stakeholders na região algarvia. Para atingir este objetivo, a MARSOLVE atua com base num conjunto de valores fundamentais:
-                </p>
-              </div>
-
-              <div class="values-grid" style="margin-top: 2vw;">
-                <article class="value-card">
-                  <span class="value-number" style="color: rgba(255,255,255,0.6);">(01)</span>
-                  <h4 style="color: white; font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.2); font-style: italic; font-weight: 700; line-height: 1.2;">Liderar pelo exemplo</h4>
-                  <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">Liderar pelo exemplo;</p>
-                </article>
-
-                <article class="value-card">
-                  <span class="value-number" style="color: rgba(255,255,255,0.6);">(02)</span>
-                  <h4 style="color: white; font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.2); font-style: italic; font-weight: 700; line-height: 1.2;">Trabalho em equipa</h4>
-                  <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">Trabalhar em equipa, ouvindo atentamente todos os intervenientes nos projetos;</p>
-                </article>
-
-                <article class="value-card">
-                  <span class="value-number" style="color: rgba(255,255,255,0.6);">(03)</span>
-                  <h4 style="color: white; font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.2); font-style: italic; font-weight: 700; line-height: 1.2;">Cumprir as promessas</h4>
-                  <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">Cumprir as promessas, trabalhando sempre com o objetivo de as exceder;</p>
-                </article>
-
-                <article class="value-card">
-                  <span class="value-number" style="color: rgba(255,255,255,0.6);">(04)</span>
-                  <h4 style="color: white; font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.2); font-style: italic; font-weight: 700; line-height: 1.2;">Colaborar de forma próxima</h4>
-                  <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">Colaborar de forma próxima com todos os clientes e parceiros;</p>
-                </article>
-
-                <article class="value-card">
-                  <span class="value-number" style="color: rgba(255,255,255,0.6);">(05)</span>
-                  <h4 style="color: white; font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.2); font-style: italic; font-weight: 700; line-height: 1.2;">Segurança prioritária</h4>
-                  <p style="color: rgba(255,255,255,0.8); line-height: 1.6;">Fazer da segurança uma prioridade absoluta, executando cada obra de forma altamente responsável.</p>
-                </article>
+            <section class="sobre-bloco">
+              <p class="sobre-rotulo">(Diferencia&ccedil;&atilde;o)</p>
+              <div class="sobre-texto">
+                <h2 class="sobre-titulo">O que os distingue</h2>
+                <p>O grande fator de diferencia&ccedil;&atilde;o da <strong>MARSOLVE</strong> face &agrave; concorr&ecirc;ncia reside na sua capacidade de gerir eficazmente os projetos e manter uma intera&ccedil;&atilde;o muito pr&oacute;xima com o cliente. O objetivo principal &eacute; garantir que o servi&ccedil;o prestado corresponde de forma exata &agrave;s necessidades e desejos de cada cliente.</p>
+                <p>Esta abordagem tem permitido estabelecer e manter uma excelente rela&ccedil;&atilde;o de confian&ccedil;a com promotores, parceiros, trabalhadores e clientes (contando j&aacute; com o testemunho positivo de entidades de renome como o <strong>Grupo AP Hotels &amp; Resorts</strong>).</p>
               </div>
             </section>
 
-            <!-- Em suma -->
-            <section class="cta-section" style="margin-top: 8vw; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 6vw; text-align: center; padding-bottom: 8vw;">
-              <p class="section-label" style="color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase; font-size: calc(var(--text-size) * 0.85); margin-bottom: 2em;">(Em suma)</p>
-              <p style="font-family: var(--display-font); font-size: calc(var(--h5-size) * 1.45); font-style: italic; font-weight: 300; line-height: 1.55; color: white; max-width: 46em; margin: 0 auto;">
-                «A MARSOLVE apresenta-se como um parceiro de excelência, pautando-se pelo rigor, pela transparência, pelo cumprimento rigoroso de prazos e pela qualidade nas construções que efetua.»
-              </p>
+            <section class="sobre-bloco">
+              <p class="sobre-rotulo">(Princ&iacute;pios &amp; prop&oacute;sito)</p>
+              <div class="sobre-texto">
+                <h2 class="sobre-titulo">Vis&atilde;o e valores</h2>
+                <p>A vis&atilde;o da empresa &eacute; clara: ser a primeira escolha na &aacute;rea da constru&ccedil;&atilde;o para os diversos stakeholders na regi&atilde;o algarvia. Para atingir este objetivo, a MARSOLVE atua com base num conjunto de valores fundamentais:</p>
+                <ol class="sobre-valores">
+                  <li><span class="sobre-valores__num">(01)</span><span class="sobre-valores__texto">Liderar pelo exemplo.</span></li>
+                  <li><span class="sobre-valores__num">(02)</span><span class="sobre-valores__texto">Trabalhar em equipa, ouvindo atentamente todos os intervenientes nos projetos.</span></li>
+                  <li><span class="sobre-valores__num">(03)</span><span class="sobre-valores__texto">Cumprir as promessas, trabalhando sempre com o objetivo de as exceder.</span></li>
+                  <li><span class="sobre-valores__num">(04)</span><span class="sobre-valores__texto">Colaborar de forma pr&oacute;xima com todos os clientes e parceiros.</span></li>
+                  <li><span class="sobre-valores__num">(05)</span><span class="sobre-valores__texto">Fazer da seguran&ccedil;a uma prioridade absoluta, executando cada obra de forma altamente respons&aacute;vel.</span></li>
+                </ol>
+              </div>
             </section>
 
+            <section class="sobre-bloco sobre-bloco--remate">
+              <p class="sobre-rotulo">(Em suma)</p>
+              <div class="sobre-texto">
+                <p class="sobre-citacao">&laquo;A MARSOLVE apresenta-se como um parceiro de excel&ecirc;ncia, pautando-se pelo rigor, pela transpar&ecirc;ncia, pelo cumprimento rigoroso de prazos e pela qualidade nas constru&ccedil;&otilde;es que efetua.&raquo;</p>
+              </div>
+            </section>
+
+          </article>
           </div>
 
         </div>
