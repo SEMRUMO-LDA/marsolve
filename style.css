@@ -2705,8 +2705,82 @@ body.is-ready .site-preloader {
    aqui e o formulario, nao uma fotografia -- e por isso a pagina nao faz
    scroll: os contactos vao para o canto de baixo, onde noutras paginas
    estao o "Scroll" e os filtros, e nao gastam altura nenhuma. */
+/* ------------------------------------------------------------
+   O contacto no Ivory Black
+
+   E a unica pagina cuja caixa do meio nao e uma fotografia, por isso e a
+   unica onde um campo preto nao tem nada com que lutar. Completa tambem o
+   conjunto -- terracota na entrada, branco na obra, azul no Sobre, preto
+   aqui -- e o preto deixa de ser so a cor da letra sem por isso pintar
+   nenhuma pagina que ja tenha imagens.
+   ------------------------------------------------------------ */
+body.page--contacto {
+  --contacto-tinta: var(--white);
+  /* o painel nao e transparente de proposito: e ele que tapa o nome a correr
+     por tras, como a fotografia faz nas outras paginas */
+  --contacto-painel: color-mix(in srgb, var(--white) 7%, var(--brand-dark));
+  --contacto-linha: color-mix(in srgb, var(--white) 26%, transparent);
+}
+
 body.page--contacto #page-stage {
-  background: var(--white);
+  background: var(--brand-dark);
+  color: var(--contacto-tinta);
+  /* os menus nativos do select tambem escurecem */
+  color-scheme: dark;
+}
+
+body.page--contacto .logo-img {
+  filter: brightness(0) invert(1);
+}
+
+body.page--contacto .menu-btn,
+body.page--contacto .site-nav {
+  color: var(--contacto-tinta);
+}
+
+body.page--contacto .marquee-text {
+  color: var(--contacto-tinta);
+  opacity: 0.12;
+}
+
+body.page--contacto .marquee-sep {
+  color: var(--contacto-tinta);
+  opacity: 0.22;
+}
+
+body.page--contacto .hero-content h1 {
+  color: var(--contacto-tinta);
+}
+
+body.page--contacto .marsolve-form {
+  background: var(--contacto-painel);
+  border-color: color-mix(in srgb, var(--white) 14%, transparent);
+  /* uma sombra preta sobre preto nao se ve */
+  box-shadow: none;
+}
+
+body.page--contacto .marsolve-form input,
+body.page--contacto .marsolve-form select,
+body.page--contacto .marsolve-form textarea {
+  color: var(--contacto-tinta);
+  border-bottom-color: var(--contacto-linha);
+}
+
+body.page--contacto .marsolve-form ::placeholder {
+  color: color-mix(in srgb, var(--white) 55%, transparent);
+}
+
+body.page--contacto .checkbox-inline {
+  color: color-mix(in srgb, var(--white) 62%, transparent);
+}
+
+body.page--contacto .marsolve-form .hero-price {
+  color: var(--contacto-tinta);
+  border-color: var(--contacto-tinta);
+}
+
+body.page--contacto .marsolve-form .hero-price:hover {
+  background: var(--contacto-tinta);
   color: var(--brand-dark);
 }
 
