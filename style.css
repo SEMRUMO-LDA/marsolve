@@ -2291,9 +2291,11 @@ body.page--internal .selection-preview-bar__link:hover,
     --text-size: 3vw;
     --hero-h1-size: 4.2vw;
     --selection-card-title-size: 7vw;
-    --selection-card-desc-size: 2.5vw;
-    --selection-card-symbol-width: 6vw;
-    --selection-card-padding: 4vw;
+    /* px em vez de vw: o diamante, a descricao e o respiro das margens
+       nao podem encolher com o ecra (o rem tambem nao trava, a raiz e fluida) */
+    --selection-card-desc-size: max(13px, 3.4vw);
+    --selection-card-symbol-width: max(32px, 8.2vw);
+    --selection-card-padding: max(22px, 5.6vw);
   }
 
   .site-nav {
