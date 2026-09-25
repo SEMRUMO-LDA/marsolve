@@ -78,7 +78,7 @@
               <picture>
                 <source srcset="assets/obras/vilamoura/web/capa-sm.avif" type="image/avif">
                 <source srcset="assets/obras/vilamoura/web/capa-sm.webp" type="image/webp">
-                <img src="assets/obras/vilamoura/web/capa-sm.jpg" alt="Vilamoura" loading="lazy" width="700" height="374" decoding="async">
+                <img src="assets/obras/vilamoura/web/capa-sm.jpg" alt="Vilamoura" loading="eager" fetchpriority="high" width="700" height="374" decoding="async">
               </picture>
             </span>
           </a>
@@ -221,6 +221,10 @@
       <div class="selection-progresso" aria-hidden="true">
         <span class="selection-progresso__polegar"></span>
       </div>
+      <!-- o polegar diz a posicao, o contador diz a escala: uma barra de
+           120px nao consegue dizer "faltam sete" -->
+      <span class="selection-conta" aria-hidden="true"></span>
+      <span class="sr-only" id="filtro-resultado" role="status" aria-live="polite"></span>
       <div class="selection-slide-indicators">
         <button type="button" class="selection-slide-dot active" data-slide="0" aria-label="Slide 1"></button>
         <button type="button" class="selection-slide-dot" data-slide="1" aria-label="Slide 2"></button>

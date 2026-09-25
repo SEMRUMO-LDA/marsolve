@@ -679,6 +679,20 @@
     slides.forEach((slide, i) => { slide.hidden = i >= usados; });
     totalSlides = usados;
     updateCarousel(0);
+
+    // No telemovel a fita e scroll nativo: o updateCarousel nao lhe toca e
+    // ela ficava onde estava, so limitada pelo novo maximo -- filtrar
+    // aterrava no ultimo resultado. Volta ao primeiro.
+    if (carouselTrack && fitaNativa()) {
+      carouselTrack.scrollTo({ left: 0, behavior: 'auto' });
+    }
+
+    // quem usa leitor de ecra nao ve os cards desaparecer
+    const aviso = document.getElementById('filtro-resultado');
+    if (aviso) {
+      aviso.textContent = visiveis.length === 1
+        ? '1 obra' : visiveis.length + ' obras';
+    }
     // o filtro troca os cards de slide: os que entram podem trazer um nome
     // mais comprido do que os que ficaram
     document.dispatchEvent(new CustomEvent('marsolve:cards'));
@@ -791,6 +805,30 @@
   // fatia que se ve, como a de um scroll, por isso diz ao mesmo tempo onde se
   // esta e quantos cards ha. As duas medidas saem do proprio scroll da fita,
   // portanto acertam sozinhas quando um filtro tira cards.
+  // — O contador —
+  // A largura do polegar ja diz a fraccao, mas nao o numero: "01 / 08" diz.
+  // A posicao sai do card que esta encostado ao inicio util da fita (o
+  // scroll-padding), por isso acerta com o snap em vez de estimar.
+  const conta = document.querySelector('.selection-conta');
+  function pintarConta() {
+    if (!conta || !carouselTrack) return;
+    if (!fitaNativa()) { conta.textContent = ''; return; }
+    const cards = [...carouselTrack.querySelectorAll('.selection-card')]
+      .filter(c => !c.hidden && c.offsetParent !== null);
+    if (!cards.length) { conta.textContent = ''; return; }
+    const fita = carouselTrack.getBoundingClientRect();
+    const recuo = parseFloat(getComputedStyle(carouselTrack).scrollPaddingLeft) || 0;
+    const inicio = fita.left + recuo;
+    let actual = 0;
+    let melhor = Infinity;
+    cards.forEach((card, i) => {
+      const d = Math.abs(card.getBoundingClientRect().left - inicio);
+      if (d < melhor) { melhor = d; actual = i; }
+    });
+    const dois = n => String(n).padStart(2, '0');
+    conta.textContent = dois(actual + 1) + ' / ' + dois(cards.length);
+  }
+
   const polegar = document.querySelector('.selection-progresso');
   if (carouselTrack && polegar) {
     let pedidoPolegar = null;
@@ -801,6 +839,7 @@
       const vista = carouselTrack.clientWidth;
       polegar.style.setProperty('--swipe-fatia', (Math.min(vista / total, 1)).toFixed(4));
       polegar.style.setProperty('--swipe-inicio', (carouselTrack.scrollLeft / total).toFixed(4));
+      pintarConta();
     };
     const agendarPolegar = () => {
       if (pedidoPolegar === null) pedidoPolegar = requestAnimationFrame(pintarPolegar);
