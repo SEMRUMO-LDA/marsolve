@@ -897,6 +897,31 @@
   // fixo, o que obrigava a encurtar nomes e nunca enchia o painel. Aqui
   // mede-se o que esta mesmo desenhado e escolhe-se o maior tamanho em que
   // todos cabem.
+  // Uma sonda fora do ecra mede o comprimento de cada nome. E preciso
+  // porque os cards escondidos -- pelo filtro, ou pela pagina do carrossel
+  // no desktop -- nao medem nada, e sem eles a escala passava a ser a do
+  // nome mais comprido daquele filtro: em "Concluidas" o corpo saltava de
+  // 38 para 72px. Mostra-los para medir tambem nao servia, que no desktop
+  // revelar a segunda pagina parte a altura ao meio.
+  let sonda = null;
+  function comprimentoDoNome(titulo) {
+    if (!sonda) {
+      sonda = document.createElement('span');
+      sonda.setAttribute('aria-hidden', 'true');
+      sonda.style.cssText = 'position:fixed;left:-9999px;top:0;' +
+        'visibility:hidden;white-space:nowrap;pointer-events:none;';
+      document.body.appendChild(sonda);
+    }
+    const est = getComputedStyle(titulo);
+    sonda.style.font = est.font;
+    sonda.style.letterSpacing = est.letterSpacing;
+    sonda.style.textTransform = est.textTransform;
+    sonda.textContent = titulo.textContent;
+    // o titulo esta em vertical-rl: o que corre na altura dele e a largura
+    // que o mesmo texto ocuparia na horizontal
+    return sonda.getBoundingClientRect().width;
+  }
+
   const medirLocalidades = () => {
     const titulos = [...document.querySelectorAll('.selection-card__title')];
     if (!titulos.length) return;
@@ -910,21 +935,27 @@
     // variavel por escrever, que e o que faz o CSS mandar.
     if (!getComputedStyle(titulos[0]).writingMode.startsWith('vertical')) return;
 
-    let escala = Infinity;
+    // a altura util e igual em todos os cards, por isso chega a de um que
+    // esteja a vista; o pior racio e do conjunto todo, escondidos incluidos
+    let util = 0;
+    let pior = 0;
     for (const t of titulos) {
       const painel = t.closest('.selection-card__panel');
-      if (!painel) continue;
-      const est = getComputedStyle(painel);
-      const util = painel.clientHeight
-        - parseFloat(est.paddingTop) - parseFloat(est.paddingBottom);
-      const corrido = t.getBoundingClientRect().height;
-      if (util > 0 && corrido > 0) escala = Math.min(escala, util / corrido);
+      if (painel) {
+        const est = getComputedStyle(painel);
+        const u = painel.clientHeight
+          - parseFloat(est.paddingTop) - parseFloat(est.paddingBottom);
+        if (u > util) util = u;
+      }
+      const corpo = parseFloat(getComputedStyle(t).fontSize);
+      const corrido = comprimentoDoNome(t);
+      // o racio nao depende do corpo: e so a forma do nome
+      if (corpo > 0 && corrido > 0) pior = Math.max(pior, corrido / corpo);
     }
-    if (!isFinite(escala)) return;
+    if (!(util > 0) || !(pior > 0)) return;
 
-    const base = parseFloat(getComputedStyle(titulos[0]).fontSize);
     document.documentElement.style.setProperty(
-      '--titulo-card', (base * escala).toFixed(2) + 'px');
+      '--titulo-card', (util / pior).toFixed(2) + 'px');
   };
 
   const agendarMedicao = () => requestAnimationFrame(medirLocalidades);
