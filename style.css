@@ -746,10 +746,27 @@ body.page--portfolio .bottom-left-contact {
     overflow-y: auto;
   }
 
+  /* Com o portfolio aberto, o logotipo sai. O losango da marca ja esta em
+     cada card, portanto nao se perde marca nenhuma -- ganham-se os 93px da
+     linha de cima, que num ecra de 844 e mais de um decimo do card. A nav
+     fica a zero porque o que la resta, o botao do menu, e fixo a janela e
+     nao precisa da linha. Volta tudo ao sitio assim que se fecha. */
+  body.page--portfolio .logo,
+  body.page--home.selection-open .logo {
+    display: none;
+  }
+
+  body.page--portfolio .portfolio-stage .site-nav,
+  body.page--home.selection-open .site-nav {
+    height: 0;
+  }
+
   .selection-card {
-    /* o height: 100% que traz do desktop deixava-o encolher ate ao minimo */
+    /* o height: 100% que traz do desktop deixava-o encolher ate ao minimo.
+       O tecto subiu com a saida do logotipo: o card usa a altura que ele
+       deixou e o seguinte continua a espreitar por baixo. */
     height: auto;
-    min-height: min(58svh, 460px);
+    min-height: min(64svh, 540px);
   }
 
   .selection-card__panel {

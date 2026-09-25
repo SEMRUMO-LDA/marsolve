@@ -384,6 +384,17 @@
       closeSelection();
     }
 
+    // Com os cards a rolar por dentro -- no telemovel sao oito, um por ecra --
+    // o gesto para cima e primeiro deles. So fecha a selecao quando a lista ja
+    // esta no topo; a meio do portfolio, dois dedos para cima iam parar a
+    // hero sem se perceber porque. Quando a lista ainda tem por onde subir, a
+    // contagem e zerada: assim e preciso um gesto novo depois de chegar ao
+    // topo, em vez de o mesmo impulso continuar e fechar.
+    function listaNoTopo() {
+      const slide = document.querySelector('.selection-cards-slide:not([hidden])');
+      return !slide || slide.scrollTop <= 1;
+    }
+
     window.addEventListener('wheel', (e) => {
       if (!gestureAllowed()) return;
       // gesto sobretudo horizontal pertence ao carrossel, nao a selecao
@@ -399,7 +410,7 @@
         showSelection();
       } else if (isOpen() && wheelAccum <= -WHEEL_THRESHOLD) {
         wheelAccum = 0;
-        hideSelection();
+        if (listaNoTopo()) hideSelection();
       }
     }, { passive: true });
 
@@ -420,7 +431,7 @@
       if (sideways > Math.abs(travelled)) return;
       if (!gestureAllowed()) return;
       if (!isOpen() && travelled > SWIPE_THRESHOLD) showSelection();
-      else if (isOpen() && travelled < -SWIPE_THRESHOLD) hideSelection();
+      else if (isOpen() && travelled < -SWIPE_THRESHOLD && listaNoTopo()) hideSelection();
     }, { passive: true });
 
     document.addEventListener('keydown', (e) => {
@@ -431,6 +442,7 @@
         e.preventDefault();
         showSelection();
       } else if (isOpen() && (e.key === 'ArrowUp' || e.key === 'PageUp')) {
+        if (!listaNoTopo()) return;   // a lista sobe primeiro
         e.preventDefault();
         hideSelection();
       }
