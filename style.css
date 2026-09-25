@@ -1827,9 +1827,17 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 }
 
 /* — Drawer Navigation Menu (4 links principais) — */
+/* O painel espalha os tres grupos com space-between, e sobrava um vao morto
+   por cima e por baixo da navegacao -- o que se via como um buraco entre o
+   "Contacto" e as redes. A navegacao passa a crescer e as quatro linhas
+   repartem o espaco entre si: os riscos ficam a distancias iguais, o menu
+   ocupa o ecra e o rodape fica logo a seguir. O "0 auto" e para nunca
+   encolher abaixo do texto num ecra baixo. */
 .drawer-nav {
   margin: 0;
   padding: 0;
+  flex: 1 0 auto;
+  display: flex;
 }
 
 .drawer-nav__list {
@@ -1838,10 +1846,17 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   margin: 0;
   display: flex;
   flex-direction: column;
+  flex: 1 0 auto;
 }
 
 .drawer-nav__item {
   border-bottom: 1px solid color-mix(in srgb, var(--gaveta-tinta) 10%, transparent);
+  /* a linha cresce, o link fica centrado nela e mantem o alinhamento pela
+     linha de base entre o numero e a palavra */
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .drawer-nav__link {
