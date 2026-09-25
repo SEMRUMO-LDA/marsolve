@@ -227,7 +227,11 @@
     // a seguir a animacao de entrada, senao o browser salta a pagina para o
     // sitio onde o botao ainda esta a caminho
     setTimeout(() => {
-      const primeiro = navMenu.querySelector('.nav-menu__close, a[href], button');
+      // o querySelector com lista devolve o primeiro do documento, seja
+      // qual for o selector que casou -- com o logotipo no topo era ele a
+      // apanhar o foco em vez do X
+      const primeiro = navMenu.querySelector('.nav-menu__close')
+        || navMenu.querySelector('a[href], button');
       if (primeiro) primeiro.focus();
     }, 320);
   }

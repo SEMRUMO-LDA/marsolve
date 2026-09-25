@@ -1792,6 +1792,19 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   border-bottom: none;
 }
 
+/* O logotipo so aparece na gaveta do telemovel: e ai que ele nao esta em
+   lado nenhum do ecra (no portfolio esta escondido para dar altura aos
+   cards). No desktop o cabecalho da gaveta fica so com o X. */
+.nav-menu__logo {
+  display: none;
+}
+
+.nav-menu__close {
+  /* com o logotipo a esquerda, e esta margem que empurra o X para a
+     direita -- sem ela os dois ficavam colados ao fim */
+  margin-left: auto;
+}
+
 .nav-menu__close {
   display: inline-flex;
   align-items: center;
@@ -2514,6 +2527,20 @@ body.diamante-claro .menu-btn .menu-btn__svg {
      encolhe com o ecra (o html tem corpo fluido), a fazer de chao num clamp
      e a nao segurar nada. Tudo em px, e a navegacao -- que e o que se vem
      ca buscar -- com o tamanho que a largura toda permite. */
+  .nav-menu__logo {
+    display: block;
+    width: min(170px, 46vw);
+    line-height: 0;
+  }
+
+  .nav-menu__logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* a gaveta e branca: o logotipo fica na cor da casa */
+    filter: none;
+  }
+
   .nav-menu__panel {
     width: 100%;
     min-width: unset;
@@ -4280,7 +4307,14 @@ body.page--detalhe.obra-aberta .logo {
   color: var(--brand-dark);
 }
 
-.sobre-bloco--remate { margin-bottom: 4vw; }
+/* O ultimo bloco ficava rente ao fundo do ecra -- e no telemovel por tras
+   do diamante, que e fixo. A folga e padding e nao margem: a margem do
+   ultimo filho nao chega a entrar na altura rolavel do palco, e por isso
+   nao se via. Reserva a altura do diamante mais ar. */
+.sobre-bloco--remate {
+  margin-bottom: 0;
+  padding-bottom: max(104px, calc(var(--grid-padding) + var(--nav-action-height) + 5vh));
+}
 
 @media (max-width: 900px) {
   .sobre-bloco {
