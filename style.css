@@ -2484,12 +2484,21 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   /* o dedo precisa de 44px; a etiqueta continua com 11px.
      O "body" e para ganhar a .corner-filter, que esta mais a frente no
      ficheiro e por isso levava a melhor com a mesma especificidade */
-  body .corner-filter,
-  body .corner-filters__rotulo {
+  /* com o titulo na linha de cima, as tres opcoes tem a largura do card
+     so para elas e podem crescer */
+  body .corner-filter {
     letter-spacing: 0.05em;
-    /* 12px e o maximo que deixa o rotulo e as tres opcoes numa linha
-       dentro da largura de um card, ate aos 360px */
-    font-size: 12px;
+    font-size: 13px;
+  }
+
+  /* no telemovel passa para a linha de cima: com a fila a ter so a largura
+     de um card, um titulo ao lado das opcoes lia-se como mais uma delas */
+  body .corner-filters__rotulo {
+    flex: 0 0 100%;
+    text-align: left;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    margin-bottom: 2px;
   }
 
   body .corner-filter {
@@ -3770,20 +3779,20 @@ body.selection-open .corner-scroll {
    abaixo do minimo legivel. A 0.68 passam os 4.5:1 e continuam a ler-se como
    o estado inativo, que era o que a opacidade baixa queria dizer. */
 /* Diz o substantivo uma vez, para as opcoes poderem ser curtas: sem ele,
-   "Concluidas" sozinho nao diz concluidas o que. Nao e um botao -- e mais
-   apagado e nunca leva sublinhado. */
+   "Concluidos" sozinho nao diz concluidos o que. Fica na linha de cima e
+   na cor da casa -- e o que o faz ler como titulo e nao como um quarto
+   filtro. Nao e um botao e nunca leva sublinhado. */
 .corner-filters__rotulo {
-  font-family: var(--sans-font);
-  font-size: var(--corner-text-size);
-  line-height: 1.2;
-  /* peso normal contra o 700 das opcoes: distingue-se sem custar largura */
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: currentColor;
-  opacity: 0.45;
-  white-space: nowrap;
   align-self: center;
+  font-family: var(--sans-font);
+  font-size: calc(var(--corner-text-size) * 0.92);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  white-space: nowrap;
+  text-align: left;
 }
 
 .corner-filter {

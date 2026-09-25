@@ -695,7 +695,7 @@
     const aviso = document.getElementById('filtro-resultado');
     if (aviso) {
       aviso.textContent = visiveis.length === 1
-        ? '1 obra' : visiveis.length + ' obras';
+        ? '1 projeto' : visiveis.length + ' projetos';
     }
     // o filtro troca os cards de slide: os que entram podem trazer um nome
     // mais comprido do que os que ficaram
