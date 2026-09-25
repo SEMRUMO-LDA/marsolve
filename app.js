@@ -65,8 +65,12 @@
 
     sessionStorage.setItem('marsolve_visited', 'true');
 
+    // O contador andava 2 a 10 por cada 120ms: 17 passos, cerca de 2s, mais
+    // 1s a sair. Sao 3,15s de nada antes de se poder fazer o que quer que
+    // seja -- numa ligacao movel, vindo de um link do Instagram, e tempo que
+    // chega para desistir. O gesto e o mesmo, a metade do compasso.
     const interval = setInterval(() => {
-      preloaderCount += Math.random() * 8 + 2;
+      preloaderCount += Math.random() * 12 + 6;
       if (preloaderCount >= preloaderTarget) {
         preloaderCount = preloaderTarget;
         clearInterval(interval);
@@ -85,7 +89,7 @@
           setFrame(frameIndex);
         }
       }
-    }, 120);
+    }, 70);
   }
 
   function finishPreloader() {
@@ -101,8 +105,8 @@
         // chegou com #portfolio: abre o estado aqui, ja depois do preloader,
         // para a transicao ser vista em vez de acontecer por tras dele
         handlePortfolioHash();
-      }, 600);
-    }, 400);
+      }, 420);
+    }, 180);
   }
 
   // — Selection Menu Toggle —

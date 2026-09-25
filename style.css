@@ -144,7 +144,7 @@ h1, h2, h3, h4, h5, h6, p {
   place-items: center;
   background: var(--brand-primary);
   color: #fff;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+  transition: opacity 0.42s ease, visibility 0.42s ease;
 }
 
 html.preloader-done .site-preloader {
@@ -185,7 +185,10 @@ html.preloader-done .site-preloader {
   inset: 0;
   opacity: 0;
   transform: scale(1.05);
-  transition: opacity 0.5s ease, transform 0.8s var(--standard-easing);
+  /* o compasso do preloader passou a metade (ver runPreloader); o
+     atravessamento das imagens tem de o acompanhar, senao ficam todas
+     sobrepostas a meio caminho */
+  transition: opacity 0.28s ease, transform 0.45s var(--standard-easing);
 }
 
 .site-preloader__frame.active {
@@ -2166,6 +2169,49 @@ body.page--internal .selection-preview-bar__link:hover,
 
   .site-nav__actions {
     bottom: 8vw;
+  }
+
+  /* A barra de baixo no telemovel
+     ------------------------------
+     No desktop os filtros, a paginacao e o diamante dividem uma linha. A
+     390px nao ha largura para isso: os tres ficavam sobrepostos no mesmo
+     sitio, e o botao do menu -- que ai e fixo, ao centro -- ficava por cima
+     do resto.
+
+     Passam a tres andares. A grelha ganha uma quarta linha, os filtros ficam
+     na terceira e a paginacao na quarta, ambos centrados por baixo dos cards,
+     e a grelha reserva em baixo a altura do botao para ele nao pousar em cima
+     da paginacao. */
+  /* So na entrada: e a unica pagina que tem filtros e paginacao na mesma
+     barra. O contacto tem o seu rodape, as obras rolam, e a quarta linha
+     nessas so lhes roubava altura. */
+  body.page--home .page-grid {
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    padding-bottom: calc(var(--grid-padding) + 15vw);
+  }
+
+  body.page--home .corner-filters,
+  .portfolio-stage .corner-filters {
+    grid-row: 3;
+    justify-self: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: auto;
+    gap: 0.5rem 1rem;
+    text-align: center;
+  }
+
+  body.page--home .selection-controls,
+  .portfolio-stage .selection-controls {
+    grid-row: 4;
+    justify-self: center;
+    height: auto;
+    margin-top: 0.6rem;
+  }
+
+  body.page--home .corner-scroll {
+    grid-row: 3;
+    justify-self: center;
   }
 
   /* Selection cards stack on mobile */
