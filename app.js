@@ -136,6 +136,8 @@
 
   function openSelection() {
     body.classList.add('selection-open');
+    // ate aqui os cards nao tem altura, e sem altura nao ha o que medir
+    document.dispatchEvent(new CustomEvent('marsolve:cards'));
     setPortfolioHash(true);
     if (selectionBtn) selectionBtn.setAttribute('aria-expanded', 'true');
     const navPortfolioBtn = document.getElementById('nav-portfolio-btn');
@@ -665,6 +667,9 @@
     slides.forEach((slide, i) => { slide.hidden = i >= usados; });
     totalSlides = usados;
     updateCarousel(0);
+    // o filtro troca os cards de slide: os que entram podem trazer um nome
+    // mais comprido do que os que ficaram
+    document.dispatchEvent(new CustomEvent('marsolve:cards'));
   }
 
   // — 4-by-4 Portfolio Carousel Slider Logic —
@@ -791,6 +796,52 @@
       cover.style.transformOrigin = `${50 + x * 20}% ${50 + y * 20}%`;
     });
   });
+
+  // — A localidade nos cards —
+  //
+  // O nome corre na vertical, do fundo do painel ate a linha do losango. Quem
+  // decide o tamanho e o nome mais comprido -- "Armacao de Pera" --, e esse
+  // tamanho vale para todos: lado a lado, as localidades tem de casar.
+  //
+  // Isto nao da para fazer so em CSS. O comprimento de um texto na vertical
+  // depende da letra que o browser acabou por carregar, e o CSS nao sabe
+  // medi-lo; a conta antiga dividia a altura por um numero de caracteres
+  // fixo, o que obrigava a encurtar nomes e nunca enchia o painel. Aqui
+  // mede-se o que esta mesmo desenhado e escolhe-se o maior tamanho em que
+  // todos cabem.
+  const medirLocalidades = () => {
+    const titulos = [...document.querySelectorAll('.selection-card__title')];
+    if (!titulos.length) return;
+
+    // sem a variavel, o CSS volta ao tamanho de referencia -- e e contra esse
+    // que se mede, senao media-se contra o resultado da vez anterior
+    document.documentElement.style.removeProperty('--titulo-card');
+
+    let escala = Infinity;
+    for (const t of titulos) {
+      const painel = t.closest('.selection-card__panel');
+      if (!painel) continue;
+      const est = getComputedStyle(painel);
+      const util = painel.clientHeight
+        - parseFloat(est.paddingTop) - parseFloat(est.paddingBottom);
+      const corrido = t.getBoundingClientRect().height;
+      if (util > 0 && corrido > 0) escala = Math.min(escala, util / corrido);
+    }
+    if (!isFinite(escala)) return;
+
+    const base = parseFloat(getComputedStyle(titulos[0]).fontSize);
+    document.documentElement.style.setProperty(
+      '--titulo-card', (base * escala).toFixed(2) + 'px');
+  };
+
+  const agendarMedicao = () => requestAnimationFrame(medirLocalidades);
+
+  // depois da letra chegar: com a de recurso, os nomes medem outra coisa
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(agendarMedicao);
+  window.addEventListener('load', agendarMedicao);
+  window.addEventListener('resize', agendarMedicao);
+  // e quando os cards aparecem, que ate ai nao tem altura para medir
+  document.addEventListener('marsolve:cards', agendarMedicao);
 
   // — Init —
   let preloaderStarted = false;

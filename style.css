@@ -547,20 +547,18 @@ body.selection-open .bottom-left-contact {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   font-family: var(--sans-font);
-  /* O texto corre na vertical, por isso o que manda no tamanho e a altura
-     disponivel dividida pelo numero de caracteres que la tem de caber.
+  /* O texto corre na vertical, do fundo do painel ate a linha do losango.
+     O tamanho e o mesmo em todos os cards e vem do nome mais comprido, que
+     e quem decide quanto cabe -- lado a lado, as localidades tem de casar.
 
-     A medida e a altura do proprio painel (cqh), nao a do ecra: o carrossel
-     nem sempre consegue os 75svh que pede -- num ecra baixo e largo a moldura
-     nao deixa -- e contra o ecra o titulo pedia mais altura do que o card
-     tinha para dar. 98cqh deixa metade do painel para o titulo, que e o que
-     sobra depois do losango e da legenda.
-
-     O divisor e o mesmo para todos os cards e nao o comprimento de cada nome:
-     assim as localidades tem todas o mesmo tamanho, lado a lado. Dez e o
-     comprimento maximo que cabe -- um nome mais comprido do que isso tem de
-     ser encurtado, como foi o "Armacao de Pera". */
-  font-size: min(var(--selection-card-title-size), calc(98cqh / 10));
+     Quem o calcula e o JS (medirLocalidades), porque o comprimento de um
+     texto na vertical depende da letra que o browser acabou por carregar e o
+     CSS nao sabe medi-lo. O valor aqui e so o de partida: e contra ele que a
+     medicao e feita, e e ele que fica se o JS nao correr. A medida e a
+     altura do proprio painel (cqh) e nao a do ecra, porque o carrossel nem
+     sempre consegue os 75svh que pede. */
+  font-size: var(--titulo-card,
+    min(var(--selection-card-title-size), calc(98cqh / 10)));
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -729,9 +727,13 @@ body.page--portfolio .bottom-left-contact {
   }
 }
 
+/* Uma coluna so punha um card a ocupar a largura toda e o painel ficava
+   baixo e largo: a localidade corre na vertical e media-se contra ele, por
+   isso saia com poucos pixeis e nao se lia. Duas colunas, como na entrada,
+   devolvem-lhe altura. */
 @media (max-width: 650px) {
   body.page--portfolio .selection-cards-slide {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     overflow-y: auto;
   }
 }
@@ -2192,6 +2194,15 @@ body.page--internal .selection-preview-bar__link:hover,
      barra. O contacto tem o seu rodape, as obras rolam, e a quarta linha
      nessas so lhes roubava altura. */
   body.page--home .page-grid {
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    padding-bottom: calc(var(--grid-padding) + 15vw);
+  }
+
+  /* A pagina de portfolio tem a mesma barra mas nao usa a .page-grid -- tem
+     palco proprio. Sem isto, as regras de baixo mandavam os filtros para a
+     linha 3 e a paginacao para a 4 numa grelha de tres linhas, e os dois
+     ficavam empilhados em cima do botao do menu. */
+  body.page--portfolio .portfolio-stage {
     grid-template-rows: auto minmax(0, 1fr) auto auto;
     padding-bottom: calc(var(--grid-padding) + 15vw);
   }
