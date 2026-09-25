@@ -743,12 +743,19 @@
            !!document.getElementById('home-selection');
   }
 
+  // No telemovel a fita rola de verdade, com snap do browser. Nesse modo
+  // ninguem lhe pode mexer no transform nem contar paginas por ela: os
+  // gestos sao do proprio scroll.
+  function fitaNativa() {
+    return !!carouselTrack && getComputedStyle(carouselTrack).overflowX === 'auto';
+  }
+
   let hAccum = 0;
   let hTimer = null;
   const H_THRESHOLD = 60;
 
   window.addEventListener('wheel', (e) => {
-    if (!carouselInteractive()) return;
+    if (!carouselInteractive() || fitaNativa()) return;
     // so tratamos o gesto quando e claramente horizontal, para nao competir
     // com o scroll vertical que abre e fecha a selecao na home
     if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
@@ -769,6 +776,7 @@
     }, { passive: true });
 
     carouselTrack.addEventListener('touchend', (e) => {
+      if (fitaNativa()) return;
       touchEndX = e.changedTouches[0].screenX;
       if (touchStartX - touchEndX > 50) {
         updateCarousel(currentSlide + 1);
@@ -780,7 +788,7 @@
 
   // Keyboard navigation when selection is open
   document.addEventListener('keydown', (e) => {
-    if (body.classList.contains('selection-open')) {
+    if (body.classList.contains('selection-open') && !fitaNativa()) {
       if (e.key === 'ArrowRight') updateCarousel(currentSlide + 1);
       if (e.key === 'ArrowLeft') updateCarousel(currentSlide - 1);
     }

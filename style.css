@@ -739,11 +739,58 @@ body.page--portfolio .bottom-left-contact {
    grande, na horizontal. Ve-se um card de cada vez e o seguinte a espreitar,
    que e o que convida a continuar. */
 @media (max-width: 650px) {
-  body.page--portfolio .selection-cards-slide,
-  .selection-cards,
-  .selection-cards-slide {
-    grid-template-columns: 1fr;
-    overflow-y: auto;
+  /* Uma so gramatica: os cards andam para o lado.
+     ------------------------------------------------
+     Antes havia duas -- a pagina 1 rolava para cima e para chegar a 2 era
+     swipe -- e o mesmo dedo fazia coisas diferentes conforme onde ia. Pior,
+     o gesto vertical dentro da lista disputava com o que fecha o portfolio.
+
+     Agora as paginas de quatro deixam de existir aqui. O display: contents
+     dissolve os dois slides e poe os oito cards como filhos directos da
+     fita; quem manda passa a ser o scroll horizontal com snap do proprio
+     browser, com a inercia e o travao que ele ja sabe fazer. O scroll
+     vertical volta a significar uma coisa so: sair do portfolio. */
+  .selection-cards-track {
+    /* o updateCarousel translada a fita por paginas; aqui nao ha paginas */
+    transform: none !important;
+    transition: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    gap: 12px;
+    scrollbar-width: none;
+  }
+
+  .selection-cards-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* o segundo seletor e para ganhar ao "body.page--portfolio
+     .selection-cards-slide { display: grid }", que e mais especifico */
+  .selection-cards-slide,
+  body.page--portfolio .selection-cards-slide {
+    display: contents;
+  }
+
+  /* e o [hidden] do filtro tem de ganhar aos dois */
+  .selection-cards-slide[hidden],
+  body.page--portfolio .selection-cards-slide[hidden] {
+    display: none;
+  }
+
+  /* 88% deixa o seguinte a espreitar -- e essa a unica indicacao de que ha
+     mais, e chega: nao precisa de setas nem de contador */
+  .selection-card {
+    flex: 0 0 88%;
+    scroll-snap-align: start;
+  }
+
+  /* a barra de baixo fica so com os filtros e o diamante. O "body" esta ca
+     para passar a frente da regra que poe a barra de baixo em flex, que vive
+     mais abaixo no ficheiro com a mesma especificidade. */
+  body .selection-controls {
+    display: none;
   }
 
   /* Com o portfolio aberto, o logotipo sai. O losango da marca ja esta em
@@ -761,12 +808,28 @@ body.page--portfolio .bottom-left-contact {
     height: 0;
   }
 
-  .selection-card {
-    /* o height: 100% que traz do desktop deixava-o encolher ate ao minimo.
-       O tecto subiu com a saida do logotipo: o card usa a altura que ele
-       deixou e o seguinte continua a espreitar por baixo. */
-    height: auto;
-    min-height: min(64svh, 540px);
+  /* Com a linha do logotipo a zero, o que ficava por cima do primeiro card
+     eram 65px de nada: 23 de padding do palco, 20 do intervalo entre linhas
+     da grelha -- que continua a separar uma linha vazia da seguinte -- e 22
+     do recuo interno do carrossel. Vao os tres a 18px no total. O intervalo
+     passa para a barra de baixo, que e quem precisa dele. */
+  body.page--portfolio .portfolio-stage,
+  body.page--home.selection-open .page-grid {
+    padding-top: 14px;
+    row-gap: 0;
+  }
+
+  body.page--portfolio .corner-filters,
+  body.page--home.selection-open .corner-filters {
+    margin-top: 18px;
+  }
+
+  /* na entrada o carrossel vinha centrado na sua caixa e sobravam-lhe 22px
+     em cima: encostado, o primeiro card comeca a mesma altura que na pagina
+     de portfolio */
+  body.page--home.selection-open .home-selection {
+    justify-content: flex-start;
+    align-items: stretch;
   }
 
   .selection-card__panel {
