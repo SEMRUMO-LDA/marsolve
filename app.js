@@ -65,12 +65,14 @@
 
     sessionStorage.setItem('marsolve_visited', 'true');
 
-    // O contador andava 2 a 10 por cada 120ms: 17 passos, cerca de 2s, mais
-    // 1s a sair. Sao 3,15s de nada antes de se poder fazer o que quer que
-    // seja -- numa ligacao movel, vindo de um link do Instagram, e tempo que
-    // chega para desistir. O gesto e o mesmo, a metade do compasso.
+    // Isto esteve a metade do compasso durante umas horas, por causa dos 3s
+    // que segurava. O Tiago apanhou o que faltava ao raciocinio: o preloader
+    // so corre uma vez por separador, portanto quem o ve, ve-o uma vez na
+    // vida -- e a 1,3s nao dava para perceber o que era, so um piscar. Ou
+    // dura o suficiente para ser alguma coisa, ou nao vale a pena existir.
+    // Volta ao compasso original.
     const interval = setInterval(() => {
-      preloaderCount += Math.random() * 12 + 6;
+      preloaderCount += Math.random() * 8 + 2;
       if (preloaderCount >= preloaderTarget) {
         preloaderCount = preloaderTarget;
         clearInterval(interval);
@@ -89,7 +91,7 @@
           setFrame(frameIndex);
         }
       }
-    }, 70);
+    }, 120);
   }
 
   function finishPreloader() {
@@ -105,8 +107,8 @@
         // chegou com #portfolio: abre o estado aqui, ja depois do preloader,
         // para a transicao ser vista em vez de acontecer por tras dele
         handlePortfolioHash();
-      }, 420);
-    }, 180);
+      }, 600);
+    }, 400);
   }
 
   // — Selection Menu Toggle —

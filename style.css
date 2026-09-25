@@ -144,7 +144,7 @@ h1, h2, h3, h4, h5, h6, p {
   place-items: center;
   background: var(--brand-primary);
   color: #fff;
-  transition: opacity 0.42s ease, visibility 0.42s ease;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
 html.preloader-done .site-preloader {
@@ -185,10 +185,8 @@ html.preloader-done .site-preloader {
   inset: 0;
   opacity: 0;
   transform: scale(1.05);
-  /* o compasso do preloader passou a metade (ver runPreloader); o
-     atravessamento das imagens tem de o acompanhar, senao ficam todas
-     sobrepostas a meio caminho */
-  transition: opacity 0.28s ease, transform 0.45s var(--standard-easing);
+  /* acompanha o compasso do contador (ver runPreloader) */
+  transition: opacity 0.5s ease, transform 0.8s var(--standard-easing);
 }
 
 .site-preloader__frame.active {
