@@ -3782,7 +3782,12 @@ body.page--detalhe.obra-aberta .logo {
      corrido, menos de metade do que devia */
   font-family: var(--sans-font);
   font-size: clamp(23px, 2.3vw, 42px);
-  margin: max(90px, 13vw) auto 0;
+  /* Ar a serio. Com 13vw em cima e nada em baixo, o texto ainda pertencia a
+     ficha e a galeria; com isto fica praticamente sozinho no ecra enquanto
+     se le, que e o que o torna uma paragem. A folga de baixo e maior do que
+     a da galeria de proposito: sao irmaos, as margens juntam-se numa so e
+     fica a maior das duas. */
+  margin: max(140px, 20vw) auto max(120px, 17vw);
   max-width: 40ch;
   text-align: center;
 }
