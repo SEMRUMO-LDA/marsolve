@@ -3602,9 +3602,16 @@ body.page--detalhe.obra-claro .menu-btn {
   min-height: calc(2 * 1.45 * var(--hero-h1-size, var(--h5-size)));
 }
 
-/* A legenda e o nome atras ficam quietos. Antes desvaneciam-se e saiam de
-   cena; agora e a foto que passa por cima deles, o que se le como a foto a
-   aproximar-se em vez da pagina a reorganizar-se a volta dela. */
+/* A legenda fica quieta: e a foto que lhe passa por cima, o que se le como
+   ela a aproximar-se em vez da pagina a reorganizar-se a volta dela. */
+
+/* O nome atras continua a desvanecer-se. Quieto, ficavam-lhe as pontas de
+   fora dos lados da foto durante todo o percurso -- a frase corre em ciclo
+   e e mais larga do que o ecra -- e viam-se letras soltas a boiar ao lado
+   da imagem. */
+.obra-hero .marquee {
+  opacity: calc(1 - var(--abertura, 0) * 2.4);
+}
 
 /* O logotipo tambem tem de ficar. Nao e sticky: a nav vive na grelha que
    rola, e prende-la mudava o comportamento da pagina toda. Em vez disso
@@ -3624,16 +3631,58 @@ body.page--detalhe.obra-claro .menu-btn {
    --abertura * --obra-abertura-curso. Essa conta so bate certo se o curso
    em svh for exactamente o que o scroller tem, e com as barras dinamicas
    dos browseres nao e -- o logotipo derrapava uns pixeis por cada ecra. */
+/* O logotipo fica preso a janela enquanto a abertura corre.
+   -----------------------------------------------------------
+   Estava a ser compensado por JS -- uma distancia escrita a cada frame de
+   scroll. Nao ha maneira de isso nao tremer: o browser pinta a pagina ja
+   rolada e so depois corre o nosso rAF, por isso o logotipo chega sempre um
+   frame atrasado. Com position:fixed quem o segura e o compositor, e nao
+   ha atraso nenhum.
+
+   Nao e sticky porque a nav e um item da grelha e o sticky nao sai da sua
+   celula -- a linha tem 70px e ele nao andava. E o fixed nao estraga o
+   diamante como o transform estragava: so transform, filter, perspective e
+   containment e que roubam o fixed a janela; sticky e fixed nao.
+
+   O z-index: 5 que traz da home tem de cair. O 60 do palco fica preso no
+   contexto de empilhamento da .internal-content e nao ganha a um 5 solto ca
+   fora -- e o logotipo aparecia por cima da foto. Em auto, pinta pela ordem
+   do documento, e a nav vem antes do conteudo. */
 body.page--detalhe .logo {
-  translate: 0 var(--nav-fixa, 0px);
-  /* e tem de largar o z-index: 5 que traz da home. O z-index: 60 do palco
-     fica preso no contexto de empilhamento da .internal-content, por isso
-     nao ganha a um 5 solto ca fora -- e o logotipo aparecia por cima da
-     foto, que e o contrario do que se quer. Com auto, pinta pela ordem do
-     documento, e a nav vem antes do conteudo. O diamante nao e afectado:
-     esta em position:fixed com z-index 100 e continua por cima de tudo,
-     que e o que faz o menu continuar a dar para carregar. */
+  position: fixed;
+  top: var(--grid-padding);
+  left: 50%;
+  translate: -50% 0;
   z-index: auto;
+  /* Nunca se mexe -- mas apaga-se nos ultimos dez por cento do percurso. No
+     desktop a foto acaba por tapa-lo, no telemovel nao: a faixa e mais
+     estreita do que ele e ficava-lhe meia palavra de fora, cortada ao meio
+     pelo bordo da imagem. Assim sai sempre limpo, e sai sem andar.
+     O clamp() nao serve aqui: com um custom property la dentro a
+     declaracao fica invalida no calculo e o opacity cai para o valor
+     inicial, que e 1 -- ou seja, nao fazia nada. Nao faz falta, porque o
+     proprio opacity ja corta o que passa de 0 e de 1. */
+}
+
+/* A opacidade vai num seletor a parte, e leva !important, por duas razoes
+   que se somam. Ha um "body.is-ready .logo { opacity: 1 }" a fechar a
+   animacao de entrada, com a mesma especificidade e mais abaixo no ficheiro
+   -- isso resolve-se juntando o .is-ready aqui. Mas o logotipo tambem entra
+   com uma animacao em forwards, e os valores que vem de uma animacao ganham
+   a qualquer declaracao normal, por mais especifica que seja. So o
+   !important do autor e que passa a frente de uma animacao. */
+body.page--detalhe.is-ready .logo {
+  opacity: calc((0.96 - var(--abertura, 0)) * 10) !important;
+}
+
+/* Solta-se no fim do percurso, senao ficava a flutuar por cima da ficha e da
+   galeria o resto da pagina. Nessa altura a foto ja o tapa por inteiro, por
+   isso o salto nao se ve. */
+body.page--detalhe.obra-aberta .logo {
+  position: relative;
+  top: auto;
+  left: auto;
+  translate: none;
 }
 
 /* o nome atras da foto segue a tinta da obra: claro sobre as cores escuras,

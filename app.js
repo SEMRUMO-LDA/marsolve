@@ -536,9 +536,9 @@
         const a = medidas.abertura;
         const p = a.curso > 0 ? entre((y - a.topo) / a.curso, 0, 1) : 0;
         raiz.style.setProperty('--abertura', p.toFixed(4));
-        // o logotipo desce o que a pagina subiu, ate ao fim do percurso
-        raiz.style.setProperty('--nav-fixa',
-          Math.min(y, a.topo + a.curso).toFixed(1) + 'px');
+        // o logotipo larga a janela quando a abertura acaba; ate la fica
+        // preso por CSS, sem nada escrito a cada frame
+        document.body.classList.toggle('obra-aberta', p > 0.995);
         // numa obra o fundo ja e branco desde o inicio e o que muda aqui e
         // so a tinta, do terracota para o preto. No Sobre o fundo tambem
         // esta a virar do azul para o branco (no CSS): a tinta nao se pode
