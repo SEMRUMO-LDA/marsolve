@@ -768,6 +768,9 @@ body.page--portfolio .bottom-left-contact {
        a 86vw centrados, que nao coincide com os 6vw da grelha. Assim o card
        assenta exactamente onde a foto da entrada assenta e as duas paginas
        partilham a mesma coluna. O scroll-padding faz o snap parar la. */
+    /* sem o width: auto a fita fica presa a largura do palco e as margens
+       negativas so a deslocam para a esquerda, em vez de a alargarem */
+    width: auto;
     margin-inline: calc(var(--grid-padding) * -1);
     padding-inline: calc((100vw - var(--hero-visual-width)) / 2);
     scroll-padding-inline: calc((100vw - var(--hero-visual-width)) / 2);
@@ -775,6 +778,16 @@ body.page--portfolio .bottom-left-contact {
 
   .selection-cards-track::-webkit-scrollbar {
     display: none;
+  }
+
+  /* A moldura do carrossel corta a 100% do palco, que e o que o desktop
+     precisa para esconder as paginas que estao de lado. Aqui a fita ja sai
+     pela borda do ecra de proposito, e esse corte apanhava-a antes: o card
+     seguinte desaparecia na margem em vez de continuar ate ao fim. Quem
+     corta passa a ser a propria fita, que tem exactamente 100vw. */
+  .selection-carousel-wrapper,
+  body.page--portfolio .selection-carousel-wrapper {
+    overflow: visible;
   }
 
   /* o segundo seletor e para ganhar ao "body.page--portfolio
