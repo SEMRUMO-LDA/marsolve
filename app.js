@@ -491,6 +491,8 @@
       return (nav ? nav.offsetHeight : 70) + folga;
     };
 
+    const moldura = document.querySelector('.obra-hero .hero-top');
+
     let medidas = null;
     const medir = () => {
       const alturaEcra = grelhaObra.clientHeight;
@@ -499,6 +501,7 @@
       // desce, nunca sobe
       raiz.style.setProperty('--obra-hero-altura', faixaDaHero().toFixed(1) + 'px');
       raiz.style.setProperty('--obra-hero-topo', topoDaHero().toFixed(1) + 'px');
+
       medidas = {
         alturaEcra,
         abertura: palco ? {
@@ -535,6 +538,22 @@
         const a = medidas.abertura;
         const p = a.curso > 0 ? entre((y - a.topo) / a.curso, 0, 1) : 0;
         raiz.style.setProperty('--abertura', p.toFixed(4));
+
+        // A foto cresce ate a janela inteira, mas assenta numa faixa que nao
+        // esta centrada nela -- tem a linha do logotipo em cima e a barra em
+        // baixo. Sem correccao, ao tamanho maximo ficava descaida. Mede-se
+        // aqui, e nao em medir(), porque medir() corre antes de o preloader
+        // largar o ecra e devolvia a faixa ainda por assentar.
+        //
+        // A moldura nao se mexe durante a abertura -- e a foto que cresce
+        // dentro dela, fora do fluxo -- por isso o rect vale em qualquer
+        // ponto. Le-se no primeiro terco, que da folga de sobra para acertar
+        // e deixa o resto do percurso sem um unico rect.
+        if (p < 0.35 && moldura) {
+          const r = moldura.getBoundingClientRect();
+          raiz.style.setProperty('--capa-desvio',
+            (window.innerHeight / 2 - (r.top + r.height / 2)).toFixed(1) + 'px');
+        }
         // numa obra o fundo ja e branco desde o inicio e o que muda aqui e
         // so a tinta, do terracota para o preto. No Sobre o fundo tambem
         // esta a virar do azul para o branco (no CSS): a tinta nao se pode

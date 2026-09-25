@@ -3547,6 +3547,19 @@ body.page--detalhe.obra-claro .menu-btn {
   top: var(--obra-hero-topo, 93px);
   height: var(--obra-hero-altura);
   container-type: size;
+  /* A foto cresce para fora desta caixa e passa por cima do logotipo, que
+     fica quieto. Acima do logotipo (5) e abaixo do botao do menu (100), que
+     tem de continuar a dar para carregar com a foto ja a ocupar o ecra. */
+  z-index: 60;
+}
+
+/* A moldura guarda a altura de repouso e a foto sai do fluxo dentro dela.
+   Sem isto, a foto a crescer empurrava a legenda para baixo -- e a legenda e
+   justamente o que tem de ficar quieto. */
+.obra-hero .hero-top {
+  position: relative;
+  width: 100%;
+  height: calc(var(--hero-visual-width) * 9 / 16);
 }
 
 
@@ -3562,8 +3575,15 @@ body.page--detalhe.obra-claro .menu-btn {
 .obra-hero .hero-visual {
   --capa-w0: var(--hero-visual-width);
   --capa-h0: calc(var(--hero-visual-width) * 9 / 16);
-  width: calc(var(--capa-w0) + (100cqw - var(--capa-w0)) * var(--abertura, 0));
-  height: calc(var(--capa-h0) + (100cqh - var(--capa-h0)) * var(--abertura, 0));
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--capa-w0) + (100vw - var(--capa-w0)) * var(--abertura, 0));
+  height: calc(var(--capa-h0) + (100svh - var(--capa-h0)) * var(--abertura, 0));
+  /* -50% -50% poe-na onde estava; --capa-desvio (medido pelo JS uma vez) leva
+     o centro dela ao centro do ecra a medida que cresce, porque a faixa onde
+     assenta nao esta centrada na janela */
+  translate: -50% calc(-50% + var(--capa-desvio, 0px) * var(--abertura, 0));
   /* na home a imagem nunca passa de meio ecra; aqui e suposto passar */
   max-height: none;
   aspect-ratio: auto;
@@ -3582,16 +3602,19 @@ body.page--detalhe.obra-claro .menu-btn {
   min-height: calc(2 * 1.45 * var(--hero-h1-size, var(--h5-size)));
 }
 
-/* A legenda sai de cena e deixa de ocupar lugar, para a imagem no fim ficar
-   centrada na moldura e nao desviada pela altura de um texto invisivel. */
-.obra-hero .hero-bottom {
-  max-height: calc((1 - var(--abertura, 0)) * 14vh);
-  overflow: clip;
-  opacity: calc(1 - var(--abertura, 0) * 3.5);
-}
+/* A legenda e o nome atras ficam quietos. Antes desvaneciam-se e saiam de
+   cena; agora e a foto que passa por cima deles, o que se le como a foto a
+   aproximar-se em vez da pagina a reorganizar-se a volta dela. */
 
-.obra-hero .marquee {
-  opacity: calc(1 - var(--abertura, 0) * 2.4);
+/* O logotipo tambem tem de ficar. Nao e sticky: a nav vive na grelha que
+   rola, e prende-la mudava o comportamento da pagina toda. Em vez disso
+   anda para baixo exactamente o que a pagina andou para cima -- a abertura
+   vai de 0 a 1 ao longo de --obra-abertura-curso, por isso o produto das
+   duas e o scroll feito -- e fica parada no ecra. Quando a abertura chega a
+   1 deixa de compensar e sai de cena a rolar, mas ai ja esta tapada pela
+   foto e ninguem a ve partir. */
+body.page--detalhe .site-nav {
+  translate: 0 calc(var(--abertura, 0) * var(--obra-abertura-curso));
 }
 
 /* o nome atras da foto segue a tinta da obra: claro sobre as cores escuras,
