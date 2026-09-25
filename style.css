@@ -3621,11 +3621,16 @@ body.page--detalhe.obra-claro .menu-btn {
 
 /* Os tres elementos a volta da foto -- o nome em ciclo, a legenda e o
    logotipo -- desvanecem-se ao mesmo tempo e ao mesmo ritmo, numa conta so.
-   Nenhum deles anda: ficam onde estao e apagam-se enquanto a foto cresce,
-   que e o que a faz parecer aproximar-se em vez de a pagina se reorganizar
-   a volta dela. Chegam a zero a 42% do percurso, com a foto ainda a meio. */
+   Nenhum deles anda: ficam onde estao e apagam-se enquanto a foto cresce.
+
+   O inicio e atrasado de proposito. Se comecassem a apagar-se logo, sumiam
+   antes de a foto lhes chegar e o que se via era a pagina a esvaziar-se.
+   Ficam inteiros ate 30% e so entao desaparecem, ja com a foto por cima
+   deles -- a 1440x900 o bordo de baixo da foto cruza a legenda entre os 12%
+   e os 60%, e o de cima chega ao logotipo aos 62%. Ve-se a imagem a tapa-los
+   antes de eles se irem, e e isso que a faz parecer aproximar-se. */
 body.page--detalhe {
-  --abertura-desvanece: calc(1 - var(--abertura, 0) * 2.4);
+  --abertura-desvanece: calc((0.8 - var(--abertura, 0)) * 2);
 }
 
 .obra-hero .marquee,
