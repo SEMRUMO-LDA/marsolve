@@ -3406,13 +3406,14 @@ body.page--contacto .marsolve-form {
     overflow-y: auto;
     row-gap: 26px;
     /* o diamante e fixo em baixo: o rodape nao pode acabar por tras dele */
-    padding-bottom: calc(var(--grid-padding) + var(--nav-action-height) + 40px);
+    padding-bottom: calc(var(--grid-padding) + var(--nav-action-height) + 22px);
   }
 
   /* sem isto o conteudo da hero continuava centrado na linha e transbordava
      para cima e para baixo em vez de a fazer crescer */
   body.page--contacto .hero-section {
-    display: block;
+    display: flex;
+    flex-direction: column;
     height: auto;
     /* a margem negativa servia para apertar tudo num ecra so; a empilhar,
        so puxava o formulario para cima do logotipo */
@@ -3423,6 +3424,40 @@ body.page--contacto .marsolve-form {
   body.page--contacto .hero-bottom {
     height: auto;
     min-height: 0;
+  }
+
+  /* A frase e o convite da pagina, nao o remate: a ler de cima para baixo,
+     vem antes do formulario -- logotipo, convite, formulario, contactos.
+     No desktop, onde se ve tudo de uma vez, fica onde esta. */
+  body.page--contacto .hero-bottom {
+    order: -1;
+    margin-bottom: 30px;
+  }
+
+  body.page--contacto .hero-content h1 {
+    font-size: 25px;
+    line-height: 1.25;
+  }
+
+  /* o rodape passa a ler-se como rodape: risco por cima, ar entre os
+     grupos e rotulos um pouco maiores */
+  body.page--contacto .corner-rodape {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid color-mix(in srgb, var(--contacto-tinta) 16%, transparent);
+    row-gap: 24px;
+  }
+
+  body.page--contacto .rodape-grupo__titulo {
+    font-size: 10.5px;
+    margin-bottom: 7px;
+  }
+
+  /* No desktop a palavra passa inteira por tras do formulario e e uma
+     textura; a 390px so se veem duas letras a espreitar dos lados, que se
+     leem como um defeito. */
+  body.page--contacto .marquee {
+    display: none;
   }
 
   .hero-visual--formulario {
