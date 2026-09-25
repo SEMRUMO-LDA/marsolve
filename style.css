@@ -3732,9 +3732,14 @@ body.page--detalhe.obra-aberta .logo {
    Continua a aguentar o que vier: o destaque e so o primeiro paragrafo, os
    seguintes ficam em corpo de texto, e a fila dos dados reparte-se sozinha
    pelos campos que existirem. */
-/* as folgas em vw sozinhas colapsam no telemovel: max() poe-lhes um chao */
+/* A ficha nao leva folga por cima. O palco da abertura ja deixa uma faixa
+   vazia por baixo da foto quando ela chega ao tamanho maximo -- a foto
+   ocupa a caixa da hero, que nao chega ao fundo do ecra -- e e nessa faixa
+   que a ficha vai pousar. Assim, no instante em que a imagem acaba de
+   crescer, a localidade, o ano e o estado ja estao no ecra, em vez de
+   ficarem a espera do scroll seguinte. */
 .obra-ficha {
-  margin-top: max(2.4rem, 4.5vw);
+  margin-top: 0;
 }
 
 /* o primeiro paragrafo e a entrada da obra, nao mais um paragrafo */
@@ -3745,7 +3750,9 @@ body.page--detalhe.obra-aberta .logo {
   line-height: 1.35;
   letter-spacing: -0.015em;
   color: var(--brand-dark);
-  max-width: 24ch;
+  /* 24ch servia a frase de uma linha que ja nao existe; com texto a serio --
+     o unico que ha, o da Maria Nova -- partia em seis linhas estreitas */
+  max-width: 32ch;
 }
 
 /* se houver mais, voltam ao corpo normal */
@@ -3759,8 +3766,12 @@ body.page--detalhe.obra-aberta .logo {
 .obra-texto p { margin: 0; }
 .obra-texto p + p { margin-top: 1.1em; }
 
+/* A folga de cima pertence ao par frase + dados, nao aos dados. Sete das
+   oito obras ficaram sem texto -- a frase que la estava repetia a legenda da
+   abertura -- e sem isto sobrava-lhes um vazio antes do traco. Quando a
+   cliente der texto a serio, o paragrafo volta e a folga vem com ele. */
 .obra-dados {
-  margin: max(2.4rem, 4.5vw) 0 0;
+  margin: 0;
   padding-top: max(1.1rem, 1.7vw);
   border-top: 1px solid rgba(35, 31, 32, 0.14);
   display: grid;
@@ -3783,6 +3794,10 @@ body.page--detalhe.obra-aberta .logo {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(35, 31, 32, 0.68);
+}
+
+.obra-texto + .obra-dados {
+  margin-top: max(2.4rem, 4.5vw);
 }
 
 .obra-dados dd {
