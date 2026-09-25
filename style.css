@@ -2841,6 +2841,9 @@ body.page--contacto .marsolve-form {
 
 /* os contactos no canto, com a mesma caixa e a mesma escala dos filtros,
    para assentarem na linha do diamante */
+/* Duas linhas de proposito: os contactos e o telefone em cima, a morada em
+   baixo. Numa linha so a morada empurrava o bloco ate as redes, e a quebra
+   automatica deixava um losango pendurado no fim da primeira linha. */
 .corner-contactos {
   grid-column: 1 / -1;
   grid-row: 3;
@@ -2849,9 +2852,10 @@ body.page--contacto .marsolve-form {
   z-index: 30;
   height: var(--nav-action-height);
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0 1.1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.45em;
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.2;
@@ -2874,9 +2878,50 @@ body.page--contacto .marsolve-form {
   opacity: 0.3;
 }
 
-/* nao passar por baixo do diamante, que vive no canto oposto da mesma linha */
+/* As redes no canto oposto, com a mesma escala: a barra de baixo fica com
+   os contactos a esquerda, as redes a direita e o diamante no fim. */
+.corner-redes {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  justify-self: end;
+  align-self: end;
+  z-index: 30;
+  height: var(--nav-action-height);
+  display: flex;
+  align-items: center;
+  gap: 0 1.1rem;
+  margin-right: calc(var(--menu-btn-width) + 2.6vw);
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.corner-redes a {
+  color: inherit;
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+
+.corner-redes a:hover {
+  opacity: 1;
+}
+
+.corner-redes__sep {
+  opacity: 0.3;
+}
+
+/* os contactos param onde as redes comecam, para os dois nao se tocarem */
 .corner-contactos {
-  max-width: calc(100% - var(--menu-btn-width) - 3vw);
+  max-width: calc(100% - var(--menu-btn-width) - 24vw);
+}
+
+.corner-contactos__linha {
+  display: flex;
+  align-items: center;
+  gap: 0 1.1rem;
 }
 
 /* No telemovel o botao do menu desce para o centro da barra de baixo, em
@@ -2884,14 +2929,26 @@ body.page--contacto .marsolve-form {
    a faixa vazia logo acima, um por linha. */
 @media (max-width: 650px) {
   .corner-contactos {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.45em;
+    height: auto;
     max-width: 100%;
     margin-bottom: calc(var(--menu-btn-width) + 1.2rem);
   }
+  .corner-contactos__linha {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45em;
+  }
   .corner-contactos__sep {
     display: none;
+  }
+  /* No telemovel o canto direito e do botao do menu e a barra de baixo ja
+     leva os contactos em tres linhas. As redes saem: estao na gaveta, a um
+     toque, e aqui so empilhavam. */
+  .corner-redes {
+    display: none;
+  }
+  .corner-contactos {
+    max-width: 100%;
   }
 }
 
