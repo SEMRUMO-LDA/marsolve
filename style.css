@@ -727,14 +727,78 @@ body.page--portfolio .bottom-left-contact {
   }
 }
 
-/* Uma coluna so punha um card a ocupar a largura toda e o painel ficava
-   baixo e largo: a localidade corre na vertical e media-se contra ele, por
-   isso saia com poucos pixeis e nao se lia. Duas colunas, como na entrada,
-   devolvem-lhe altura. */
+/* Os cards no telemovel
+   ---------------------
+   Quatro cards num ecra de 390 dava cada um com 164px de largura: a
+   fotografia minuscula e a localidade a 13px. Nao e problema de reparticao,
+   e de layout -- o card foi desenhado para uma coluna estreita e alta.
+
+   No telemovel passa a um por linha, a largura toda, e o painel deixa de ser
+   uma grelha com o nome a correr na vertical: passa a uma coluna, com o
+   losango em cima e, em baixo, o descritivo pequeno sobre a localidade
+   grande, na horizontal. Ve-se um card de cada vez e o seguinte a espreitar,
+   que e o que convida a continuar. */
 @media (max-width: 650px) {
-  body.page--portfolio .selection-cards-slide {
-    grid-template-columns: repeat(2, 1fr);
+  body.page--portfolio .selection-cards-slide,
+  .selection-cards,
+  .selection-cards-slide {
+    grid-template-columns: 1fr;
     overflow-y: auto;
+  }
+
+  .selection-card {
+    /* o height: 100% que traz do desktop deixava-o encolher ate ao minimo */
+    height: auto;
+    min-height: min(58svh, 460px);
+  }
+
+  .selection-card__panel {
+    /* o titulo deixa de se medir contra este painel */
+    container-type: normal;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    /* com o nome na horizontal o painel precisa de menos altura: a foto fica
+       com a maior parte do card, que e o que se quer ver no telemovel */
+    flex: 1.1 1 0;
+  }
+
+  .selection-card__cover {
+    flex: 1.5 1 0;
+  }
+
+  /* o align-self: end que trazem do desktop e, numa coluna flex, alinhamento
+     a direita -- no desktop era o eixo vertical, aqui e o horizontal */
+  .selection-card__symbol,
+  .selection-card__desc,
+  .selection-card__title {
+    align-self: flex-start;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .selection-card__symbol {
+    order: 1;
+    width: 34px;
+  }
+
+  /* o descritivo empurra-se a si e ao titulo para o fundo do painel */
+  .selection-card__desc {
+    order: 2;
+    margin-top: auto;
+    max-width: none;
+    font-size: 13px;
+    opacity: 0.75;
+  }
+
+  .selection-card__title {
+    order: 3;
+    writing-mode: horizontal-tb;
+    transform: none;
+    margin-top: 2px;
+    font-size: clamp(30px, 8.4vw, 44px);
+    letter-spacing: -0.02em;
   }
 }
 
@@ -2231,10 +2295,10 @@ body.page--internal .selection-preview-bar__link:hover,
     justify-self: center;
   }
 
-  /* Selection cards stack on mobile */
+  /* Um card por linha, tambem na entrada -- ver "Os cards no telemovel" */
   .selection-cards,
   .selection-cards-slide {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
     height: auto;
     /* sem recuo lateral, como no desktop; em baixo fica a faixa dos controlos */
     padding: var(--card-inset) 0;
@@ -2245,11 +2309,58 @@ body.page--internal .selection-preview-bar__link:hover,
     max-width: none;
   }
 
-  /* Nav menu full width on mobile */
+  /* A gaveta no telemovel
+     ---------------------
+     Era um painel quase vazio com letra minuscula: os numeros a 8.4px, as
+     redes a 9.4px, os contactos a 9.8px. Outra vez o rem, que neste site
+     encolhe com o ecra (o html tem corpo fluido), a fazer de chao num clamp
+     e a nao segurar nada. Tudo em px, e a navegacao -- que e o que se vem
+     ca buscar -- com o tamanho que a largura toda permite. */
   .nav-menu__panel {
     width: 100%;
     min-width: unset;
-    padding: 1.5rem 1.25rem 2.5rem;
+    padding: 26px 22px 34px;
+  }
+
+  .drawer-nav__text {
+    font-size: clamp(30px, 8.6vw, 40px);
+    letter-spacing: 0.02em;
+  }
+
+  .drawer-nav__num {
+    font-size: 12px;
+    min-width: 2.6em;
+  }
+
+  /* linhas altas: enchem a gaveta e dao um alvo de toque a serio */
+  .drawer-nav__link {
+    padding: 20px 0;
+  }
+
+  .drawer-footer {
+    gap: 20px;
+  }
+
+  .drawer-footer__heading {
+    font-size: 12px;
+  }
+
+  .drawer-social-link,
+  .drawer-footer__contact-item,
+  .drawer-footer__address {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .drawer-legal-link,
+  .drawer-legal-sep,
+  .drawer-copyright {
+    font-size: 12px;
+  }
+
+  .nav-menu__close {
+    width: 40px;
+    height: 40px;
   }
 
   .drawer-form__row {
@@ -2259,11 +2370,6 @@ body.page--internal .selection-preview-bar__link:hover,
   .drawer-contact__direct {
     grid-template-columns: 1fr;
     gap: 0.8rem;
-  }
-
-  .nav-menu__close {
-    width: 32px;
-    height: 32px;
   }
 
   .site-preloader__frames {

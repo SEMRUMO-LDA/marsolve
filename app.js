@@ -817,6 +817,11 @@
     // que se mede, senao media-se contra o resultado da vez anterior
     document.documentElement.style.removeProperty('--titulo-card');
 
+    // no telemovel o nome e horizontal e cabe-lhe a largura do card, nao a
+    // altura do painel: medi-lo daria uma escala enorme. Sai daqui e deixa a
+    // variavel por escrever, que e o que faz o CSS mandar.
+    if (!getComputedStyle(titulos[0]).writingMode.startsWith('vertical')) return;
+
     let escala = Infinity;
     for (const t of titulos) {
       const painel = t.closest('.selection-card__panel');
