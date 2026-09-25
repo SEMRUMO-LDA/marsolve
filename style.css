@@ -1859,6 +1859,12 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   justify-content: center;
 }
 
+/* o rodape ja traz um risco por cima: sem isto ficavam dois, a 18px um do
+   outro */
+.drawer-nav__item:last-child {
+  border-bottom: none;
+}
+
 .drawer-nav__link {
   display: flex;
   align-items: baseline;
