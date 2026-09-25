@@ -786,6 +786,31 @@
     }, { passive: true });
   }
 
+  // — O polegar do swipe —
+  // So o telemovel o mostra. Nao e uma barra que enche: tem o tamanho da
+  // fatia que se ve, como a de um scroll, por isso diz ao mesmo tempo onde se
+  // esta e quantos cards ha. As duas medidas saem do proprio scroll da fita,
+  // portanto acertam sozinhas quando um filtro tira cards.
+  const polegar = document.querySelector('.selection-progresso');
+  if (carouselTrack && polegar) {
+    let pedidoPolegar = null;
+    const pintarPolegar = () => {
+      pedidoPolegar = null;
+      const total = carouselTrack.scrollWidth;
+      if (total <= 0) return;
+      const vista = carouselTrack.clientWidth;
+      polegar.style.setProperty('--swipe-fatia', (Math.min(vista / total, 1)).toFixed(4));
+      polegar.style.setProperty('--swipe-inicio', (carouselTrack.scrollLeft / total).toFixed(4));
+    };
+    const agendarPolegar = () => {
+      if (pedidoPolegar === null) pedidoPolegar = requestAnimationFrame(pintarPolegar);
+    };
+    carouselTrack.addEventListener('scroll', agendarPolegar, { passive: true });
+    window.addEventListener('resize', agendarPolegar);
+    document.addEventListener('marsolve:cards', agendarPolegar);
+    agendarPolegar();
+  }
+
   // Keyboard navigation when selection is open
   document.addEventListener('keydown', (e) => {
     if (body.classList.contains('selection-open') && !fitaNativa()) {

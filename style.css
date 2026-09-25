@@ -760,6 +760,17 @@ body.page--portfolio .bottom-left-contact {
     overscroll-behavior-x: contain;
     gap: 12px;
     scrollbar-width: none;
+    /* Sangra ate as bordas do ecra: o card seguinte passa a ser cortado pelo
+       proprio ecra e nao por uma margem branca, que era o que dava a sensacao
+       de estar mal recortado.
+
+       O recuo nao e a goteira do palco, e o da fotografia da hero -- ela vive
+       a 86vw centrados, que nao coincide com os 6vw da grelha. Assim o card
+       assenta exactamente onde a foto da entrada assenta e as duas paginas
+       partilham a mesma coluna. O scroll-padding faz o snap parar la. */
+    margin-inline: calc(var(--grid-padding) * -1);
+    padding-inline: calc((100vw - var(--hero-visual-width)) / 2);
+    scroll-padding-inline: calc((100vw - var(--hero-visual-width)) / 2);
   }
 
   .selection-cards-track::-webkit-scrollbar {
@@ -779,18 +790,50 @@ body.page--portfolio .bottom-left-contact {
     display: none;
   }
 
-  /* 88% deixa o seguinte a espreitar -- e essa a unica indicacao de que ha
-     mais, e chega: nao precisa de setas nem de contador */
+  /* a mesma largura da fotografia da hero; o que sobra do seguinte sai pela
+     borda do ecra fora */
   .selection-card {
-    flex: 0 0 88%;
+    flex: 0 0 var(--hero-visual-width);
     scroll-snap-align: start;
   }
 
-  /* a barra de baixo fica so com os filtros e o diamante. O "body" esta ca
-     para passar a frente da regra que poe a barra de baixo em flex, que vive
-     mais abaixo no ficheiro com a mesma especificidade. */
+  /* O polegar do swipe. Nao e uma barra que enche: tem o tamanho da fatia
+     que se ve, como a de um scroll, por isso diz ao mesmo tempo onde se esta
+     e quantos cards ha -- com oito fica com um oitavo da largura. As duas
+     medidas vem do JS, que le o scroll da fita.
+
+     O "body" esta ca para passar a frente da regra que poe a barra de baixo
+     em flex, que vive mais abaixo no ficheiro com a mesma especificidade. */
   body .selection-controls {
+    display: flex;
+    justify-content: center;
+    height: auto;
+    margin-top: 18px;
+  }
+
+  .selection-nav-arrow,
+  .selection-slide-indicators {
     display: none;
+  }
+
+  .selection-progresso {
+    display: block;
+    position: relative;
+    width: min(120px, 32vw);
+    height: 2px;
+    border-radius: 2px;
+    background: color-mix(in srgb, currentColor 18%, transparent);
+    overflow: hidden;
+  }
+
+  .selection-progresso__polegar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--swipe-inicio, 0) * 100%);
+    width: calc(var(--swipe-fatia, 1) * 100%);
+    border-radius: inherit;
+    background: currentColor;
   }
 
   /* Com o portfolio aberto, o logotipo sai. O losango da marca ja esta em
@@ -817,11 +860,17 @@ body.page--portfolio .bottom-left-contact {
   body.page--home.selection-open .page-grid {
     padding-top: 14px;
     row-gap: 0;
+    /* o diamante e fixo a 8vw do fundo: sem esta folga os filtros ficavam a
+       uma dezena de pixeis dele */
+    padding-bottom: calc(var(--grid-padding) + 22vw);
   }
 
   body.page--portfolio .corner-filters,
   body.page--home.selection-open .corner-filters {
-    margin-top: 18px;
+    margin-top: 16px;
+    /* o diamante e fixo e nao entra na grelha: a folga que o afasta tem de
+       vir daqui */
+    margin-bottom: 24px;
   }
 
   /* na entrada o carrossel vinha centrado na sua caixa e sobravam-lhe 22px
@@ -832,54 +881,10 @@ body.page--portfolio .bottom-left-contact {
     align-items: stretch;
   }
 
-  .selection-card__panel {
-    /* o titulo deixa de se medir contra este painel */
-    container-type: normal;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    /* com o nome na horizontal o painel precisa de menos altura: a foto fica
-       com a maior parte do card, que e o que se quer ver no telemovel */
-    flex: 1.1 1 0;
-  }
-
-  .selection-card__cover {
-    flex: 1.5 1 0;
-  }
-
-  /* o align-self: end que trazem do desktop e, numa coluna flex, alinhamento
-     a direita -- no desktop era o eixo vertical, aqui e o horizontal */
-  .selection-card__symbol,
-  .selection-card__desc,
-  .selection-card__title {
-    align-self: flex-start;
-    justify-self: start;
-    text-align: left;
-  }
-
-  .selection-card__symbol {
-    order: 1;
-    width: 34px;
-  }
-
-  /* o descritivo empurra-se a si e ao titulo para o fundo do painel */
-  .selection-card__desc {
-    order: 2;
-    margin-top: auto;
-    max-width: none;
-    font-size: 13px;
-    opacity: 0.75;
-  }
-
-  .selection-card__title {
-    order: 3;
-    writing-mode: horizontal-tb;
-    transform: none;
-    margin-top: 2px;
-    font-size: clamp(30px, 8.4vw, 44px);
-    letter-spacing: -0.02em;
-  }
+  /* O card volta ao layout do desktop -- nome na vertical, medido contra o
+     painel. O que obrigava a deita-lo era o card de 164px de largura de
+     quando eram quatro por ecra; com um por ecra ha 633px de altura, mais do
+     que os 561 do desktop, e a vertical volta a ser a melhor leitura. */
 }
 
 /* — Page Stage & Transitions — */
@@ -2351,9 +2356,11 @@ body.page--internal .selection-preview-bar__link:hover,
     padding-bottom: calc(var(--grid-padding) + 15vw);
   }
 
+  /* o polegar em cima, os filtros por baixo: a ordem da esquerda para a
+     direita do desktop passa a de cima para baixo */
   body.page--home .corner-filters,
   .portfolio-stage .corner-filters {
-    grid-row: 3;
+    grid-row: 4;
     justify-self: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -2364,7 +2371,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
   body.page--home .selection-controls,
   .portfolio-stage .selection-controls {
-    grid-row: 4;
+    grid-row: 3;
     justify-self: center;
     height: auto;
     margin-top: 0.6rem;
