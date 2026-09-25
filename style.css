@@ -3719,60 +3719,19 @@ body.page--detalhe.obra-aberta .logo {
 }
 
 /* — Ficha — */
-/* A ficha era uma coluna estreita de dados a esquerda e uma frase solta a
-   direita, com o terco final do ecra vazio. Com tres campos e uma linha de
-   texto -- que e o que ha -- lia-se como sobras entre a fotografia de cima e
-   a galeria de baixo, e nao como um bloco.
-
-   Passa a duas coisas empilhadas e ambas a largura toda: a frase primeiro,
-   grande, presa a fotografia; os dados a seguir, numa fila com um traco por
-   cima. Uma fila le-se como uma unidade; uma coluna ao lado de uma frase
-   curta le-se como um buraco.
-
-   Continua a aguentar o que vier: o destaque e so o primeiro paragrafo, os
-   seguintes ficam em corpo de texto, e a fila dos dados reparte-se sozinha
-   pelos campos que existirem. */
-/* A ficha nao leva folga por cima. O palco da abertura ja deixa uma faixa
-   vazia por baixo da foto quando ela chega ao tamanho maximo -- a foto
-   ocupa a caixa da hero, que nao chega ao fundo do ecra -- e e nessa faixa
-   que a ficha vai pousar. Assim, no instante em que a imagem acaba de
-   crescer, a localidade, o ano e o estado ja estao no ecra, em vez de
-   ficarem a espera do scroll seguinte. */
+/* A ficha nao leva folga por cima. O palco da abertura deixa uma faixa vazia
+   por baixo da foto quando ela chega ao tamanho maximo -- a foto ocupa a
+   caixa da hero, que nao chega ao fundo do ecra -- e e nessa faixa que a
+   ficha pousa. Assim, no instante em que a imagem acaba de crescer, a
+   localidade, o ano e o estado ja estao no ecra, em vez de ficarem a espera
+   do scroll seguinte. Medido a 1440x900: foto ate aos 724, dados em 800-876. */
 .obra-ficha {
   margin-top: 0;
 }
 
-/* o primeiro paragrafo e a entrada da obra, nao mais um paragrafo */
-.obra-texto > p:first-child {
-  font-family: var(--sans-font);
-  font-size: clamp(1.45rem, 2.25vw, 2.5rem);
-  font-weight: 400;
-  line-height: 1.35;
-  letter-spacing: -0.015em;
-  color: var(--brand-dark);
-  /* 24ch servia a frase de uma linha que ja nao existe; com texto a serio --
-     o unico que ha, o da Maria Nova -- partia em seis linhas estreitas */
-  max-width: 32ch;
-}
-
-/* se houver mais, voltam ao corpo normal */
-.obra-texto > p + p {
-  max-width: 62ch;
-  font-size: clamp(1rem, 1.25vw, 1.3rem);
-  line-height: 1.7;
-  color: #4a4646;
-}
-
-.obra-texto p { margin: 0; }
-.obra-texto p + p { margin-top: 1.1em; }
-
-/* A folga de cima pertence ao par frase + dados, nao aos dados. Sete das
-   oito obras ficaram sem texto -- a frase que la estava repetia a legenda da
-   abertura -- e sem isto sobrava-lhes um vazio antes do traco. Quando a
-   cliente der texto a serio, o paragrafo volta e a folga vem com ele. */
 .obra-dados {
   margin: 0;
-  padding-top: max(1.1rem, 1.7vw);
+  padding-top: max(18px, 1.7vw);
   border-top: 1px solid rgba(35, 31, 32, 0.14);
   display: grid;
   /* tres campos dao tres colunas, seis dao seis; num ecra estreito
@@ -3796,17 +3755,64 @@ body.page--detalhe.obra-aberta .logo {
   color: rgba(35, 31, 32, 0.68);
 }
 
-.obra-texto + .obra-dados {
-  margin-top: max(2.4rem, 4.5vw);
-}
-
 .obra-dados dd {
   margin: 0;
   font-family: var(--sans-font);
-  font-size: clamp(1.05rem, 1.35vw, 1.45rem);
+  font-size: clamp(17px, 1.35vw, 23px);
   font-weight: 600;
   line-height: 1.3;
   color: var(--brand-dark);
+}
+
+/* — O texto da obra — */
+/* Nota para quem mexer nestas medidas: o html tem corpo fluido (11.7px a
+   390, 15.8px a 1440, 21.1px a 1920), portanto rem nao serve de chao num
+   clamp -- encolhe com o ecra como o vw. Os minimos aqui vao em px. */
+/* Quando ha texto a serio -- por agora so a Maria Nova -- ele nao e uma
+   legenda da ficha: e uma paragem entre os dados e a galeria. Vem ao centro,
+   grande, com ar a volta, e e a unica coisa no ecra enquanto se le. Sem
+   texto a seccao nao existe e a galeria segue a ficha com a sua folga.
+
+   Medida curta de proposito: partir em cinco ou seis linhas centradas e o
+   que faz um paragrafo parecer uma frase dita, em vez de um bloco de
+   informacao. */
+.obra-texto {
+  /* o corpo vive aqui, e nao no <p>, porque o 40ch mede-se pelo tamanho de
+     letra do proprio elemento: no <p> a caixa saia com a medida do texto
+     corrido, menos de metade do que devia */
+  font-family: var(--sans-font);
+  font-size: clamp(23px, 2.3vw, 42px);
+  margin: max(90px, 13vw) auto 0;
+  max-width: 40ch;
+  text-align: center;
+}
+
+.obra-texto p {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--brand-dark);
+}
+
+/* se um dia houver mais do que um paragrafo, os seguintes voltam ao corpo de
+   texto e a uma medida de leitura -- o destaque e da abertura, nao de tudo */
+.obra-texto p + p {
+  margin-top: 1.4em;
+  max-width: 52ch;
+  margin-inline: auto;
+  font-size: clamp(16px, 1.15vw, 19px);
+  line-height: 1.75;
+  letter-spacing: 0;
+  color: #4a4646;
+}
+
+.obra-texto em {
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--brand-primary);
 }
 
 /* — Galeria — */
@@ -3819,7 +3825,7 @@ body.page--detalhe.obra-aberta .logo {
 .obra-galeria {
   /* a ficha encostou-se a fotografia; a galeria afasta-se, para comecar um
      andamento novo em vez de ser a continuacao do texto */
-  margin-top: max(4rem, 9.5vw);
+  margin-top: max(64px, 9.5vw);
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   column-gap: var(--grid-gap);
