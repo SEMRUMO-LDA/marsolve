@@ -3449,8 +3449,23 @@ body.page--contacto .marsolve-form {
   }
 
   body.page--contacto .rodape-grupo__titulo {
-    font-size: 10.5px;
-    margin-bottom: 7px;
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  /* Estes sao os unicos contactos da pagina e tinham 9px de corpo com 14px
+     de altura de toque -- um terco do minimo que um dedo precisa. Passam a
+     14px, cada um com 44px de alvo. O recuo vertical tambem e o que os
+     separa uns dos outros, por isso o ar entre grupos pode descer. */
+  body.page--contacto .rodape-grupo a {
+    display: block;
+    font-size: 14px;
+    line-height: 1.5;
+    padding-block: 12px;
+  }
+
+  body.page--contacto .corner-rodape {
+    row-gap: 16px;
   }
 
   /* No desktop a palavra passa inteira por tras do formulario e e uma
