@@ -67,8 +67,16 @@
   --selection-card-desc-size: 0.9vw;
   --selection-card-symbol-width: 1.9vw;
   --selection-card-padding: 1.85vw;
-  --selection-card-panel-ratio: 1.85;
-  --selection-card-cover-ratio: 1.2;
+  /* A reparticao do card entre o painel de cor e a fotografia. Estava em
+     1.85/1.2, ou seja quase dois tercos de cor para um terco de obra --
+     numa pagina que existe para mostrar obra. Passa a 1.45/1.55: a foto
+     sobe de 36% para 47% do card, mais 31% de altura.
+
+     O travao e o titulo, que se mede em cqh e portanto encolhe com o
+     painel: 30px antes, 24px agora a 1440x900. Abaixo disto a localidade
+     comeca a nao se ler em janelas baixas. */
+  --selection-card-panel-ratio: 1.45;
+  --selection-card-cover-ratio: 1.55;
 }
 
 /* — Reset — */
