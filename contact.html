@@ -11,94 +11,120 @@
   <link href="https://fonts.googleapis.com/css2?family=Gantari:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,700&amp;family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,600;1,8..60,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=6">
 </head>
-<body class="is-ready page--white page--internal" data-page-theme="white" style="background: #ffffff;">
+<body class="is-ready page--internal page--contacto">
 
-  <!-- Main Page -->
-  <div id="page-stage" class="page-stage--white" style="background: #ffffff !important; color: var(--brand-dark) !important;">
+  <div id="page-stage">
     <main>
-      <div class="page-grid page-grid--scrollable">
+      <div class="page-grid">
 
-        <!-- Navigation -->
-        <nav class="site-nav" aria-label="Primary" style="color: var(--brand-dark) !important;">
-          <header class="logo">
-            <a href="index.html" aria-label="Marsolve - home">
-              <img class="logo-img" src="assets/logo-horizontal.png" alt="Marsolve" width="1084" height="125">
-            </a>
-          </header>
+          <!-- Navigation -->
+          <nav class="site-nav" aria-label="Primary">
+            <header class="logo">
+              <a href="index.html" aria-label="Marsolve - home">
+                <img class="logo-img" src="assets/logo-horizontal.png" alt="Marsolve" width="1084" height="125">
+              </a>
+            </header>
 
-          <div class="site-nav__actions animate">
-            <button type="button" class="menu-btn" aria-label="Abrir menu" aria-expanded="false" id="menu-toggle-btn" style="color: var(--brand-primary) !important;">
-              <span class="menu-btn__icon-box">
-                <svg class="menu-btn__svg" viewBox="0 0 418.76 799.46" fill="none" aria-hidden="true">
-                  <rect fill="currentColor" x="106.39" y="734.12" width="205.98" height="65.34" rx="10.07" ry="10.07"/>
-                  <path fill="currentColor" stroke="currentColor" stroke-miterlimit="10" stroke-width="7" d="M410.24,319.12L219.65,9.27c-4.7-7.69-15.88-7.69-20.58,0L23.47,294.23l-14.95,24.89c-2.94,4.9-4.61,10.39-4.95,15.92-.1,1.42-.1,2.84,0,4.21.34,5.59,2.01,11.07,4.95,15.97l190.54,309.85c4.7,7.69,15.88,7.69,20.58,0l190.59-309.85c2.94-4.9,4.61-10.39,4.95-15.97.1-1.37.1-2.79,0-4.21-.34-5.54-2.01-11.02-4.95-15.92ZM371.57,337.5l-162.22,269.63L47.19,337.45v-.54L209.36,67.23l162.22,269.63v.64Z"/>
-                </svg>
-              </span>
-            </button>
-          </div>
-        </nav>
+            <div class="site-nav__actions">
+              <button type="button" class="menu-btn" aria-label="Abrir menu" aria-expanded="false" id="menu-toggle-btn">
+                <span class="menu-btn__icon-box">
+                  <svg class="menu-btn__svg" viewBox="0 0 418.76 799.46" fill="none" aria-hidden="true">
+                    <rect fill="currentColor" x="106.39" y="734.12" width="205.98" height="65.34" rx="10.07" ry="10.07"/>
+                    <path fill="currentColor" stroke="currentColor" stroke-miterlimit="10" stroke-width="7" d="M410.24,319.12L219.65,9.27c-4.7-7.69-15.88-7.69-20.58,0L23.47,294.23l-14.95,24.89c-2.94,4.9-4.61,10.39-4.95,15.92-.1,1.42-.1,2.84,0,4.21.34,5.59,2.01,11.07,4.95,15.97l190.54,309.85c4.7,7.69,15.88,7.69,20.58,0l190.59-309.85c2.94-4.9,4.61-10.39,4.95-15.97.1-1.37.1-2.79,0-4.21-.34-5.54-2.01-11.02-4.95-15.92ZM371.57,337.5l-162.22,269.63L47.19,337.45v-.54L209.36,67.23l162.22,269.63v.64Z"/>
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </nav>
 
-        <div class="internal-content fade-in-up contact-page">
-            
-            <section class="contact-layout">
-              <div class="contact-info">
-                <h1>Fale connosco e comece a construir.</h1>
-                
-                <div class="contact-details">
-                  <div class="contact-block">
-                    <span class="contact-label">Email</span>
-                    <a href="mailto:comercial@marsolve.net" class="contact-link link-underline">comercial@marsolve.net</a>
+        <!-- Canto inferior esquerdo: nas outras paginas e o scroll ou os
+             filtros; aqui sao os contactos, que assim nao gastam altura. -->
+        <div class="corner-contactos">
+          <a href="mailto:comercial@marsolve.net">comercial@marsolve.net</a>
+          <span class="corner-contactos__sep">&#9671;</span>
+          <a href="tel:+351282312485">(+351) 282 312 485</a>
+          <span class="corner-contactos__sep">&#9671;</span>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Quinta+dos+Arcos+Lote+23+8365-186+Arma%C3%A7%C3%A3o+de+P%C3%AAra" target="_blank" rel="noopener noreferrer">Quinta dos Arcos, Lote 23 Loja C, 8365-186 Arma&ccedil;&atilde;o de P&ecirc;ra</a>
+        </div>
+
+        <!-- As mesmas classes da hero: o que muda e o que esta na caixa do
+             meio. Aqui e o formulario, e a pagina cabe num ecra. -->
+        <div class="hero-section">
+          <div class="hero-top">
+            <div class="hero-visual hero-visual--formulario">
+              <form class="marsolve-form marsolve-form--hero">
+                <div class="form-group">
+                  <label class="sr-only" for="c-nome">Nome completo</label>
+                  <input id="c-nome" type="text" name="name" placeholder="Nome completo*" required>
+                </div>
+                <div class="form-group">
+                  <label class="sr-only" for="c-email">Email</label>
+                  <input id="c-email" type="email" name="email" placeholder="Email*" required>
+                </div>
+                <div class="form-group">
+                  <label class="sr-only" for="c-tel">Telefone</label>
+                  <input id="c-tel" type="tel" name="phone" placeholder="Telefone*" required>
+                </div>
+                <div class="form-group">
+                  <label class="sr-only" for="c-assunto">Assunto</label>
+                  <select id="c-assunto" name="subject" required>
+                    <option value="" disabled selected>Assunto*</option>
+                    <option value="Cliente">Nova constru&ccedil;&atilde;o</option>
+                    <option value="Investidor">Investimento imobili&aacute;rio</option>
+                    <option value="Parceria">Parceria / fornecedor</option>
+                  </select>
+                </div>
+                <div class="form-group form-group--largo">
+                  <label class="sr-only" for="c-msg">Mensagem</label>
+                  <textarea id="c-msg" name="message" rows="3" placeholder="Mensagem"></textarea>
+                </div>
+                <div class="form-group form-group--largo marsolve-form__fim">
+                  <label class="checkbox-inline">
+                    <input type="checkbox" required>
+                    <span>Concordo com a <a href="#">Pol&iacute;tica de Privacidade</a> e o tratamento dos meus dados.</span>
+                  </label>
+                  <button type="submit" class="hero-price">Enviar mensagem</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="marquee" aria-hidden="true">
+              <div class="marquee-reveal">
+                <div class="marquee-scroll">
+                  <div class="marquee-collection">
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
                   </div>
-                  <div class="contact-block">
-                    <span class="contact-label">Telefone</span>
-                    <a href="tel:+351282312485" class="contact-link link-underline">(+351) 282 312 485</a>
-                  </div>
-                  <div class="contact-block">
-                    <span class="contact-label">Morada</span>
-                    <a href="https://www.google.com/maps/search/?api=1&amp;query=Quinta+dos+Arcos+Lote+23+8365-186+Arma%C3%A7%C3%A3o+de+P%C3%AAra" target="_blank" rel="noopener noreferrer" class="contact-link link-underline">Quinta dos Arcos, Lote 23 Loja C,<br>8365-186 Armação de Pêra</a>
+                  <div class="marquee-collection" aria-hidden="true">
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
                   </div>
                 </div>
               </div>
-
-              <div class="contact-form-wrapper">
-                <form class="marsolve-form">
-                  <div class="form-group">
-                    <input type="text" name="name" placeholder="Nome completo*" required>
-                  </div>
-                  <div class="form-group">
-                    <input type="email" name="email" placeholder="Email*" required>
-                  </div>
-                  <div class="form-row">
-                    <div class="form-group">
-                      <input type="tel" name="phone" placeholder="Telefone*" required>
-                    </div>
-                    <div class="form-group">
-                      <select name="subject" required>
-                        <option value="" disabled selected>Assunto*</option>
-                        <option value="Cliente">Nova Construção (Cliente)</option>
-                        <option value="Investidor">Investimento Imobiliário</option>
-                        <option value="Parceria">Parceria / Fornecedor</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <textarea name="message" rows="4" placeholder="Mensagem"></textarea>
-                  </div>
-                  <div class="form-group checkbox-group">
-                    <label>
-                      <input type="checkbox" required>
-                      <span>Concordo com a Política de Privacidade e o tratamento dos meus dados.</span>
-                    </label>
-                  </div>
-                  <button type="submit" class="hero-price" style="width: 100%; text-align: center; margin-top: 1em;">Enviar Mensagem</button>
-                </form>
-              </div>
-            </section>
-
+            </div>
           </div>
 
+          <div class="hero-bottom">
+            <div class="hero-content">
+              <h1>Diga-nos o que tem em m&atilde;os e <em>come&ccedil;amos a construir.</em></h1>
+            </div>
+          </div>
         </div>
-      </main>
+
+      </div>
+    </main>
   </div>
 
   <!-- Slide-out Contact & Inquiry Drawer -->

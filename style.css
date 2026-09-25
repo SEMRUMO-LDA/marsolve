@@ -2699,55 +2699,15 @@ body.is-ready .site-preloader {
 }
 
 /* — Contact Page — */
-.internal-content.contact-page {
-  padding-top: 5rem;
-}
-
-.contact-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6vw;
-  align-items: start;
-  margin-top: 2rem;
-}
-
-.contact-info h1 {
-  font-family: var(--sans-font);
-  font-size: clamp(2.2rem, 3.4vw, 3.4rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 2.2rem;
-  margin-top: 0;
+/* Esta era a unica pagina com um formato so seu. Passa a usar o da hero: o
+   logotipo em cima, uma caixa ao centro com o nome a correr por tras, uma
+   linha por baixo e o diamante no canto. O que muda e o conteudo da caixa --
+   aqui e o formulario, nao uma fotografia -- e por isso a pagina nao faz
+   scroll: os contactos vao para o canto de baixo, onde noutras paginas
+   estao o "Scroll" e os filtros, e nao gastam altura nenhuma. */
+body.page--contacto #page-stage {
+  background: var(--white);
   color: var(--brand-dark);
-}
-
-.contact-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2em;
-}
-
-.contact-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
-.contact-label {
-  font-size: calc(var(--text-size) * 0.8);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--brand-primary);
-  font-weight: 700;
-}
-
-.contact-link {
-  font-family: var(--sans-font);
-  font-size: calc(var(--h5-size) * 1.15);
-  font-weight: 500;
-  color: var(--brand-dark);
-  line-height: 1.5;
 }
 
 .marsolve-form {
@@ -2761,15 +2721,140 @@ body.is-ready .site-preloader {
   border-radius: 1vw;
 }
 
+/* a caixa do meio deixa de ser uma janela 16:9 e passa a medir o que o
+   formulario precisa, sem passar da faixa da hero */
+.hero-visual--formulario {
+  aspect-ratio: auto;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  border-radius: 0;
+}
+
+.marsolve-form--hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1vw 2vw;
+  padding: 2vw 2.2vw;
+  border-radius: 0 0 clamp(24px, 2.8vw, 42px) 0;
+}
+
+.form-group--largo {
+  grid-column: 1 / -1;
+}
+
+/* o rodape do formulario: a autorizacao a esquerda, o botao a direita, na
+   mesma linha -- e a ultima coisa que podia fazer a pagina crescer */
+/* dois seletores para passar a frente de .form-group, que poe tudo em
+   coluna e esta declarado mais abaixo */
+.marsolve-form--hero .marsolve-form__fim {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2vw;
+  margin-top: 0.4vw;
+}
+
+.marsolve-form--hero .marsolve-form__fim .hero-price {
+  margin-top: 0;
+  white-space: nowrap;
+}
+
+.checkbox-inline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8em;
+  font-size: calc(var(--text-size) * 0.78);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--brand-dark) 70%, transparent);
+  cursor: pointer;
+}
+
+.checkbox-inline input {
+  margin-top: 0.15em;
+  flex-shrink: 0;
+  accent-color: var(--brand-primary);
+}
+
+.checkbox-inline a {
+  color: var(--brand-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* os contactos no canto, com a mesma caixa e a mesma escala dos filtros,
+   para assentarem na linha do diamante */
+.corner-contactos {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  justify-self: start;
+  align-self: end;
+  z-index: 30;
+  height: var(--nav-action-height);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 1.1rem;
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.corner-contactos a {
+  color: inherit;
+  opacity: 0.55;
+  transition: opacity 0.25s ease;
+}
+
+.corner-contactos a:hover {
+  opacity: 1;
+}
+
+.corner-contactos__sep {
+  opacity: 0.3;
+}
+
+/* nao passar por baixo do diamante, que vive no canto oposto da mesma linha */
+.corner-contactos {
+  max-width: calc(100% - var(--menu-btn-width) - 3vw);
+}
+
+/* No telemovel o botao do menu desce para o centro da barra de baixo, em
+   cima dos contactos. Em vez de os encolher ate nao se lerem, sobem-se para
+   a faixa vazia logo acima, um por linha. */
+@media (max-width: 650px) {
+  .corner-contactos {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45em;
+    max-width: 100%;
+    margin-bottom: calc(var(--menu-btn-width) + 1.2rem);
+  }
+  .corner-contactos__sep {
+    display: none;
+  }
+}
+
+/* rotulos para quem ouve a pagina: os placeholders nao servem de etiqueta */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .form-group {
   display: flex;
   flex-direction: column;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5em;
 }
 
 .marsolve-form input,
@@ -2777,7 +2862,7 @@ body.is-ready .site-preloader {
 .marsolve-form textarea {
   font-family: var(--sans-font);
   font-size: var(--text-size);
-  padding: 1em 0;
+  padding: 0.75em 0;
   border: none;
   border-bottom: 1px solid rgba(0,0,0,0.2);
   background: transparent;
@@ -2793,23 +2878,22 @@ body.is-ready .site-preloader {
 }
 
 .marsolve-form textarea {
-  resize: vertical;
+  resize: none;
 }
 
-.checkbox-group label {
-  display: flex;
-  align-items: flex-start;
-  gap: 1em;
-  font-size: calc(var(--text-size) * 0.85);
-  color: var(--brand-dark);
-  cursor: pointer;
-}
-
-.checkbox-group input {
-  margin-top: 0.2em;
+/* Abaixo de 650px a pagina passa a ter scroll, e ainda bem: o formulario
+   numa coluna nao cabe num ecra de telemovel sem apertar os campos. */
+@media (max-width: 900px) {
+  .corner-contactos {
+    height: auto;
+    font-size: clamp(9px, 2.4vw, 12px);
+    gap: 0 0.7rem;
+  }
 }
 
 @media (max-width: 650px) {
+  /* estas duas vinham do bloco antigo dos contactos e servem as paginas
+     internas, nao o formulario -- ficam */
   .internal-content {
     grid-column: 1 / -1;
     padding-top: 8vw;
@@ -2817,16 +2901,25 @@ body.is-ready .site-preloader {
   .values-grid {
     grid-template-columns: 1fr;
   }
-  .contact-layout {
-    grid-template-columns: 1fr;
+  .hero-visual--formulario {
+    max-height: none;
   }
-  .form-row {
+  .marsolve-form--hero {
     grid-template-columns: 1fr;
-  }
-  .marsolve-form {
+    gap: 1.2em;
     padding: 6vw 5vw;
   }
+  .marsolve-form--hero .marsolve-form__fim {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.2em;
+  }
+  .marsolve-form--hero .marsolve-form__fim .hero-price {
+    width: 100%;
+    text-align: center;
+  }
 }
+
 
 /* ============================================================
    Transição hero <-> portfólio (home)
