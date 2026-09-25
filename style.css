@@ -880,7 +880,7 @@ body.page--portfolio .bottom-left-contact {
 
   body.page--portfolio .corner-filters,
   body.page--home.selection-open .corner-filters {
-    margin-top: 16px;
+    margin-top: 0;
     /* o diamante e fixo e nao entra na grelha: a folga que o afasta tem de
        vir daqui */
     margin-bottom: 24px;
@@ -2389,7 +2389,10 @@ body.page--internal .selection-preview-bar__link:hover,
     grid-row: 3;
     justify-self: center;
     height: auto;
-    margin-top: 0.6rem;
+    /* a barra pertence a fita, nao aos filtros: fica perto do card
+       e o ar grande fica por baixo dela (ver .corner-filters) */
+    margin-top: 16px;
+    margin-bottom: 34px;
   }
 
   body.page--home .corner-scroll {
