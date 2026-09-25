@@ -3719,29 +3719,61 @@ body.page--detalhe.obra-aberta .logo {
 }
 
 /* — Ficha — */
-/* Feita para aguentar uma frase ou cinco paragrafos: a coluna do texto cresce
-   sozinha e a dos dados aceita os campos que houver. */
+/* A ficha era uma coluna estreita de dados a esquerda e uma frase solta a
+   direita, com o terco final do ecra vazio. Com tres campos e uma linha de
+   texto -- que e o que ha -- lia-se como sobras entre a fotografia de cima e
+   a galeria de baixo, e nao como um bloco.
+
+   Passa a duas coisas empilhadas e ambas a largura toda: a frase primeiro,
+   grande, presa a fotografia; os dados a seguir, numa fila com um traco por
+   cima. Uma fila le-se como uma unidade; uma coluna ao lado de uma frase
+   curta le-se como um buraco.
+
+   Continua a aguentar o que vier: o destaque e so o primeiro paragrafo, os
+   seguintes ficam em corpo de texto, e a fila dos dados reparte-se sozinha
+   pelos campos que existirem. */
+/* as folgas em vw sozinhas colapsam no telemovel: max() poe-lhes um chao */
 .obra-ficha {
-  margin-top: 7vw;
-  padding-top: 2.6vw;
-  border-top: 1px solid rgba(35, 31, 32, 0.12);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
-  gap: var(--grid-gap);
-  align-items: start;
+  margin-top: max(2.4rem, 4.5vw);
 }
 
+/* o primeiro paragrafo e a entrada da obra, nao mais um paragrafo */
+.obra-texto > p:first-child {
+  font-family: var(--sans-font);
+  font-size: clamp(1.45rem, 2.25vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--brand-dark);
+  max-width: 24ch;
+}
+
+/* se houver mais, voltam ao corpo normal */
+.obra-texto > p + p {
+  max-width: 62ch;
+  font-size: clamp(1rem, 1.25vw, 1.3rem);
+  line-height: 1.7;
+  color: #4a4646;
+}
+
+.obra-texto p { margin: 0; }
+.obra-texto p + p { margin-top: 1.1em; }
+
 .obra-dados {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  margin: max(2.4rem, 4.5vw) 0 0;
+  padding-top: max(1.1rem, 1.7vw);
+  border-top: 1px solid rgba(35, 31, 32, 0.14);
+  display: grid;
+  /* tres campos dao tres colunas, seis dao seis; num ecra estreito
+     reparte-se sozinha em vez de espremer */
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+  gap: 2.2vw var(--grid-gap);
 }
 
 .obra-dados div {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.55rem;
 }
 
 .obra-dados dt {
@@ -3756,20 +3788,11 @@ body.page--detalhe.obra-aberta .logo {
 .obra-dados dd {
   margin: 0;
   font-family: var(--sans-font);
-  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  font-size: clamp(1.05rem, 1.35vw, 1.45rem);
   font-weight: 600;
+  line-height: 1.3;
   color: var(--brand-dark);
 }
-
-.obra-texto {
-  max-width: 62ch;
-  font-size: clamp(1rem, 1.25vw, 1.3rem);
-  line-height: 1.7;
-  color: #4a4646;
-}
-
-.obra-texto p { margin: 0; }
-.obra-texto p + p { margin-top: 1.1em; }
 
 /* — Galeria — */
 /* As molduras nao se mexem: estao pousadas na grelha de doze colunas, uma por
@@ -3779,7 +3802,9 @@ body.page--detalhe.obra-aberta .logo {
    atravessa o ecra. E um gesto calmo e nao empurra nada: ao contrario da fila
    inclinada, funciona igual com duas fotos ou com dezanove. */
 .obra-galeria {
-  margin-top: 7vw;
+  /* a ficha encostou-se a fotografia; a galeria afasta-se, para comecar um
+     andamento novo em vez de ser a continuacao do texto */
+  margin-top: max(4rem, 9.5vw);
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   column-gap: var(--grid-gap);
