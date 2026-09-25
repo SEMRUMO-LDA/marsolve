@@ -3578,12 +3578,12 @@ body.page--detalhe.obra-claro .menu-btn {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: calc(var(--capa-w0) + (100vw - var(--capa-w0)) * var(--abertura, 0));
-  height: calc(var(--capa-h0) + (100svh - var(--capa-h0)) * var(--abertura, 0));
-  /* -50% -50% poe-na onde estava; --capa-desvio (medido pelo JS uma vez) leva
-     o centro dela ao centro do ecra a medida que cresce, porque a faixa onde
-     assenta nao esta centrada na janela */
-  translate: -50% calc(-50% + var(--capa-desvio, 0px) * var(--abertura, 0));
+  /* Cresce ate a faixa onde assenta, como antes -- ecra inteiro era demais.
+     O que mudou nao foi o tamanho, foi a ordem: a foto esta a frente do
+     logotipo e da legenda, e cresce a partir do centro que ja tinha. */
+  width: calc(var(--capa-w0) + (100cqw - var(--capa-w0)) * var(--abertura, 0));
+  height: calc(var(--capa-h0) + (100cqh - var(--capa-h0)) * var(--abertura, 0));
+  translate: -50% -50%;
   /* na home a imagem nunca passa de meio ecra; aqui e suposto passar */
   max-height: none;
   aspect-ratio: auto;
@@ -3608,13 +3608,32 @@ body.page--detalhe.obra-claro .menu-btn {
 
 /* O logotipo tambem tem de ficar. Nao e sticky: a nav vive na grelha que
    rola, e prende-la mudava o comportamento da pagina toda. Em vez disso
-   anda para baixo exactamente o que a pagina andou para cima -- a abertura
-   vai de 0 a 1 ao longo de --obra-abertura-curso, por isso o produto das
-   duas e o scroll feito -- e fica parada no ecra. Quando a abertura chega a
-   1 deixa de compensar e sai de cena a rolar, mas ai ja esta tapada pela
-   foto e ninguem a ve partir. */
-body.page--detalhe .site-nav {
-  translate: 0 calc(var(--abertura, 0) * var(--obra-abertura-curso));
+   anda para baixo exactamente o que a pagina andou para cima, e fica parado
+   no ecra. Quando a abertura acaba deixa de compensar e sai a rolar, mas ai
+   ja esta tapado pela foto e ninguem o ve partir.
+
+   Duas licoes, as duas pagas a primeira tentativa:
+
+   Vai no .logo, nunca na .site-nav. O diamante e um position:fixed dentro
+   da nav, e um antepassado com transform deixa de o deixar fixo a janela --
+   passa a posicionar-se pela nav e salta para o topo. Transformar so o
+   logotipo deixa o diamante em paz, que alias nao precisa de compensacao
+   nenhuma por ja ser fixo.
+
+   E a distancia vem do scroll real, medido pelo JS, nao de
+   --abertura * --obra-abertura-curso. Essa conta so bate certo se o curso
+   em svh for exactamente o que o scroller tem, e com as barras dinamicas
+   dos browseres nao e -- o logotipo derrapava uns pixeis por cada ecra. */
+body.page--detalhe .logo {
+  translate: 0 var(--nav-fixa, 0px);
+  /* e tem de largar o z-index: 5 que traz da home. O z-index: 60 do palco
+     fica preso no contexto de empilhamento da .internal-content, por isso
+     nao ganha a um 5 solto ca fora -- e o logotipo aparecia por cima da
+     foto, que e o contrario do que se quer. Com auto, pinta pela ordem do
+     documento, e a nav vem antes do conteudo. O diamante nao e afectado:
+     esta em position:fixed com z-index 100 e continua por cima de tudo,
+     que e o que faz o menu continuar a dar para carregar. */
+  z-index: auto;
 }
 
 /* o nome atras da foto segue a tinta da obra: claro sobre as cores escuras,
