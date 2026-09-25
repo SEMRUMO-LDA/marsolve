@@ -2477,19 +2477,25 @@ body.diamante-claro .menu-btn .menu-btn__svg {
     justify-content: space-between;
     flex-wrap: wrap;
     height: auto;
-    gap: 0 8px;
+    gap: 0 10px;
     text-align: center;
   }
 
   /* o dedo precisa de 44px; a etiqueta continua com 11px.
      O "body" e para ganhar a .corner-filter, que esta mais a frente no
      ficheiro e por isso levava a melhor com a mesma especificidade */
+  body .corner-filter,
+  body .corner-filters__rotulo {
+    letter-spacing: 0.05em;
+    /* 12px e o maximo que deixa o rotulo e as tres opcoes numa linha
+       dentro da largura de um card, ate aos 360px */
+    font-size: 12px;
+  }
+
   body .corner-filter {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    letter-spacing: 0.05em;
-    font-size: 12.5px;
   }
 
   /* o sublinhado acompanha a linha de base do texto, nao o fundo da caixa
@@ -3763,6 +3769,23 @@ body.selection-open .corner-scroll {
 /* Os filtros nao escolhidos estavam a 0.4 -- 2.44:1 contra o branco, muito
    abaixo do minimo legivel. A 0.68 passam os 4.5:1 e continuam a ler-se como
    o estado inativo, que era o que a opacidade baixa queria dizer. */
+/* Diz o substantivo uma vez, para as opcoes poderem ser curtas: sem ele,
+   "Concluidas" sozinho nao diz concluidas o que. Nao e um botao -- e mais
+   apagado e nunca leva sublinhado. */
+.corner-filters__rotulo {
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  line-height: 1.2;
+  /* peso normal contra o 700 das opcoes: distingue-se sem custar largura */
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: currentColor;
+  opacity: 0.45;
+  white-space: nowrap;
+  align-self: center;
+}
+
 .corner-filter {
   border: none;
   background: none;
