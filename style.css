@@ -3601,8 +3601,8 @@ body.page--detalhe.obra-claro .menu-btn {
 
 /* — Obra seguinte — */
 /* O fim de uma obra e o principio da outra: a capa seguinte ocupa o ecra e
-   insistir no scroll leva la. O medidor enche com essa insistencia e esvazia
-   se a pessoa desistir. */
+   insistir no scroll leva la. O medidor enche com essa insistencia e fica
+   cheio ate onde se chegou -- so volta a zero se a pessoa sair do fundo. */
 .obra-seguinte {
   margin-top: 8vw;
   margin-inline: calc(var(--grid-padding) * -1);

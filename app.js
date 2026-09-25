@@ -535,6 +535,12 @@
     // Chegado ao fim, continuar a fazer scroll leva a obra seguinte. Nao basta
     // um empurrao: e preciso insistir, senao quem chega ao fundo por acaso era
     // levado para outra pagina sem querer.
+    //
+    // O medidor nao esvazia com o tempo. Esvaziava, e parar um instante fazia
+    // a barra recuar sozinha -- parecia que o scroll nao tinha contado. Fica
+    // cheia ate onde se chegou, e o empurrao seguinte continua dai. Quem se
+    // afasta do fundo e que volta a zero, no pintar(), e essa e a salvaguarda
+    // que interessa: ninguem e levado para outra pagina sem ter insistido.
     const insistir = (delta) => {
       if (aNavegar || !ligacao || !noFundo() || delta <= 0) return;
       acumulado = Math.min(INSISTENCIA_NECESSARIA, acumulado + Math.min(delta, 60));
@@ -559,14 +565,6 @@
       insistir((toqueY - y) * 1.8);
       toqueY = y;
     }, { passive: true });
-
-    // a insistencia esvazia sozinha se a pessoa parar
-    setInterval(() => {
-      if (acumulado > 0 && !aNavegar) {
-        acumulado = Math.max(0, acumulado - 28);
-        aplicarInsistencia(acumulado / INSISTENCIA_NECESSARIA);
-      }
-    }, 120);
 
     window.addEventListener('resize', () => { medidas = null; agendar(); });
     window.addEventListener('load', () => { medidas = null; agendar(); });
