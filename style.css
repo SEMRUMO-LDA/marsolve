@@ -2202,10 +2202,6 @@ body.page--internal .selection-preview-bar__link:hover,
     height: 32px;
   }
 
-  body.selection-open #page-stage {
-    display: none !important;
-  }
-
   .site-preloader__frames {
     width: 50vw;
     height: 50vw;
