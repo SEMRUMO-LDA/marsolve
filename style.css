@@ -125,7 +125,9 @@ a {
   cursor: pointer;
 }
 
-a:focus, a:active { outline: none; }
+/* O anel de foco so se tira para :focus, nao para :focus-visible -- ver a
+   seccao "Foco visivel" no fim do ficheiro. */
+a:focus:not(:focus-visible), a:active { outline: none; }
 
 h1, h2, h3, h4, h5, h6, p {
   margin: 0;
@@ -566,7 +568,7 @@ body.selection-open .bottom-left-contact {
   font-weight: 400;
   line-height: 1.35;
   color: currentColor;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 /* — Selection Preview Bar — */
@@ -1282,7 +1284,7 @@ body.page--internal .selection-preview-bar__link:hover,
   color: var(--brand-gold) !important;
 }
 
-.menu-btn:focus, .menu-btn:focus-visible { outline: none !important; }
+.menu-btn:focus:not(:focus-visible) { outline: none; }
 
 .menu-btn__icon-box {
   position: relative;
@@ -1848,7 +1850,6 @@ body.page--internal .selection-preview-bar__link:hover,
   font-size: 0.88rem;
   color: var(--gaveta-tinta);
   transition: all 0.25s ease;
-  outline: none;
 }
 
 .drawer-form input::placeholder,
@@ -2878,13 +2879,13 @@ body.page--contacto .marsolve-form {
 }
 
 .rodape-grupo__titulo {
-  opacity: 0.3;
+  opacity: 0.62;
   margin-bottom: 0.45em;
 }
 
 .rodape-grupo a {
   color: inherit;
-  opacity: 0.72;
+  opacity: 0.86;
   transition: opacity 0.25s ease;
 }
 
@@ -2944,7 +2945,6 @@ body.page--contacto .marsolve-form {
   border-bottom: 1px solid rgba(0,0,0,0.2);
   background: transparent;
   color: var(--brand-dark);
-  outline: none;
   transition: border-color 0.3s ease;
 }
 
@@ -3296,7 +3296,7 @@ body[data-obra="unik-fitness-club"] .category-cover {
   text-transform: uppercase;
   color: inherit;
   cursor: pointer;
-  opacity: 0.85;
+  opacity: 1;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
@@ -3330,6 +3330,9 @@ body.selection-open .corner-scroll {
   gap: 1.4rem;
 }
 
+/* Os filtros nao escolhidos estavam a 0.4 -- 2.44:1 contra o branco, muito
+   abaixo do minimo legivel. A 0.68 passam os 4.5:1 e continuam a ler-se como
+   o estado inativo, que era o que a opacidade baixa queria dizer. */
 .corner-filter {
   border: none;
   background: none;
@@ -3342,7 +3345,7 @@ body.selection-open .corner-scroll {
   text-transform: uppercase;
   color: currentColor;
   cursor: pointer;
-  opacity: 0.4;
+  opacity: 0.68;
   transition: opacity 0.25s ease;
   position: relative;
 }
@@ -3594,7 +3597,7 @@ body.page--detalhe.obra-claro .menu-btn {
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(35, 31, 32, 0.4);
+  color: rgba(35, 31, 32, 0.68);
 }
 
 .obra-dados dd {
@@ -3682,7 +3685,7 @@ body.page--detalhe.obra-claro .menu-btn {
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(35, 31, 32, 0.4);
+  color: rgba(35, 31, 32, 0.68);
 }
 
 .sobre-texto {
@@ -3912,3 +3915,77 @@ body.obra-fim .menu-btn {
 @media (max-width: 650px) {
 }
 
+
+
+/* ============================================================
+   Foco visivel
+
+   O site inteiro nao dava sinal nenhum de foco: dos 29 elementos focaveis da
+   entrada, 25 nao mudavam absolutamente nada ao receber foco. Quem navega
+   por teclado nao sabia onde estava.
+
+   O anel e currentColor de proposito: o site muda de campo -- terracota,
+   branco, azul, preto -- e a cor da letra ja esta certa em cada um deles,
+   por isso o anel acerta sozinho sem uma regra por pagina. So aparece em
+   :focus-visible, portanto um clique com o rato nao o mostra.
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* os cards sao blocos grandes: o anel afasta-se para nao colar a foto */
+.selection-card:focus-visible,
+.obra-seguinte__link:focus-visible {
+  outline-offset: 5px;
+}
+
+/* dentro da gaveta manda a tinta da gaveta, nao a da pagina por tras */
+.nav-menu__panel :focus-visible {
+  outline-color: var(--gaveta-tinta);
+}
+
+/* nos campos o sublinhado ja vira terracota; o anel junta-se-lhe, colado,
+   para o campo inteiro se ler como um so elemento */
+.marsolve-form input:focus-visible,
+.marsolve-form select:focus-visible,
+.marsolve-form textarea:focus-visible,
+.drawer-form input:focus-visible,
+.drawer-form textarea:focus-visible {
+  outline-color: var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Movimento reduzido
+
+   Quem pede menos movimento ao sistema costuma ter perturbacoes
+   vestibulares, e para essa pessoa isto nao e desconforto, e enjoo. Cai
+   tudo o que anda sozinho -- o marquee, o preloader, as transicoes de
+   entrada -- e o JS trata do contador e do parallax.
+
+   O que fica e a foto a crescer nas paginas internas: nao anda sozinha,
+   responde ao scroll da propria pessoa, e sem ela a pagina nao tem layout.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .marquee-scroll {
+    animation: none !important;
+  }
+
+  /* as fotos ficam quietas dentro das molduras */
+  .obra-galeria__item img {
+    translate: none !important;
+  }
+}

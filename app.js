@@ -19,6 +19,12 @@
   const navMenuBackdrop = navMenu ? navMenu.querySelector('.nav-menu__backdrop') : null;
 
   // — Preloader —
+  // Quem pediu ao sistema menos movimento tem perturbacoes vestibulares com
+  // mais frequencia do que se imagina, e para essa pessoa isto nao e
+  // desconforto, e enjoo. O CSS trata das animacoes; aqui ficam as duas que
+  // vivem em JS -- o contador do preloader e o parallax da galeria.
+  const menosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
+
   let preloaderCount = 0;
   const totalFrames = preloaderFrames ? preloaderFrames.length : 0;
   const preloaderTarget = 100;
@@ -50,7 +56,7 @@
       return;
     }
 
-    if (sessionStorage.getItem('marsolve_visited')) {
+    if (sessionStorage.getItem('marsolve_visited') || menosMovimento.matches) {
       preloader.style.display = 'none';
       body.classList.add('is-ready');
       // o hash e tratado por handlePortfolioHash(), chamado no init
@@ -187,20 +193,45 @@
   }
 
   // — Nav Menu (slide drawer) —
+  //
+  // Com a gaveta aberta, o Tab andava pela pagina por tras -- o "Scroll", os
+  // pontos do carrossel, as setas -- antes de chegar ao menu. Quem nao ve o
+  // ecra ficava a percorrer coisas invisiveis.
+  //
+  // A solucao nao e um ciclo de Tab em JS: e por a pagina inteira em `inert`
+  // enquanto a gaveta esta aberta. O browser trata do resto -- tira-a do
+  // percurso do teclado e da arvore de acessibilidade de uma vez -- e nao ha
+  // ciclo nenhum para manter. So falta levar o foco la para dentro ao abrir e
+  // devolve-lo a quem abriu ao fechar, senao a pessoa volta ao inicio da
+  // pagina sem perceber porque.
+  const foraDaGaveta = () =>
+    [...document.body.children].filter(el => el !== navMenu && el.tagName !== 'SCRIPT');
+
+  let quemAbriu = null;
+
   function openNavMenu() {
-    if (navMenu) {
-      navMenu.classList.add('open');
-      navMenu.setAttribute('aria-hidden', 'false');
-      document.querySelectorAll('.menu-btn').forEach(b => b.setAttribute('aria-expanded', 'true'));
-    }
+    if (!navMenu || navMenu.classList.contains('open')) return;
+    quemAbriu = document.activeElement;
+    navMenu.classList.add('open');
+    navMenu.setAttribute('aria-hidden', 'false');
+    foraDaGaveta().forEach(el => el.setAttribute('inert', ''));
+    document.querySelectorAll('.menu-btn').forEach(b => b.setAttribute('aria-expanded', 'true'));
+    // a seguir a animacao de entrada, senao o browser salta a pagina para o
+    // sitio onde o botao ainda esta a caminho
+    setTimeout(() => {
+      const primeiro = navMenu.querySelector('.nav-menu__close, a[href], button');
+      if (primeiro) primeiro.focus();
+    }, 320);
   }
 
   function closeNavMenu() {
-    if (navMenu) {
-      navMenu.classList.remove('open');
-      navMenu.setAttribute('aria-hidden', 'true');
-      document.querySelectorAll('.menu-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
-    }
+    if (!navMenu || !navMenu.classList.contains('open')) return;
+    navMenu.classList.remove('open');
+    navMenu.setAttribute('aria-hidden', 'true');
+    foraDaGaveta().forEach(el => el.removeAttribute('inert'));
+    document.querySelectorAll('.menu-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    if (quemAbriu && document.contains(quemAbriu)) quemAbriu.focus();
+    quemAbriu = null;
   }
 
   document.querySelectorAll('.menu-btn').forEach(btn => {
@@ -508,10 +539,14 @@
         document.body.classList.toggle('obra-claro', y > h * 0.34);
       }
 
-      // -1 quando a moldura entra por baixo, +1 quando sai por cima
-      for (const f of medidas.fotos) {
-        const p = entre((y + h - f.topo) / (h + f.altura), 0, 1) * 2 - 1;
-        f.img.style.translate = '0 ' + (p * 11).toFixed(2) + '%';
+      // -1 quando a moldura entra por baixo, +1 quando sai por cima. O
+      // parallax anda ao contrario do scroll, que e o que enjoa: com
+      // movimento reduzido as fotos ficam quietas dentro das molduras.
+      if (!menosMovimento.matches) {
+        for (const f of medidas.fotos) {
+          const p = entre((y + h - f.topo) / (h + f.altura), 0, 1) * 2 - 1;
+          f.img.style.translate = '0 ' + (p * 11).toFixed(2) + '%';
+        }
       }
 
       if (medidas.seguinte) {
