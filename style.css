@@ -3393,6 +3393,38 @@ body.page--contacto .marsolve-form {
   .values-grid {
     grid-template-columns: 1fr;
   }
+  /* A pagina de contacto passa a rolar no telemovel.
+     Nao ha altura para o logotipo, o formulario, a frase e o rodape num
+     ecra so: so o formulario leva 377px a 390x667, e o que acontecia era
+     ficar tudo sobreposto -- o formulario por cima do logotipo, a frase
+     por cima do rodape. Em vez de tentar caber, empilha e rola: scroll
+     normal, tudo a subir, sem animacao nenhuma pelo meio (a de crescer a
+     imagem e das obras e do sobre, nao desta). */
+  body.page--contacto .page-grid {
+    grid-template-rows: auto auto auto;
+    align-content: start;
+    overflow-y: auto;
+    row-gap: 26px;
+    /* o diamante e fixo em baixo: o rodape nao pode acabar por tras dele */
+    padding-bottom: calc(var(--grid-padding) + var(--nav-action-height) + 40px);
+  }
+
+  /* sem isto o conteudo da hero continuava centrado na linha e transbordava
+     para cima e para baixo em vez de a fazer crescer */
+  body.page--contacto .hero-section {
+    display: block;
+    height: auto;
+    /* a margem negativa servia para apertar tudo num ecra so; a empilhar,
+       so puxava o formulario para cima do logotipo */
+    margin-top: 0;
+  }
+
+  body.page--contacto .hero-top,
+  body.page--contacto .hero-bottom {
+    height: auto;
+    min-height: 0;
+  }
+
   .hero-visual--formulario {
     max-height: none;
   }
