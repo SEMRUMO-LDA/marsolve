@@ -2372,7 +2372,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
     /* px em vez de vw: o diamante, a descricao e o respiro das margens
        nao podem encolher com o ecra (o rem tambem nao trava, a raiz e fluida) */
     --selection-card-desc-size: max(13px, 3.4vw);
-    --selection-card-symbol-width: max(32px, 8.2vw);
+    --selection-card-symbol-width: max(46px, 11.8vw);
     --selection-card-padding: max(22px, 5.6vw);
   }
 
@@ -2471,16 +2471,13 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   .portfolio-stage .corner-filters {
     grid-row: 2;
     justify-self: center;
-    justify-content: center;
+    /* a fila ocupa exactamente a largura de um card e os tres encostam as
+       pontas: o filtro passa a assentar na mesma coluna da fotografia */
+    width: var(--hero-visual-width);
+    justify-content: space-between;
     flex-wrap: wrap;
     height: auto;
-    /* 10px em vez de 1rem: com a letra menos espacada os tres cabem numa
-       linha a 390px, e uma segunda linha custava 44px de card */
-    gap: 0 10px;
-    /* a linha pode usar a largura toda do ecra: num 360 os tres nao cabiam
-       por 4px dentro da moldura */
-    width: 100vw;
-    margin-inline: calc(var(--grid-padding) * -1);
+    gap: 0 8px;
     text-align: center;
   }
 
@@ -2492,6 +2489,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
     align-items: center;
     min-height: 44px;
     letter-spacing: 0.05em;
+    font-size: 12.5px;
   }
 
   /* o sublinhado acompanha a linha de base do texto, nao o fundo da caixa
@@ -2550,7 +2548,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
      ca buscar -- com o tamanho que a largura toda permite. */
   .nav-menu__logo {
     display: block;
-    width: min(170px, 46vw);
+    width: min(240px, 60vw);
     line-height: 0;
   }
 
