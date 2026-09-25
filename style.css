@@ -1476,6 +1476,26 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .menu-btn:focus:not(:focus-visible) { outline: none; }
 
+/* — O diamante sobre fotografias —
+   O botao e fixo e por baixo dele passam fotografias: nas escuras a tinta
+   da casa desaparecia. O JS mede o brilho do que esta mesmo por tras (ver
+   "O diamante sobre fundo escuro" em app.js) e poe esta classe. */
+body.diamante-claro .menu-btn,
+body.diamante-claro .menu-btn .menu-btn__icon-box {
+  color: #ffffff !important;
+}
+
+/* sobre fotografia ha sempre um halo: com a tinta escura o halo e claro,
+   com a tinta branca e escuro. E o que segura o diamante num pormenor da
+   imagem que va ao contrario da leitura media */
+body.diamante-em-foto .menu-btn .menu-btn__svg {
+  filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.55));
+}
+
+body.diamante-claro .menu-btn .menu-btn__svg {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+}
+
 .menu-btn__icon-box {
   position: relative;
   display: flex;
@@ -2293,6 +2313,13 @@ body.page--internal .selection-preview-bar__link:hover,
    RESPONSIVE — MOBILE
    ============================================ */
 @media (max-width: 650px) {
+  /* No telemovel o diamante e fixo ao centro, em baixo, e o medidor caia-lhe
+     em cima (sobrepunham-se 8px). Sobe o suficiente para deixar ar entre os
+     dois. */
+  body .obra-seguinte__medidor {
+    bottom: calc(var(--grid-padding) + var(--nav-action-height) + 40px);
+  }
+
   :root {
     --grid-padding: 6vw;
     --grid-gap: 4vw;

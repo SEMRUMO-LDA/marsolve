@@ -949,5 +949,109 @@
     window.addEventListener('DOMContentLoaded', initPreloader);
   }
 
-})();
+  // — O diamante sobre fundo escuro —
+  // O botao do menu e fixo e por baixo dele passam fotografias. A tinta da
+  // casa (terracota, ou preto) desaparece nas escuras. Em vez de adivinhar
+  // quais sao, le-se o brilho do pedaco de imagem que esta mesmo por tras:
+  // a foto e desenhada uma vez num canvas de 48x48 (mesma origem, logo sem
+  // taint) e guardada em cache, e depois so se convertem coordenadas.
+  (function tintaDoDiamante() {
+    const botao = document.querySelector('.menu-btn');
+    if (!botao) return;
 
+    const cache = new Map();
+
+    // Brilho medio do pedaco de imagem que fica debaixo de "caixa" (o
+    // rectangulo do botao). Devolve 0..1, ou null se a imagem ainda nao
+    // esta pronta. A amostra tem o tamanho do proprio diamante: num
+    // canvas grosseiro demais, uma parede branca era diluida pelo jardim
+    // ao lado e a leitura dava escuro.
+    const N = 128;
+
+    function brilho(img, caixa) {
+      const chave = img.currentSrc || img.src;
+      let am = cache.get(chave);
+      if (!am) {
+        if (!img.complete || !img.naturalWidth) return null;
+        const cv = document.createElement('canvas');
+        cv.width = N; cv.height = N;
+        const ctx = cv.getContext('2d', { willReadFrequently: true });
+        try { ctx.drawImage(img, 0, 0, N, N); } catch (e) { return null; }
+        am = { ctx };
+        cache.set(chave, am);
+      }
+      const r = img.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      // object-fit: cover -- a imagem e maior do que a caixa e fica centrada
+      const escala = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+      const larg = img.naturalWidth * escala;
+      const alt = img.naturalHeight * escala;
+      // canto superior esquerdo e tamanho da amostra, em pixeis do canvas
+      const emX = v => (v - r.left - (r.width - larg) / 2) / escala / img.naturalWidth * N;
+      const emY = v => (v - r.top - (r.height - alt) / 2) / escala / img.naturalHeight * N;
+      const px = Math.round(emX(caixa.left));
+      const py = Math.round(emY(caixa.top));
+      const pw = Math.max(2, Math.round(emX(caixa.right) - px));
+      const ph = Math.max(2, Math.round(emY(caixa.bottom) - py));
+      const x0 = Math.max(0, Math.min(N - pw, px));
+      const y0 = Math.max(0, Math.min(N - ph, py));
+      let d;
+      try { d = am.ctx.getImageData(x0, y0, pw, ph).data; } catch (e) { return null; }
+      let soma = 0;
+      for (let i = 0; i < d.length; i += 4) {
+        soma += (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255;
+      }
+      return soma / (d.length / 4);
+    }
+
+    // a capa da obra seguinte leva por cima um veu preto a 42%
+    function veu(img) {
+      return img.closest('.obra-seguinte') ? 0.58 : 1;
+    }
+
+    let claro = false;
+    let pedido = null;
+
+    function medir() {
+      pedido = null;
+      const r = botao.getBoundingClientRect();
+      if (!r.width) return;
+      // quem esta por tras, tirando o proprio botao
+      const img = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2)
+        .find(el => el.tagName === 'IMG' && !botao.contains(el));
+      const b = img ? brilho(img, r) : null;
+      if (!img) {
+        claro = false;
+      } else if (b === null) {
+        // a fotografia ainda nao chegou (as de baixo sao lazy): fica como
+        // esta e volta-se a medir no load dela
+      } else {
+        const luz = b * veu(img);
+        // histerese: sem ela a tinta piscava ao passar por um meio-tom.
+        // Nos meios-tons fica a tinta da casa -- e o halo que a segura.
+        if (!claro && luz < 0.46) claro = true;
+        else if (claro && luz > 0.6) claro = false;
+      }
+      document.body.classList.toggle('diamante-claro', claro);
+      // sobre fotografia ha sempre um halo, para o diamante nao se perder
+      // num pormenor claro ou escuro da imagem
+      document.body.classList.toggle('diamante-em-foto', !!img);
+    }
+
+    const agendar = () => {
+      if (pedido === null) pedido = requestAnimationFrame(medir);
+    };
+
+    // o palco das paginas internas e que rola, nao a janela
+    const palco = document.querySelector('.page-grid--scrollable');
+    if (palco) palco.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('resize', agendar);
+    window.addEventListener('load', agendar);
+    // as fotografias de baixo sao lazy: quando uma chega, o que esta por
+    // tras do diamante muda sem haver scroll nenhum
+    document.addEventListener('load', agendar, true);
+    agendar();
+  })();
+
+})();
