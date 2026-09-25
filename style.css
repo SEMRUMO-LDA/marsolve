@@ -1451,6 +1451,7 @@ body.page--internal .selection-preview-bar__link:hover,
 
 .hero-price {
   display: inline-block;
+  background: transparent;
   margin-top: 1.5em;
   font-family: var(--sans-font);
   font-size: calc(var(--text-size) * 0.72);
@@ -2716,17 +2717,11 @@ body.is-ready .site-preloader {
    ------------------------------------------------------------ */
 body.page--contacto {
   --contacto-tinta: var(--white);
-  /* o painel nao e transparente de proposito: e ele que tapa o nome a correr
-     por tras, como a fotografia faz nas outras paginas */
-  --contacto-painel: color-mix(in srgb, var(--white) 7%, var(--brand-dark));
-  --contacto-linha: color-mix(in srgb, var(--white) 26%, transparent);
 }
 
 body.page--contacto #page-stage {
   background: var(--brand-dark);
   color: var(--contacto-tinta);
-  /* os menus nativos do select tambem escurecem */
-  color-scheme: dark;
 }
 
 body.page--contacto .logo-img {
@@ -2752,36 +2747,13 @@ body.page--contacto .hero-content h1 {
   color: var(--contacto-tinta);
 }
 
+/* o formulario fica claro: uma folha pousada no campo preto. Assim tambem
+   nao e preciso reinventar os campos -- sao os mesmos das outras paginas --
+   e o link da politica volta a ler-se. A sombra e que tem de ser funda,
+   senao a folha nao levanta do fundo. */
 body.page--contacto .marsolve-form {
-  background: var(--contacto-painel);
-  border-color: color-mix(in srgb, var(--white) 14%, transparent);
-  /* uma sombra preta sobre preto nao se ve */
-  box-shadow: none;
-}
-
-body.page--contacto .marsolve-form input,
-body.page--contacto .marsolve-form select,
-body.page--contacto .marsolve-form textarea {
-  color: var(--contacto-tinta);
-  border-bottom-color: var(--contacto-linha);
-}
-
-body.page--contacto .marsolve-form ::placeholder {
-  color: color-mix(in srgb, var(--white) 55%, transparent);
-}
-
-body.page--contacto .checkbox-inline {
-  color: color-mix(in srgb, var(--white) 62%, transparent);
-}
-
-body.page--contacto .marsolve-form .hero-price {
-  color: var(--contacto-tinta);
-  border-color: var(--contacto-tinta);
-}
-
-body.page--contacto .marsolve-form .hero-price:hover {
-  background: var(--contacto-tinta);
-  color: var(--brand-dark);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+  border-color: transparent;
 }
 
 .marsolve-form {
@@ -2851,10 +2823,20 @@ body.page--contacto .marsolve-form .hero-price:hover {
   accent-color: var(--brand-primary);
 }
 
+/* O link da politica nao leva a cor da marca: estava a disputar o destaque
+   com o "comecamos a construir" logo por baixo, no mesmo terracota, e entre
+   os dois e a frase que manda. E um link legal -- o sublinhado chega para o
+   encontrar, e fica na tinta do texto que o rodeia. */
 .checkbox-inline a {
-  color: var(--brand-primary);
+  color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  transition: text-decoration-color 0.25s ease;
+}
+
+.checkbox-inline a:hover {
+  text-decoration-color: currentColor;
 }
 
 /* os contactos no canto, com a mesma caixa e a mesma escala dos filtros,
