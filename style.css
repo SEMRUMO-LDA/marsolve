@@ -387,6 +387,7 @@ body.page--contacto .sobre-titulo {
 .obra-scroll {
   display: block;
   margin-top: max(18px, 1.6vw);
+  text-align: center;
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.2;
@@ -394,7 +395,25 @@ body.page--contacto .sobre-titulo {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: inherit;
-  opacity: 0.62;
+}
+
+/* Na entrada o convite nao vem colado a frase: fica la em baixo, a meio
+   caminho dela e do diamante (a 390px sao 137px por cima e 71 por baixo).
+   Aqui vai para o mesmo sitio, ancorado ao fundo da hero -- que e sticky e
+   por isso serve de referencia. Fica irmao do .hero-section e nao dentro do
+   .hero-content, que tem um transform e por isso seria ele a servir de
+   ancora; e como ja nao esta debaixo do .hero-bottom, desvanece pela conta
+   que este usa. */
+.obra-hero .obra-scroll {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  /* 71px acima do diamante, que e o vao que a entrada tem */
+  bottom: max(91px, 5.6vw);
+  margin-top: 0;
+  width: max-content;
+  /* a mesma conta da frase, para desaparecerem juntos */
+  opacity: var(--abertura-desvanece, 1);
 }
 
 .obra-scroll::after {
@@ -406,18 +425,6 @@ body.page--contacto .sobre-titulo {
   vertical-align: -0.1em;
   background: currentColor;
   opacity: 0.55;
-}
-
-/* quem pediu menos movimento continua a ver o convite, que e estatico */
-@media (prefers-reduced-motion: no-preference) {
-  .obra-scroll {
-    animation: obraScrollRespira 2.6s ease-in-out infinite;
-  }
-}
-
-@keyframes obraScrollRespira {
-  0%, 100% { opacity: 0.45; }
-  50%      { opacity: 0.85; }
 }
 
 /* — Quebras de linha —
