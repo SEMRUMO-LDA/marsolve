@@ -3547,12 +3547,9 @@ body.page--contacto .marsolve-form {
     min-height: 0;
   }
 
-  /* A frase e o convite da pagina, nao o remate: a ler de cima para baixo,
-     vem antes do formulario -- logotipo, convite, formulario, contactos.
-     No desktop, onde se ve tudo de uma vez, fica onde esta. */
+  /* a frase fica por baixo do formulario, como no desktop */
   body.page--contacto .hero-bottom {
-    order: -1;
-    margin-bottom: 30px;
+    margin-top: 30px;
   }
 
   body.page--contacto .hero-content h1 {
