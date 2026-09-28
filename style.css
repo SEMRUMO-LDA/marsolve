@@ -256,6 +256,29 @@ html.preloader-done .site-preloader {
   overflow: hidden;
 }
 
+/* — Quebras de linha —
+   Sem isto, "a sua medida." ficava sozinho numa terceira linha na entrada e
+   "Pera" numa linha so para ele na obra -- e sao estas as frases que dao a
+   cara ao site. O balance reparte os titulos por linhas de peso parecido; o
+   pretty evita orfaos no corpo. Onde nao ha suporte, nada muda. */
+h1, h2, h3,
+.hero-content h1,
+.sobre-titulo,
+.sobre-citacao,
+.obra-seguinte__nome,
+.rodape-grupo__titulo {
+  text-wrap: balance;
+}
+
+p,
+li,
+.sobre-texto,
+.sobre-destaque,
+.obra-texto,
+.selection-card__desc {
+  text-wrap: pretty;
+}
+
 /* — Selection Menu — */
 
 /* — Selection Cards Carousel (4 por slide com deslizamento para a direita) — */
@@ -2362,7 +2385,8 @@ body.diamante-claro .menu-btn .menu-btn__svg {
     --hero-visual-aspect: 16 / 10;
     --hero-content-width: 85vw;
     --nav-footer-text-size: 3.2vw;
-    --nav-action-height: 10vw;
+    /* 10vw dava 39px a 390: o botao do menu e o alvo mais usado do site */
+    --nav-action-height: max(44px, 10vw);
     --menu-btn-width: 11vw;
     --marquee-size: 16.5vw;
     --h5-size: 4vw;
@@ -2533,6 +2557,10 @@ body.diamante-claro .menu-btn .menu-btn__svg {
     justify-self: center;
   }
 
+  .corner-scroll {
+    min-height: 44px;
+  }
+
   body.page--home.selection-open .corner-scroll {
     grid-row: 4;
   }
@@ -2559,8 +2587,10 @@ body.diamante-claro .menu-btn .menu-btn__svg {
      e a nao segurar nada. Tudo em px, e a navegacao -- que e o que se vem
      ca buscar -- com o tamanho que a largura toda permite. */
   .nav-menu__logo {
-    display: block;
+    display: flex;
+    align-items: center;
     width: min(240px, 60vw);
+    min-height: 44px;
     line-height: 0;
   }
 
@@ -2599,6 +2629,58 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 
   .drawer-footer__heading {
     font-size: 12px;
+  }
+
+  /* Os campos a 16px nao sao so legibilidade: abaixo disso o iOS faz zoom
+     a pagina assim que se toca num campo, e depois nao volta atras. */
+  .marsolve-form input,
+  .marsolve-form select,
+  .marsolve-form textarea {
+    font-size: 16px;
+    padding: 0.85em 0;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  /* a caixa do consentimento tinha 13x13px -- e a coisa que e obrigatorio
+     tocar antes de submeter. A etiqueta envolve-a, por isso o alvo e a
+     linha inteira. */
+  .checkbox-inline {
+    font-size: 14px;
+    padding-block: 9px;
+    gap: 12px;
+  }
+
+  .checkbox-inline input {
+    width: 22px;
+    height: 22px;
+    margin-top: 0;
+  }
+
+  /* o link legal vive dentro da etiqueta: o recuo nao muda o desenho da
+     linha mas alarga a area que responde ao dedo */
+  .checkbox-inline a {
+    padding-block: 12px;
+  }
+
+  .hero-price {
+    font-size: 13px;
+    padding: 1.05em 1.8em;
+    min-height: 44px;
+  }
+
+  /* na gaveta os contactos e as redes ficavam com 23px de alvo, e os links
+     legais com 14px */
+  .drawer-social-link,
+  .drawer-footer__contact-item {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .drawer-legal-link {
+    display: inline-block;
+    padding-block: 15px;
   }
 
   .drawer-social-link,
@@ -4374,7 +4456,8 @@ body.page--detalhe.obra-aberta .logo {
 
 .sobre-texto {
   max-width: 62ch;
-  font-size: clamp(1rem, 1.25vw, 1.3rem);
+  /* o piso e em px: a 390 o rem dava 11.7px, ilegivel para texto corrido */
+  font-size: clamp(16px, 1.25vw, 28px);
   line-height: 1.7;
   color: rgba(35, 31, 32, 0.78);
 }
@@ -4385,7 +4468,7 @@ body.page--detalhe.obra-aberta .logo {
 .sobre-titulo {
   margin: 0 0 0.8em;
   font-family: var(--sans-font);
-  font-size: clamp(1.4rem, 2.2vw, 2.4rem);
+  font-size: clamp(22px, 2.2vw, 50px);
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -4393,7 +4476,7 @@ body.page--detalhe.obra-aberta .logo {
 }
 
 .sobre-destaque {
-  font-size: clamp(1.15rem, 1.65vw, 1.75rem);
+  font-size: clamp(18px, 1.65vw, 37px);
   line-height: 1.55;
   color: var(--brand-dark);
 }
@@ -4432,7 +4515,7 @@ body.page--detalhe.obra-aberta .logo {
 .sobre-citacao {
   font-family: var(--serif-font);
   font-style: italic;
-  font-size: clamp(1.2rem, 1.9vw, 2rem);
+  font-size: clamp(19px, 1.9vw, 42px);
   line-height: 1.5;
   color: var(--brand-dark);
 }
@@ -4517,7 +4600,7 @@ body.page--detalhe.obra-aberta .logo {
 
 .obra-seguinte__nome {
   font-family: var(--sans-font);
-  font-size: clamp(2.4rem, 6vw, 6rem);
+  font-size: clamp(30px, 6vw, 126px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -4526,7 +4609,7 @@ body.page--detalhe.obra-aberta .logo {
 .obra-seguinte__tipo {
   font-family: var(--serif-font);
   font-style: italic;
-  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  font-size: clamp(15px, 1.5vw, 32px);
   opacity: 0.85;
 }
 
@@ -4593,7 +4676,7 @@ body.obra-fim .menu-btn {
     grid-column: 1;
     grid-row: 2;
     justify-self: start;
-    font-size: clamp(2rem, 8vw, 3.4rem);
+    font-size: clamp(30px, 8vw, 54px);
   }
   .obra-titulo__obra { grid-row: 3; }
   .category-cover { aspect-ratio: 4 / 3; }
