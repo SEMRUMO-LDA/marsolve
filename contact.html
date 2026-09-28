@@ -31,13 +31,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Gantari:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,700&amp;family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,600;1,8..60,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=6">
 </head>
-<body class="is-ready page--internal page--contacto">
+<body class="is-ready page--internal page--detalhe page--contacto">
 
   <div id="page-stage">
     <main>
-      <div class="page-grid">
+      <div class="page-grid page-grid--scrollable">
 
-          <!-- Navigation -->
           <nav class="site-nav" aria-label="Primary">
             <header class="logo">
               <a href="index.html" aria-label="Marsolve - home">
@@ -45,7 +44,7 @@
               </a>
             </header>
 
-            <div class="site-nav__actions">
+            <div class="site-nav__actions animate">
               <button type="button" class="menu-btn" aria-label="Abrir menu" aria-expanded="false" id="menu-toggle-btn">
                 <span class="menu-btn__icon-box">
                   <svg class="menu-btn__svg" viewBox="0 0 418.76 799.46" fill="none" aria-hidden="true">
@@ -57,36 +56,89 @@
             </div>
           </nav>
 
-        <!-- A barra de baixo e o rodape da pagina: tres grupos rotulados,
-             contactos a esquerda, morada ao centro e redes a direita. Nas
-             outras paginas este canto leva o "Scroll" ou os filtros. -->
-        <div class="corner-rodape">
-          <div class="rodape-grupo">
-            <span class="rodape-grupo__titulo">Contactos</span>
-            <a href="mailto:comercial@marsolve.net">comercial@marsolve.net</a>
-            <a href="tel:+351282312485">(+351) 282 312 485</a>
-          </div>
+        <div class="internal-content obra-content fade-in-up">
+          <article class="obra">
 
-          <div class="rodape-grupo rodape-grupo--centro">
-            <span class="rodape-grupo__titulo">Morada</span>
-            <a href="https://www.google.com/maps/search/?api=1&amp;query=Quinta+dos+Arcos+Lote+23+8365-186+Arma%C3%A7%C3%A3o+de+P%C3%AAra" target="_blank" rel="noopener noreferrer">
-              Quinta dos Arcos, Lote 23 Loja C<br>8365-186 Arma&ccedil;&atilde;o de P&ecirc;ra
-            </a>
-          </div>
+            <!-- A mesma abertura das outras paginas internas: a foto na caixa
+                 da hero, a crescer com o scroll. -->
+            <header class="obra-hero">
+              <div class="obra-hero__palco">
+                <div class="obra-hero__fixo">
+                  <div class="hero-section">
+                    <div class="hero-top">
+                      <div class="hero-visual">
+                        <picture>
+                          <img class="hero-opening-media" src="assets/hero-pool.jpg" alt="Moradia construída pela Marsolve no Algarve" width="1024" height="576" fetchpriority="high" decoding="async">
+                        </picture>
+                      </div>
+                      <div class="marquee" aria-hidden="true">
+                        <div class="marquee-scroll">
+                          <div class="marquee-collection">
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                          <div class="marquee-collection" aria-hidden="true">
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                            <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="hero-bottom">
+                      <div class="hero-content">
+                        <h1>Diga-nos o que tem em m&atilde;os e <em>come&ccedil;amos a construir.</em></h1>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </header>
 
-          <div class="rodape-grupo rodape-grupo--fim">
-            <span class="rodape-grupo__titulo">Redes</span>
-            <a href="https://www.instagram.com/marsolve_/" target="_blank" rel="noopener noreferrer">Instagram</a>
-            <a href="https://www.facebook.com/marsolve.net/" target="_blank" rel="noopener noreferrer">Facebook</a>
-          </div>
-        </div>
+            <!-- Quem procura o telefone nao devia ter de passar por um
+                 formulario: as vias directas vem primeiro. -->
+            <section class="sobre-bloco">
+              <p class="sobre-rotulo">(Fale connosco)</p>
+              <div class="sobre-texto">
+                <p class="sobre-destaque">Respondemos a todos os pedidos. Se preferir falar directamente, use o telefone ou o email &mdash; e se o assunto for uma obra em curso, diga-nos qual.</p>
 
-        <!-- As mesmas classes da hero: o que muda e o que esta na caixa do
-             meio. Aqui e o formulario, e a pagina cabe num ecra. -->
-        <div class="hero-section">
-          <div class="hero-top">
-            <div class="hero-visual hero-visual--formulario">
-              <form class="marsolve-form marsolve-form--hero">
+                <div class="contacto-vias">
+                  <div class="contacto-via">
+                    <span class="contacto-via__rotulo">Email</span>
+                    <a href="mailto:comercial@marsolve.net">comercial@marsolve.net</a>
+                  </div>
+                  <div class="contacto-via">
+                    <span class="contacto-via__rotulo">Telefone</span>
+                    <a href="tel:+351282312485">(+351) 282 312 485</a>
+                  </div>
+                  <div class="contacto-via">
+                    <span class="contacto-via__rotulo">Morada</span>
+                    <a href="https://www.google.com/maps/search/?api=1&amp;query=Quinta+dos+Arcos+Lote+23+8365-186+Arma%C3%A7%C3%A3o+de+P%C3%AAra" target="_blank" rel="noopener noreferrer">Quinta dos Arcos, Lote 23 Loja C<br>8365-186 Arma&ccedil;&atilde;o de P&ecirc;ra</a>
+                  </div>
+                  <div class="contacto-via">
+                    <span class="contacto-via__rotulo">Redes</span>
+                    <a href="https://www.instagram.com/marsolve_/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                    <a href="https://www.facebook.com/marsolve.net/" target="_blank" rel="noopener noreferrer">Facebook</a>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="sobre-bloco sobre-bloco--formulario">
+              <p class="sobre-rotulo">(Deixe-nos uma mensagem)</p>
+              <div class="sobre-texto">
+              <form class="marsolve-form">
                 <div class="form-group">
                   <label class="sr-only" for="c-nome">Nome completo</label>
                   <input id="c-nome" type="text" name="name" placeholder="Nome completo*" required>
@@ -120,41 +172,10 @@
                   <button type="submit" class="hero-price">Enviar mensagem</button>
                 </div>
               </form>
-            </div>
-
-            <div class="marquee" aria-hidden="true">
-              <div class="marquee-reveal">
-                <div class="marquee-scroll">
-                  <div class="marquee-collection">
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                  </div>
-                  <div class="marquee-collection" aria-hidden="true">
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                      <span class="marquee-item"><span class="marquee-text">Contacto</span><span class="marquee-sep">&#9671;</span></span>
-                  </div>
-                </div>
               </div>
-            </div>
-          </div>
+            </section>
 
-          <div class="hero-bottom">
-            <div class="hero-content">
-              <h1>Diga-nos o que tem em m&atilde;os e <em>come&ccedil;amos a construir.</em></h1>
-            </div>
-          </div>
+          </article>
         </div>
 
       </div>

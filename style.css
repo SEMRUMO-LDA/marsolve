@@ -256,6 +256,128 @@ html.preloader-done .site-preloader {
   overflow: hidden;
 }
 
+/* ============================================================
+   Pagina de contacto
+   ------------------------------------------------------------
+   Passou a ter o mesmo layout das outras paginas internas: a foto na caixa
+   da hero a crescer com o scroll, a frase por baixo, e depois dois blocos
+   -- as vias directas e o formulario. Quem so quer telefonar nao tem de
+   passar por um formulario.
+
+   Leva o page--detalhe (e dele que vem a abertura) mas mantem o campo
+   preto, por isso as regras de cor do detalhe tem de ser desfeitas com um
+   selector mais especifico. */
+body.page--detalhe.page--contacto #page-stage {
+  background: var(--brand-dark);
+  color: var(--contacto-tinta);
+}
+
+body.page--detalhe.page--contacto {
+  --card-ink: var(--contacto-tinta);
+  --logo-filtro: brightness(0) invert(1);
+}
+
+/* os blocos do sobre servem tal e qual; so a tinta e que muda */
+body.page--contacto .sobre-bloco {
+  border-top-color: color-mix(in srgb, var(--contacto-tinta) 16%, transparent);
+}
+
+body.page--contacto .sobre-rotulo {
+  color: color-mix(in srgb, var(--contacto-tinta) 68%, transparent);
+}
+
+body.page--contacto .sobre-texto {
+  color: color-mix(in srgb, var(--contacto-tinta) 82%, transparent);
+}
+
+body.page--contacto .sobre-destaque,
+body.page--contacto .sobre-titulo {
+  color: var(--contacto-tinta);
+}
+
+/* — As vias directas —
+   Uma lista de pares rotulo/valor. Cada valor e um alvo de 44px, que sao
+   os unicos contactos accionaveis da pagina. */
+.contacto-vias {
+  margin-top: max(28px, 2.4vw);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: max(18px, 1.6vw) var(--grid-gap);
+}
+
+.contacto-via {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.contacto-via__rotulo {
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--contacto-tinta) 55%, transparent);
+  margin-bottom: 2px;
+}
+
+.contacto-via a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--sans-font);
+  font-size: clamp(16px, 1.15vw, 22px);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--contacto-tinta);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.contacto-via a:hover {
+  color: var(--brand-primary);
+}
+
+/* o formulario e uma folha clara pousada no campo preto: nao precisa do
+   risco que separa os blocos de texto. O recuo em baixo reserva a altura
+   do diamante, para a pagina nao acabar rente a ele. */
+.sobre-bloco--formulario {
+  border-top-color: transparent;
+  padding-bottom: max(104px, calc(var(--grid-padding) + var(--nav-action-height) + 5vh));
+}
+
+@media (max-width: 900px) {
+  .contacto-vias {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .contacto-vias {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .contacto-via a {
+    font-size: 16px;
+  }
+
+  /* a folha ocupa a largura toda da coluna no telemovel */
+  body.page--contacto .marsolve-form {
+    padding: 22px 18px;
+  }
+}
+
+/* enquanto o diamante ficaria por cima do botao de enviar, sai da frente
+   (ver "O diamante e o botao de enviar" em app.js) */
+.site-nav__actions.esta-a-tapar {
+  /* o !important e para ganhar a animacao de entrada, que fica em
+     forwards e por isso vence uma declaracao normal */
+  opacity: 0 !important;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
 /* — Quebras de linha —
    Sem isto, "a sua medida." ficava sozinho numa terceira linha na entrada e
    "Pera" numa linha so para ele na obra -- e sao estas as frases que dao a
@@ -3474,98 +3596,6 @@ body.page--contacto .marsolve-form {
   }
   .values-grid {
     grid-template-columns: 1fr;
-  }
-  /* A pagina de contacto passa a rolar no telemovel.
-     Nao ha altura para o logotipo, o formulario, a frase e o rodape num
-     ecra so: so o formulario leva 377px a 390x667, e o que acontecia era
-     ficar tudo sobreposto -- o formulario por cima do logotipo, a frase
-     por cima do rodape. Em vez de tentar caber, empilha e rola: scroll
-     normal, tudo a subir, sem animacao nenhuma pelo meio (a de crescer a
-     imagem e das obras e do sobre, nao desta). */
-  /* O diamante e fixo ao fundo e esta pagina tem um botao a meio da
-     coluna: num ecra de 700 a 750px de altura -- um iPhone com a barra do
-     Safari a vista -- ficava exactamente por cima do "Enviar mensagem", e
-     o toque abria o menu em vez de submeter. Nao ha padding que resolva
-     isso enquanto o conteudo lhe passar por baixo.
-
-     Por isso o palco deixa de ocupar o ecra todo: encurta a altura da
-     faixa do diamante e a pagina rola acima dele. O diamante fica onde
-     esta em todo o site -- em baixo, ao centro -- e nada lhe passa por
-     tras. O fundo e o mesmo, por isso a faixa nao se ve. */
-  body.page--contacto .page-grid {
-    --faixa-diamante: calc(var(--nav-action-height) + 8vw + 18px);
-    grid-template-rows: auto auto auto;
-    align-content: start;
-    overflow-y: auto;
-    row-gap: 26px;
-    height: calc(100svh - var(--faixa-diamante));
-    max-height: calc(100svh - var(--faixa-diamante));
-    padding-bottom: 16px;
-  }
-
-
-
-  /* sem isto o conteudo da hero continuava centrado na linha e transbordava
-     para cima e para baixo em vez de a fazer crescer */
-  body.page--contacto .hero-section {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    /* a margem negativa servia para apertar tudo num ecra so; a empilhar,
-       so puxava o formulario para cima do logotipo */
-    margin-top: 0;
-  }
-
-  body.page--contacto .hero-top,
-  body.page--contacto .hero-bottom {
-    height: auto;
-    min-height: 0;
-  }
-
-  /* a frase fica por baixo do formulario, como no desktop */
-  body.page--contacto .hero-bottom {
-    margin-top: 30px;
-  }
-
-  body.page--contacto .hero-content h1 {
-    font-size: 25px;
-    line-height: 1.25;
-  }
-
-  /* o rodape passa a ler-se como rodape: risco por cima, ar entre os
-     grupos e rotulos um pouco maiores */
-  body.page--contacto .corner-rodape {
-    margin-top: 40px;
-    padding-top: 28px;
-    border-top: 1px solid color-mix(in srgb, var(--contacto-tinta) 16%, transparent);
-    row-gap: 24px;
-  }
-
-  body.page--contacto .rodape-grupo__titulo {
-    font-size: 11px;
-    margin-bottom: 4px;
-  }
-
-  /* Estes sao os unicos contactos da pagina e tinham 9px de corpo com 14px
-     de altura de toque -- um terco do minimo que um dedo precisa. Passam a
-     14px, cada um com 44px de alvo. O recuo vertical tambem e o que os
-     separa uns dos outros, por isso o ar entre grupos pode descer. */
-  body.page--contacto .rodape-grupo a {
-    display: block;
-    font-size: 14px;
-    line-height: 1.5;
-    padding-block: 12px;
-  }
-
-  body.page--contacto .corner-rodape {
-    row-gap: 16px;
-  }
-
-  /* No desktop a palavra passa inteira por tras do formulario e e uma
-     textura; a 390px so se veem duas letras a espreitar dos lados, que se
-     leem como um defeito. */
-  body.page--contacto .marquee {
-    display: none;
   }
 
   .hero-visual--formulario {

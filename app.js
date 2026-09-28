@@ -1089,4 +1089,46 @@
     agendar();
   })();
 
+  // — O diamante e o botao de enviar —
+  // O botao do menu e fixo ao fundo do ecra e o botao de envio anda com o
+  // scroll: em ecras de 700 a 750px de altura passavam a ocupar o mesmo
+  // sitio, e o toque abria o menu em vez de submeter. Enquanto se
+  // sobrepuserem, o diamante desvanece e deixa de apanhar o toque -- e uma
+  // janela curta de scroll, e o menu volta assim que o botao sai de baixo
+  // dele.
+  (function diamanteSobreOBotao() {
+    const botao = document.querySelector('.menu-btn');
+    const enviar = document.querySelector('.marsolve-form button[type="submit"], .marsolve-form .hero-price');
+    if (!botao || !enviar) return;
+    const acoes = botao.closest('.site-nav__actions') || botao;
+
+    let tapado = false;
+    let pedido = null;
+
+    function medir() {
+      pedido = null;
+      const d = acoes.getBoundingClientRect();
+      const e = enviar.getBoundingClientRect();
+      if (!d.width || !e.width) return;
+      // com uma folga de 12px de cada lado, para nao ficarem a tocar-se
+      const cruza = !(d.bottom < e.top - 12 || d.top > e.bottom + 12 ||
+                      d.right < e.left || d.left > e.right);
+      if (cruza !== tapado) {
+        tapado = cruza;
+        acoes.classList.toggle('esta-a-tapar', tapado);
+      }
+    }
+
+    const agendar = () => {
+      if (pedido === null) pedido = requestAnimationFrame(medir);
+    };
+
+    const palco = document.querySelector('.page-grid--scrollable');
+    if (palco) palco.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('resize', agendar);
+    window.addEventListener('load', agendar);
+    agendar();
+  })();
+
 })();
