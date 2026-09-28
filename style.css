@@ -397,23 +397,35 @@ body.page--contacto .sobre-titulo {
   color: inherit;
 }
 
-/* Na entrada o convite nao vem colado a frase: fica la em baixo, a meio
-   caminho dela e do diamante (a 390px sao 137px por cima e 71 por baixo).
-   Aqui vai para o mesmo sitio, ancorado ao fundo da hero -- que e sticky e
-   por isso serve de referencia. Fica irmao do .hero-section e nao dentro do
-   .hero-content, que tem um transform e por isso seria ele a servir de
-   ancora; e como ja nao esta debaixo do .hero-bottom, desvanece pela conta
-   que este usa. */
-.obra-hero .obra-scroll {
-  position: absolute;
+/* Vai para o mesmo sitio que na entrada, e por isso e fixo como o diamante:
+   ao centro e a 146px do fundo no telemovel, no canto inferior esquerdo no
+   desktop. Vive fora do .internal-content de proposito -- esse tem um
+   transform, e um transform faz de ancora para o que e fixed, que deixaria
+   de se agarrar ao ecra. A opacidade vem da mesma conta que apaga a frase,
+   que esta no body e por isso le-se daqui. */
+.obra-scroll {
+  position: fixed;
+  z-index: 40;
   left: 50%;
   translate: -50% 0;
-  /* 71px acima do diamante, que e o vao que a entrada tem */
-  bottom: max(91px, 5.6vw);
+  bottom: 146px;
   margin-top: 0;
   width: max-content;
-  /* a mesma conta da frase, para desaparecerem juntos */
   opacity: var(--abertura-desvanece, 1);
+  pointer-events: none;
+}
+
+@media (min-width: 651px) {
+  /* na entrada, no desktop, o convite esta no canto de baixo a esquerda e o
+     diamante no direito -- aqui e igual */
+  .obra-scroll {
+    left: var(--grid-padding);
+    translate: none;
+    bottom: var(--grid-padding);
+    height: var(--nav-action-height);
+    display: flex;
+    align-items: center;
+  }
 }
 
 .obra-scroll::after {
