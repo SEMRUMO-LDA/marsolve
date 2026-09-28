@@ -3487,8 +3487,47 @@ body.page--contacto .marsolve-form {
     align-content: start;
     overflow-y: auto;
     row-gap: 26px;
-    /* o diamante e fixo em baixo: o rodape nao pode acabar por tras dele */
-    padding-bottom: calc(var(--grid-padding) + var(--nav-action-height) + 22px);
+    padding-bottom: 40px;
+  }
+
+  /* O diamante e fixo ao fundo do ecra e esta pagina tem um botao a meio
+     da coluna: em ecras de 700 a 750px de altura -- um iPhone com a barra
+     do Safari a vista -- ficava exactamente por cima do "Enviar mensagem",
+     e o toque abria o menu em vez de submeter. Nao ha altura de scroll que
+     resolva isso: o botao passa sempre pela faixa do diamante.
+     Nesta pagina, a unica com um formulario, o menu sobe para junto do
+     logotipo -- que e onde as pessoas olham a procura dele. */
+  body.page--contacto .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  body.page--contacto .site-nav__actions {
+    position: static;
+    transform: none;
+    bottom: auto;
+    left: auto;
+  }
+
+  /* o logotipo cede largura ao diamante: sem isto ficavam a 3px um do
+     outro e o "Building Further" encostava ao losango */
+  body.page--contacto .logo {
+    margin: 0;
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  body.page--contacto .logo a {
+    width: auto;
+    max-width: min(240px, 62vw);
+    justify-content: flex-start;
+  }
+
+  body.page--contacto .logo-img {
+    width: 100%;
+    height: auto;
   }
 
   /* sem isto o conteudo da hero continuava centrado na linha e transbordava
