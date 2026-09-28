@@ -578,6 +578,13 @@ li,
   cursor: pointer;
   padding: 0;
   transition: all 0.3s ease;
+  /* o ponto tem 7px e era isso que respondia ao rato. O contorno cresce
+     para 24px sem mexer no desenho: o ponto continua do mesmo tamanho. */
+  outline-offset: 0;
+  box-sizing: content-box;
+  border-block: 8px solid transparent;
+  border-inline: 5px solid transparent;
+  background-clip: content-box;
 }
 
 .selection-slide-dot.active {
@@ -3495,6 +3502,10 @@ body.page--contacto .marsolve-form {
 .checkbox-inline input {
   margin-top: 0.15em;
   flex-shrink: 0;
+  /* 13px era o tamanho por omissao do browser; e a caixa que tem de ser
+     marcada antes de submeter */
+  width: 18px;
+  height: 18px;
   accent-color: var(--brand-primary);
 }
 
