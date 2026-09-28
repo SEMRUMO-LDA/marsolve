@@ -378,6 +378,48 @@ body.page--contacto .sobre-titulo {
   transition: opacity 0.25s ease;
 }
 
+/* — O convite ao scroll nas paginas internas —
+   A entrada tem o "Scroll" e as paginas internas abrem com o mesmo desenho
+   -- logotipo, foto, frase -- mas a pagina inteira depende de se descer e
+   nada o dizia. Vive dentro da hero, por isso desvanece com ela e com a
+   mesma cadencia: nao e um elemento novo a aparecer, e a mesma coisa que
+   ja la estava a fazer-se notar. */
+.obra-scroll {
+  display: block;
+  margin-top: max(18px, 1.6vw);
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.62;
+}
+
+.obra-scroll::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 0.85em;
+  margin-left: 0.7em;
+  vertical-align: -0.1em;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+/* quem pediu menos movimento continua a ver o convite, que e estatico */
+@media (prefers-reduced-motion: no-preference) {
+  .obra-scroll {
+    animation: obraScrollRespira 2.6s ease-in-out infinite;
+  }
+}
+
+@keyframes obraScrollRespira {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.85; }
+}
+
 /* — Quebras de linha —
    Sem isto, "a sua medida." ficava sozinho numa terceira linha na entrada e
    "Pera" numa linha so para ele na obra -- e sao estas as frases que dao a
@@ -4146,6 +4188,22 @@ body.page--detalhe .menu-btn {
 
 body.page--detalhe.obra-claro .menu-btn {
   color: var(--brand-dark);
+}
+
+/* O obra-claro entra quando o campo da pagina cede ao branco -- e ai a tinta
+   tem de escurecer. No contacto o campo e preto do principio ao fim, por
+   isso o diamante e o logotipo ficam claros. */
+body.page--detalhe.page--contacto.obra-claro .menu-btn {
+  color: var(--contacto-tinta);
+}
+
+body.page--detalhe.page--contacto.obra-claro .logo-img {
+  filter: brightness(0) invert(1);
+}
+
+body.page--detalhe.page--contacto.obra-claro #page-stage {
+  background: var(--brand-dark);
+  color: var(--contacto-tinta);
 }
 
 .obra-hero {
