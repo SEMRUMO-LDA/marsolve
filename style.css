@@ -3482,53 +3482,28 @@ body.page--contacto .marsolve-form {
      por cima do rodape. Em vez de tentar caber, empilha e rola: scroll
      normal, tudo a subir, sem animacao nenhuma pelo meio (a de crescer a
      imagem e das obras e do sobre, nao desta). */
+  /* O diamante e fixo ao fundo e esta pagina tem um botao a meio da
+     coluna: num ecra de 700 a 750px de altura -- um iPhone com a barra do
+     Safari a vista -- ficava exactamente por cima do "Enviar mensagem", e
+     o toque abria o menu em vez de submeter. Nao ha padding que resolva
+     isso enquanto o conteudo lhe passar por baixo.
+
+     Por isso o palco deixa de ocupar o ecra todo: encurta a altura da
+     faixa do diamante e a pagina rola acima dele. O diamante fica onde
+     esta em todo o site -- em baixo, ao centro -- e nada lhe passa por
+     tras. O fundo e o mesmo, por isso a faixa nao se ve. */
   body.page--contacto .page-grid {
+    --faixa-diamante: calc(var(--nav-action-height) + 8vw + 18px);
     grid-template-rows: auto auto auto;
     align-content: start;
     overflow-y: auto;
     row-gap: 26px;
-    padding-bottom: 40px;
+    height: calc(100svh - var(--faixa-diamante));
+    max-height: calc(100svh - var(--faixa-diamante));
+    padding-bottom: 16px;
   }
 
-  /* O diamante e fixo ao fundo do ecra e esta pagina tem um botao a meio
-     da coluna: em ecras de 700 a 750px de altura -- um iPhone com a barra
-     do Safari a vista -- ficava exactamente por cima do "Enviar mensagem",
-     e o toque abria o menu em vez de submeter. Nao ha altura de scroll que
-     resolva isso: o botao passa sempre pela faixa do diamante.
-     Nesta pagina, a unica com um formulario, o menu sobe para junto do
-     logotipo -- que e onde as pessoas olham a procura dele. */
-  body.page--contacto .site-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
 
-  body.page--contacto .site-nav__actions {
-    position: static;
-    transform: none;
-    bottom: auto;
-    left: auto;
-  }
-
-  /* o logotipo cede largura ao diamante: sem isto ficavam a 3px um do
-     outro e o "Building Further" encostava ao losango */
-  body.page--contacto .logo {
-    margin: 0;
-    flex: 0 1 auto;
-    min-width: 0;
-  }
-
-  body.page--contacto .logo a {
-    width: auto;
-    max-width: min(240px, 62vw);
-    justify-content: flex-start;
-  }
-
-  body.page--contacto .logo-img {
-    width: 100%;
-    height: auto;
-  }
 
   /* sem isto o conteudo da hero continuava centrado na linha e transbordava
      para cima e para baixo em vez de a fazer crescer */
