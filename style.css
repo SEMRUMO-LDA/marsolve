@@ -4785,9 +4785,14 @@ body.page--detalhe.obra-aberta .logo {
    do diamante, que e fixo. A folga e padding e nao margem: a margem do
    ultimo filho nao chega a entrar na altura rolavel do palco, e por isso
    nao se via. Reserva a altura do diamante mais ar. */
+/* a reserva para o diamante so faz sentido quando o remate e o fim da
+   pagina; com a chamada do portfolio a seguir, era um buraco */
+.sobre-bloco--remate:last-child {
+  padding-bottom: max(104px, calc(var(--grid-padding) + var(--nav-action-height) + 5vh));
+}
+
 .sobre-bloco--remate {
   margin-bottom: 0;
-  padding-bottom: max(104px, calc(var(--grid-padding) + var(--nav-action-height) + 5vh));
   /* O remate nao e mais um bloco de texto: e o fecho da pagina. Sai da
      grelha de duas colunas e passa ao centro, com a mesma medida que o
      texto dedicado das obras usa -- e a mesma paragem, no mesmo lugar da
