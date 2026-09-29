@@ -29,6 +29,45 @@
   --serif-font: 'Source Serif 4', Georgia, serif;
 
   --standard-easing: cubic-bezier(.7, .6, 0, 1);
+
+  /* — Movimento —
+     Havia 18 duracoes (0.15 a 1.4s) e 9 curvas, tres delas a fazer a mesma
+     coisa. Ninguem distingue 0.25 de 0.3; o que se nota e a falta de
+     coordenacao. Ficam cinco tempos, cada um com um trabalho:
+
+       curto   estados que respondem ao rato ou ao dedo
+       medio   cor, opacidade, o que muda sem se deslocar
+       longo   paineis e reveleacoes curtas
+       amplo   a gaveta, os cards, as entradas
+       cena    a abertura da hero, que e a mais longa de proposito
+
+     E duas curvas: a da casa, para tudo, e a do salto, so onde o
+     movimento deve passar do sitio e voltar (o icone do menu). */
+  --t-curto: 200ms;
+  --t-medio: 300ms;
+  --t-longo: 450ms;
+  --t-amplo: 700ms;
+  --t-cena: 1400ms;
+  --curva: var(--standard-easing);
+  /* a unica curva que passa do sitio e volta: o icone do menu */
+  --curva-salto: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* — Rotulos —
+     A camada mais pequena do site tinha seis tratamentos para o mesmo
+     papel: o mesmo corpo de 11px com pesos 500 e 700 e espacejamentos de
+     0.88 a 2.16. Ninguem ve a diferenca entre 0.10 e 0.14em; o que se ve e
+     falta de sistema.
+
+     Ficam dois papeis, e o peso e a unica coisa que os separa -- por uma
+     razao: o de 700 pode ser tocado (o Scroll, os filtros), o de 500 so
+     nomeia (Localidade, Quem somos, Obra seguinte, Email).
+
+     Os numeros -- 01, 01 / 08, (01) -- levam o seu proprio espacejamento,
+     que e o que os faz ler como numeracao e nao como palavra. */
+  --rotulo-espaco: 0.14em;
+  --rotulo-peso: 500;
+  --rotulo-peso-activo: 700;
+  --meta-espaco: 0.12em;
   --grid-padding: 4.5vw;
   /* altura do carrossel e faixa reservada em baixo para a pill */
   --carousel-h: 75svh;
@@ -152,7 +191,7 @@ h1, h2, h3, h4, h5, h6, p {
   place-items: center;
   background: var(--brand-primary);
   color: #fff;
-  transition: opacity 0.6s ease, visibility 0.6s ease;
+  transition: opacity var(--t-amplo) var(--curva), visibility var(--t-amplo) var(--curva);
 }
 
 html.preloader-done .site-preloader {
@@ -194,7 +233,7 @@ html.preloader-done .site-preloader {
   opacity: 0;
   transform: scale(1.05);
   /* acompanha o compasso do contador (ver runPreloader) */
-  transition: opacity 0.5s ease, transform 0.8s var(--standard-easing);
+  transition: opacity var(--t-longo) var(--curva), transform var(--t-amplo) var(--standard-easing);
 }
 
 .site-preloader__frame.active {
@@ -237,7 +276,7 @@ html.preloader-done .site-preloader {
 .site-preloader__digit-inner {
   display: flex;
   flex-direction: column;
-  transition: transform 0.4s var(--standard-easing);
+  transition: transform var(--t-longo) var(--standard-easing);
 }
 
 .site-preloader__number {
@@ -314,8 +353,8 @@ body.page--contacto .sobre-titulo {
 .contacto-via__rotulo {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   color: color-mix(in srgb, var(--contacto-tinta) 55%, transparent);
   margin-bottom: 2px;
@@ -331,7 +370,7 @@ body.page--contacto .sobre-titulo {
   line-height: 1.4;
   color: var(--contacto-tinta);
   text-decoration: none;
-  transition: color 0.25s ease;
+  transition: color var(--t-medio) var(--curva);
 }
 
 .contacto-via a:hover {
@@ -375,7 +414,7 @@ body.page--contacto .sobre-titulo {
      forwards e por isso vence uma declaracao normal */
   opacity: 0 !important;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--t-medio) var(--curva);
 }
 
 /* — O convite ao scroll nas paginas internas —
@@ -391,8 +430,8 @@ body.page--contacto .sobre-titulo {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso-activo);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   color: inherit;
 }
@@ -480,7 +519,7 @@ li,
   display: flex;
   width: 100%;
   height: 100%;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--t-amplo) var(--curva);
   will-change: transform;
 }
 
@@ -529,7 +568,7 @@ li,
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity var(--t-medio) var(--curva), transform var(--t-medio) var(--curva);
 }
 
 .selection-nav-arrow:hover:not(:disabled) {
@@ -589,7 +628,7 @@ li,
   border: none;
   cursor: pointer;
   padding: 0;
-  transition: all 0.3s ease;
+  transition: all var(--t-medio) var(--curva);
   /* o ponto tem 7px e era isso que respondia ao rato. O contorno cresce
      para 24px sem mexer no desenho: o ponto continua do mesmo tamanho. */
   outline-offset: 0;
@@ -657,13 +696,13 @@ body:not(.is-ready) .bottom-left-contact {
 body.is-ready .bottom-left-contact {
   visibility: visible;
   opacity: 1;
-  animation: fadeInUp 0.6s ease 0.4s both;
+  animation: fadeInUp var(--t-amplo) var(--curva) var(--t-longo) both;
 }
 
 body.selection-open .bottom-left-contact {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s;
+  transition: opacity var(--t-medio);
 }
 
 /* o contador vive com o polegar: nao existe no desktop, onde as setas e os
@@ -673,7 +712,7 @@ body.selection-open .bottom-left-contact {
   font-family: var(--sans-font);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--meta-espaco);
   font-variant-numeric: tabular-nums;
   opacity: 0.6;
   white-space: nowrap;
@@ -696,7 +735,7 @@ body.selection-open .bottom-left-contact {
   color: var(--card-ink);
   text-align: left;
   cursor: pointer;
-  transition: filter 0.8s cubic-bezier(.18, .13, 0, .99);
+  transition: filter var(--t-amplo) var(--curva);
 }
 
 
@@ -735,7 +774,7 @@ body.selection-open .bottom-left-contact {
   opacity: 0;
   background: radial-gradient(120% 90% at 50% 45%, rgba(255,255,255,0.32), rgba(255,255,255,0.1) 38%, transparent 70%);
   mix-blend-mode: soft-light;
-  transition: opacity 0.8s cubic-bezier(.18, .13, 0, .99);
+  transition: opacity var(--t-amplo) var(--curva);
 }
 
 .selection-card__cover img {
@@ -746,7 +785,7 @@ body.selection-open .bottom-left-contact {
   transform: scale(1);
   transform-origin: center;
   filter: brightness(1) saturate(1);
-  transition: transform 0.8s cubic-bezier(.18, .13, 0, .99), filter 0.8s cubic-bezier(.18, .13, 0, .99);
+  transition: transform var(--t-amplo) var(--curva), filter var(--t-amplo) var(--curva);
 }
 
 @media (hover: hover) {
@@ -851,7 +890,7 @@ body.selection-open .bottom-left-contact {
   z-index: 2;
   will-change: transform;
   background: var(--white);
-  transition: transform 0.8s var(--standard-easing), border-radius 0.8s var(--standard-easing);
+  transition: transform var(--t-amplo) var(--standard-easing), border-radius var(--t-amplo) var(--standard-easing);
 }
 
 /* a hero deixa de desaparecer de repente: agora tem animacao de saida
@@ -1139,11 +1178,11 @@ body.page--portfolio .bottom-left-contact {
   z-index: 2;
   will-change: transform;
   background: var(--brand-primary);
-  transition: transform 0.8s var(--standard-easing), border-radius 0.8s var(--standard-easing), background 0.4s ease, color 0.4s ease;
+  transition: transform var(--t-amplo) var(--standard-easing), border-radius var(--t-amplo) var(--standard-easing), background var(--t-longo) var(--curva), color var(--t-longo) var(--curva);
 }
 
 body {
-  transition: background 0.4s ease;
+  transition: background var(--t-longo) var(--curva);
 }
 
 /* — 1. TERRACOTTA THEME (Fundo Terracota & Texto Branco) — */
@@ -1415,7 +1454,7 @@ body.page--internal .selection-preview-bar__link,
 .page--white:not(.page--home) .contact-btn,
 .page--white:not(.page--home) .bottom-left-contact {
   opacity: 0.2 !important;
-  transition: opacity 0.3s ease, color 0.3s ease !important;
+  transition: opacity var(--t-medio) var(--curva), color var(--t-medio) var(--curva) !important;
 }
 
 body.page--internal.is-ready .portfolio-btn,
@@ -1426,7 +1465,7 @@ body.page--internal.is-ready .bottom-left-contact,
 .page-grid--scrollable.is-ready .about-btn,
 .page-grid--scrollable.is-ready .contact-btn,
 .page-grid--scrollable.is-ready .bottom-left-contact {
-  animation: fadeInUpInternalNav 0.6s ease 0.4s both !important;
+  animation: fadeInUpInternalNav var(--t-amplo) var(--curva) var(--t-longo) both !important;
 }
 
 body.page--internal .site-nav a:not([aria-label*="home"]):hover,
@@ -1536,7 +1575,7 @@ body.page--internal .selection-preview-bar__link:hover,
   color: var(--brand-dark);
   white-space: nowrap;
   line-height: 1;
-  transition: color 0.3s ease, opacity 0.3s ease;
+  transition: color var(--t-medio) var(--curva), opacity var(--t-medio) var(--curva);
 }
 
 .about-btn:hover,
@@ -1577,7 +1616,7 @@ body.page--internal .selection-preview-bar__link:hover,
   background: currentColor;
   transform: scaleX(0);
   transform-origin: right center;
-  transition: transform 0.4s var(--standard-easing);
+  transition: transform var(--t-longo) var(--standard-easing);
 }
 
 .link-underline:hover::after {
@@ -1621,7 +1660,7 @@ body.page--internal .selection-preview-bar__link:hover,
   background-image: linear-gradient(90deg, var(--selection-btn-fill) 50%, var(--selection-btn-bg) 50%);
   background-size: 200% 100%;
   background-position: 100% 0;
-  transition: background-position 0.75s var(--standard-easing), color 0.75s var(--standard-easing);
+  transition: background-position var(--t-amplo) var(--standard-easing), color var(--t-amplo) var(--standard-easing);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
@@ -1667,7 +1706,7 @@ body.page--internal .selection-preview-bar__link:hover,
   line-height: 0;
   position: relative;
   overflow: visible;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition: transform var(--t-medio) var(--curva), color var(--t-medio) var(--curva);
 }
 
 .menu-btn:hover {
@@ -1717,7 +1756,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   width: 25px;
   height: 48px;
   pointer-events: none;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  transition: transform var(--t-longo) var(--curva-salto), color var(--t-medio) var(--curva);
 }
 
 .menu-btn__svg,
@@ -1737,7 +1776,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 
 .menu-btn:active .menu-btn__icon-box {
   transform: translateY(0) scale(0.95);
-  transition-duration: 0.15s;
+  transition-duration: var(--t-curto);
 }
 
 /* — Hero Section — */
@@ -1886,7 +1925,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   color: var(--brand-primary);
   border: 1.5px solid var(--brand-primary);
   padding: 0.7em 1.8em;
-  transition: background 0.4s ease, color 0.4s ease;
+  transition: background var(--t-longo) var(--curva), color var(--t-longo) var(--curva);
 }
 
 .hero-price:hover {
@@ -1936,7 +1975,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   z-index: 1100;
   visibility: hidden;
   pointer-events: none;
-  transition: visibility 0.5s;
+  transition: visibility var(--t-longo);
 }
 
 .nav-menu.open {
@@ -1951,7 +1990,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity var(--t-longo) var(--curva);
 }
 
 .nav-menu.open .nav-menu__backdrop {
@@ -1977,7 +2016,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   justify-content: space-between;
   padding: 1.8rem 2.4rem 1.6rem;
   transform: translateX(100%);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--t-amplo) var(--curva);
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -2029,7 +2068,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   border: 1px solid color-mix(in srgb, var(--gaveta-tinta) 20%, transparent);
   color: var(--gaveta-tinta);
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--t-medio) var(--curva);
 }
 
 .nav-menu__close:hover {
@@ -2085,7 +2124,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   padding: 1rem 0;
   text-decoration: none;
   color: var(--gaveta-tinta);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease, opacity 0.3s ease;
+  transition: transform var(--t-medio) var(--curva), color var(--t-medio) var(--curva), opacity var(--t-medio) var(--curva);
 }
 
 .drawer-nav__link:hover {
@@ -2100,7 +2139,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   font-weight: 500;
   color: var(--gaveta-realce);
   opacity: 0.85;
-  letter-spacing: 0.16em;
+  letter-spacing: var(--meta-espaco);
   min-width: 2rem;
   font-feature-settings: "tnum";
 }
@@ -2153,7 +2192,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   color: var(--gaveta-tinta);
   text-decoration: none;
   opacity: 0.85;
-  transition: opacity 0.25s ease, color 0.25s ease;
+  transition: opacity var(--t-medio) var(--curva), color var(--t-medio) var(--curva);
 }
 
 .drawer-social-link:hover {
@@ -2182,7 +2221,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   font-weight: 500;
   letter-spacing: 0.02em;
   opacity: 0.95;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  transition: opacity var(--t-curto) var(--curva), color var(--t-curto) var(--curva);
 }
 
 .drawer-footer__contact-item:hover {
@@ -2215,7 +2254,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 .drawer-legal-link {
   color: color-mix(in srgb, var(--gaveta-tinta) 80%, transparent);
   text-decoration: none;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  transition: opacity var(--t-curto) var(--curva), color var(--t-curto) var(--curva);
 }
 
 .drawer-legal-link:hover {
@@ -2306,7 +2345,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   font-family: var(--sans-font);
   font-size: 0.88rem;
   color: var(--gaveta-tinta);
-  transition: all 0.25s ease;
+  transition: all var(--t-medio) var(--curva);
 }
 
 .drawer-form input::placeholder,
@@ -2360,7 +2399,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--t-medio) var(--curva);
   box-shadow: 0 8px 24px color-mix(in srgb, var(--gaveta-tinta) 38%, transparent);
 }
 
@@ -2371,7 +2410,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 }
 
 .drawer-form__submit svg {
-  transition: transform 0.3s ease;
+  transition: transform var(--t-medio) var(--curva);
 }
 
 .drawer-form__submit:hover svg {
@@ -2384,7 +2423,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   border-radius: 6px;
   padding: 1.5rem;
   text-align: center;
-  animation: fadeIn 0.4s ease;
+  animation: fadeIn var(--t-longo) var(--curva);
 }
 
 .drawer-success-icon {
@@ -2461,7 +2500,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 }
 
 .hero-visual.animate img {
-  animation: hero-visual-reveal 1.4s var(--standard-easing) forwards;
+  animation: hero-visual-reveal var(--t-cena) var(--standard-easing) forwards;
 }
 
 /* Fade in up */
@@ -2478,7 +2517,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 
 .fade-in-up {
   opacity: 0;
-  animation: fadeInUp 0.8s var(--standard-easing) forwards;
+  animation: fadeInUp var(--t-amplo) var(--standard-easing) forwards;
 }
 
 /* Logo entrance */
@@ -2494,7 +2533,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 }
 
 .logo.animate {
-  animation: logoReveal 0.7s ease forwards;
+  animation: logoReveal var(--t-amplo) var(--curva) forwards;
 }
 
 /* Nav actions entrance */
@@ -2510,7 +2549,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 }
 
 .site-nav__actions.animate {
-  animation: navActionsReveal 0.7s ease forwards;
+  animation: navActionsReveal var(--t-amplo) var(--curva) forwards;
 }
 
 /* Marquee reveal */
@@ -2520,7 +2559,7 @@ body.diamante-claro .menu-btn .menu-btn__svg {
 }
 
 .marquee-reveal.animate {
-  animation: marqueeReveal 0.8s ease forwards;
+  animation: marqueeReveal var(--t-amplo) var(--curva) forwards;
 }
 
 /* ============================================
@@ -2988,40 +3027,40 @@ body.is-ready .marquee-reveal {
 
 body.is-ready .hero-visual {
   clip-path: inset(0% 0% 0% 0%);
-  transition: clip-path 1.4s var(--standard-easing);
+  transition: clip-path var(--t-cena) var(--standard-easing);
 }
 
 body.is-ready .hero-visual img {
   clip-path: inset(0% 0% 0% 0%);
   transform: scale(1);
-  transition: clip-path 1.4s var(--standard-easing), transform 1.4s var(--standard-easing);
+  transition: clip-path var(--t-cena) var(--standard-easing), transform var(--t-cena) var(--standard-easing);
 }
 
 body.is-ready .logo {
-  animation: logoReveal 0.7s ease 0.2s both;
+  animation: logoReveal var(--t-amplo) var(--curva) var(--t-curto) both;
 }
 
 body.is-ready .about-btn,
 body.is-ready .contact-btn,
 body.is-ready .portfolio-btn,
 body.is-ready .contact-nav-link {
-  animation: fadeInUp 0.6s ease 0.4s both;
+  animation: fadeInUp var(--t-amplo) var(--curva) var(--t-longo) both;
 }
 
 body.is-ready .hero-content {
-  animation: fadeInUp 0.8s ease 0.6s both;
+  animation: fadeInUp var(--t-amplo) var(--curva) var(--t-amplo) both;
 }
 
 body.is-ready .marquee-reveal {
-  animation: marqueeReveal 1s ease 0.3s both;
+  animation: marqueeReveal var(--t-amplo) var(--curva) var(--t-medio) both;
 }
 
 body.is-ready .site-footer > span {
-  animation: fadeInUp 0.6s ease 0.8s both;
+  animation: fadeInUp var(--t-amplo) var(--curva) var(--t-amplo) both;
 }
 
 body.is-ready .site-nav__actions {
-  animation: navActionsReveal 0.7s ease 0.5s both;
+  animation: navActionsReveal var(--t-amplo) var(--curva) var(--t-longo) both;
 }
 
 /* — Preloader hidden state for body — */
@@ -3195,7 +3234,7 @@ body.is-ready .site-preloader {
   background: transparent;
   color: var(--brand-dark);
   cursor: pointer;
-  transition: all 0.3s var(--standard-easing);
+  transition: all var(--t-medio) var(--standard-easing);
 }
 
 .portfolio-filter-btn:hover {
@@ -3224,7 +3263,7 @@ body.is-ready .site-preloader {
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(35, 31, 32, 0.08);
   overflow: hidden;
-  transition: transform 0.4s var(--standard-easing), box-shadow 0.4s var(--standard-easing);
+  transition: transform var(--t-longo) var(--standard-easing), box-shadow var(--t-longo) var(--standard-easing);
 }
 
 .portfolio-card:hover {
@@ -3244,7 +3283,7 @@ body.is-ready .site-preloader {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.8s var(--standard-easing);
+  transition: transform var(--t-amplo) var(--standard-easing);
 }
 
 .portfolio-card:hover .portfolio-card__image {
@@ -3330,7 +3369,7 @@ body.is-ready .site-preloader {
 }
 
 .portfolio-card__action svg {
-  transition: transform 0.3s var(--standard-easing);
+  transition: transform var(--t-medio) var(--standard-easing);
 }
 
 .portfolio-card:hover .portfolio-card__action svg {
@@ -3530,7 +3569,7 @@ body.page--contacto .marsolve-form {
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
-  transition: text-decoration-color 0.25s ease;
+  transition: text-decoration-color var(--t-medio) var(--curva);
 }
 
 .checkbox-inline a:hover {
@@ -3555,8 +3594,8 @@ body.page--contacto .marsolve-form {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.55;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso-activo);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
 }
 
@@ -3587,7 +3626,7 @@ body.page--contacto .marsolve-form {
 .rodape-grupo a {
   color: inherit;
   opacity: 0.86;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--t-medio) var(--curva);
 }
 
 .rodape-grupo a:hover {
@@ -3646,7 +3685,7 @@ body.page--contacto .marsolve-form {
   border-bottom: 1px solid rgba(0,0,0,0.2);
   background: transparent;
   color: var(--brand-dark);
-  transition: border-color 0.3s ease;
+  transition: border-color var(--t-medio) var(--curva);
 }
 
 .marsolve-form input:focus,
@@ -3708,13 +3747,13 @@ body.page--contacto .marsolve-form {
   --t-chrome: 400ms;
   --t-hero-out: 340ms;
   --t-cards-in: 520ms;
-  --e-out: cubic-bezier(0.4, 0, 1, 1);
-  --e-in: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-out: var(--curva);
+  --e-in: var(--curva);
 }
 
 /* — Fundo: lidera, sem atraso — */
 body.page--home #page-stage {
-  transition: background var(--t-bg) ease, color var(--t-bg) ease;
+  transition: background var(--t-bg) var(--curva), color var(--t-bg) var(--curva);
 }
 
 body.page--home.selection-open #page-stage {
@@ -3726,11 +3765,11 @@ body.page--home.selection-open #page-stage {
 body.page--home .site-nav a,
 body.page--home .bottom-left-contact,
 body.page--home .menu-btn {
-  transition: color var(--t-chrome) ease 80ms, opacity var(--t-chrome) ease 80ms;
+  transition: color var(--t-chrome) var(--curva) 80ms, opacity var(--t-chrome) var(--curva) 80ms;
 }
 
 body.page--home .logo-img {
-  transition: filter var(--t-chrome) ease 80ms;
+  transition: filter var(--t-chrome) var(--curva) 80ms;
 }
 
 body.page--home.selection-open .portfolio-btn,
@@ -3831,7 +3870,7 @@ body.page--home:not(.selection-open) .home-selection .selection-card {
 /* setas e indicadores acompanham os cards */
 body.page--home .selection-controls {
   opacity: 0;
-  transition: opacity 400ms ease 420ms;
+  transition: opacity 400ms var(--curva) 420ms;
 }
 
 body.page--home.selection-open .selection-controls {
@@ -3958,7 +3997,7 @@ body[data-obra="unik-fitness-club"] .category-cover {
 
 ::view-transition-group(*) {
   animation-duration: 520ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-timing-function: var(--curva);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4010,13 +4049,13 @@ body[data-obra="unik-fitness-club"] .category-cover {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso-activo);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   color: inherit;
   cursor: pointer;
   opacity: 1;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity var(--t-medio) var(--curva), transform var(--t-medio) var(--curva);
 }
 
 .corner-scroll::after {
@@ -4039,7 +4078,7 @@ body[data-obra="unik-fitness-club"] .category-cover {
 body.selection-open .corner-scroll {
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--t-medio) var(--curva);
 }
 
 /* — Filtros — */
@@ -4076,13 +4115,13 @@ body.selection-open .corner-scroll {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso-activo);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   color: currentColor;
   cursor: pointer;
   opacity: 0.68;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--t-medio) var(--curva);
   position: relative;
 }
 
@@ -4109,14 +4148,14 @@ body.page--home .corner-filters {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+  transition: opacity var(--t-longo) var(--curva), visibility 0s linear var(--t-longo);
 }
 
 body.page--home.selection-open .corner-filters {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 0.45s ease 0.24s, visibility 0s linear 0s;
+  transition: opacity var(--t-longo) var(--curva) var(--t-medio), visibility 0s linear 0s;
 }
 
 /* cards escondidos pelo filtro */
@@ -4181,7 +4220,7 @@ body.page--sobre {
 body.page--detalhe #page-stage {
   background: var(--white);
   color: var(--card-ink);
-  transition: color 0.35s ease;
+  transition: color var(--t-medio) var(--curva);
 }
 
 /* a viragem do Sobre: comeca no ultimo terco da abertura, para o azul nao
@@ -4204,7 +4243,7 @@ body.page--detalhe.obra-claro #page-stage {
    sobre o branco */
 body.page--detalhe .logo-img {
   filter: var(--logo-filtro);
-  transition: filter 0.35s ease;
+  transition: filter var(--t-medio) var(--curva);
 }
 
 body.page--detalhe.obra-claro .logo-img {
@@ -4213,7 +4252,7 @@ body.page--detalhe.obra-claro .logo-img {
 
 body.page--detalhe .menu-btn {
   color: var(--card-ink);
-  transition: color 0.35s ease;
+  transition: color var(--t-medio) var(--curva);
 }
 
 body.page--detalhe.obra-claro .menu-btn {
@@ -4440,8 +4479,8 @@ body.page--detalhe.obra-aberta .logo {
 .obra-dados dt {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   color: rgba(35, 31, 32, 0.68);
 }
@@ -4577,8 +4616,8 @@ body.page--detalhe.obra-aberta .logo {
   margin: 0;
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   color: rgba(35, 31, 32, 0.68);
 }
@@ -4637,7 +4676,7 @@ body.page--detalhe.obra-aberta .logo {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--meta-espaco);
   color: var(--brand-primary);
 }
 
@@ -4698,7 +4737,7 @@ body.page--detalhe.obra-aberta .logo {
   object-fit: cover;
   display: block;
   transform: scale(1.06);
-  transition: transform 0.9s cubic-bezier(0.18, 0.13, 0, 0.99);
+  transition: transform var(--t-amplo) var(--curva);
 }
 
 .obra-seguinte__link:hover .obra-seguinte__capa img { transform: scale(1); }
@@ -4721,8 +4760,8 @@ body.page--detalhe.obra-aberta .logo {
 .obra-seguinte__rotulo {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   opacity: 0.7;
 }
@@ -4752,7 +4791,7 @@ body.page--detalhe.obra-aberta .logo {
   gap: 0.7rem;
   width: min(280px, 60vw);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity var(--t-longo) var(--curva);
 }
 
 .obra-seguinte--visivel .obra-seguinte__medidor { opacity: 1; }
@@ -4775,8 +4814,8 @@ body.page--detalhe.obra-aberta .logo {
 .obra-seguinte__medidor-texto {
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: var(--rotulo-peso);
+  letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   opacity: 0.75;
 }
