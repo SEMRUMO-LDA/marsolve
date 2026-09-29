@@ -4779,6 +4779,24 @@ body.page--detalhe.obra-aberta .logo {
 .sobre-bloco--remate {
   margin-bottom: 0;
   padding-bottom: max(104px, calc(var(--grid-padding) + var(--nav-action-height) + 5vh));
+  /* O remate nao e mais um bloco de texto: e o fecho da pagina. Sai da
+     grelha de duas colunas e passa ao centro, com a mesma medida que o
+     texto dedicado das obras usa -- e a mesma paragem, no mesmo lugar da
+     leitura. */
+  display: block;
+  text-align: center;
+}
+
+.sobre-bloco--remate .sobre-rotulo {
+  margin-bottom: max(18px, 1.6vw);
+}
+
+.sobre-bloco--remate .sobre-texto {
+  /* o 40ch mede-se pelo tamanho de letra do proprio elemento, por isso a
+     medida vive aqui e nao no <p> */
+  font-size: clamp(19px, 1.9vw, 42px);
+  max-width: 40ch;
+  margin-inline: auto;
 }
 
 @media (max-width: 900px) {
