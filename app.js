@@ -551,9 +551,10 @@
     const podeSuavizar = () => rodaFina.matches && !menosMovimento.matches
       && window.innerWidth > 650;
 
-    // Quanto do que falta se percorre por quadro. 0.12 a 60fps da uma
-    // constante de tempo de ~130ms: sente-se o peso sem ficar a arrastar.
-    const PUXAO = 0.12;
+    // Quanto do que falta se percorre por quadro. 0.095 a 60fps da uma
+    // constante de tempo de ~170ms: a cauda e mais longa e a chegada mais
+    // mansa. Mais baixo arrasta, mais alto cola ao gesto.
+    const PUXAO = 0.095;
     let alvoScroll = null;
     let aPerseguir = false;
     let ultimoQuadro = 0;
