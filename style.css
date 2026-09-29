@@ -334,6 +334,69 @@ body.page--contacto .sobre-titulo {
   color: var(--contacto-tinta);
 }
 
+/* — O rodape legal da pagina —
+   A mesma informacao que esta no fim da gaveta, agora tambem no fim da
+   pagina de contacto: e aqui que alguem a procura depois de ler os
+   contactos. Nao reaproveita as classes da gaveta porque essas vivem do
+   --gaveta-tinta, que so existe dentro do painel.
+   E este bloco que reserva a altura do diamante, que e fixo. */
+.pagina-legal {
+  margin-top: max(48px, 5vw);
+  padding-top: max(22px, 2vw);
+  padding-bottom: max(104px, calc(var(--grid-padding) + var(--nav-action-height) + 5vh));
+  border-top: 1px solid color-mix(in srgb, var(--contacto-tinta, var(--brand-dark)) 16%, transparent);
+  font-family: var(--sans-font);
+}
+
+.pagina-legal__links,
+.pagina-legal__copy {
+  margin: 0;
+}
+
+.pagina-legal__links {
+  font-size: clamp(13px, 0.86vw, 15px);
+  color: color-mix(in srgb, var(--contacto-tinta, var(--brand-dark)) 78%, transparent);
+}
+
+.pagina-legal__links a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--t-curto) var(--curva);
+}
+
+.pagina-legal__links a:hover {
+  color: var(--brand-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.pagina-legal__sep {
+  margin-inline: 0.5em;
+  opacity: 0.4;
+}
+
+.pagina-legal__copy {
+  margin-top: 8px;
+  font-size: clamp(11px, 0.72vw, 13px);
+  letter-spacing: 0.03em;
+  color: color-mix(in srgb, var(--contacto-tinta, var(--brand-dark)) 48%, transparent);
+}
+
+@media (max-width: 650px) {
+  /* os dois links sao a unica coisa tocavel deste bloco: um por linha, com
+     44px de alvo cada. O ponto de separacao deixa de fazer sentido -- e
+     nao podia ser ele a separar as linhas, que esta entre os dois e faz o
+     "a + a" nunca casar. */
+  .pagina-legal__links a {
+    display: block;
+    padding-block: 15px;
+  }
+
+  .pagina-legal__sep {
+    display: none;
+  }
+}
+
 /* — As vias directas —
    Uma lista de pares rotulo/valor. Cada valor e um alvo de 44px, que sao
    os unicos contactos accionaveis da pagina. */
@@ -382,7 +445,6 @@ body.page--contacto .sobre-titulo {
    do diamante, para a pagina nao acabar rente a ele. */
 .sobre-bloco--formulario {
   border-top-color: transparent;
-  padding-bottom: max(104px, calc(var(--grid-padding) + var(--nav-action-height) + 5vh));
 }
 
 @media (max-width: 900px) {
