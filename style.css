@@ -4696,6 +4696,8 @@ body.page--detalhe.obra-aberta .logo {
   align-items: start;
 }
 
+/* o rotulo e agora o cabecalho da seccao (um h2): os titulos grandes
+   saiam, que diziam a mesma coisa que ele */
 .sobre-rotulo {
   margin: 0;
   font-family: var(--sans-font);
@@ -4727,16 +4729,23 @@ body.page--detalhe.obra-aberta .logo {
   color: var(--brand-dark);
 }
 
+/* O primeiro paragrafo era maior e trocava de letra a meio. Passa a ser
+   corpo de texto como os outros: o que o distingue e vir primeiro. */
 .sobre-destaque {
-  font-size: clamp(18px, 1.65vw, 37px);
-  line-height: 1.55;
   color: var(--brand-dark);
 }
 
-.sobre-destaque em {
-  font-family: var(--serif-font);
-  font-style: italic;
-  font-weight: 700;
+/* O nome da casa aparecia de tres maneiras na mesma pagina -- serifada em
+   italico no primeiro paragrafo, sans a negrito no segundo e sem nada no
+   terceiro. Passa a haver um so destaque, o mesmo para qualquer nome
+   proprio no corpo de texto: a mesma letra, o mesmo corpo, so mais peso.
+   A citacao fica de fora de proposito: ja e um registo a parte. */
+.sobre-texto strong,
+.sobre-texto b {
+  font-weight: 600;
+  font-style: normal;
+  font-family: inherit;
+  color: var(--brand-dark);
 }
 
 .sobre-valores {
