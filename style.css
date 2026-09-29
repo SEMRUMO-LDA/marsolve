@@ -68,6 +68,20 @@
   --rotulo-peso: 500;
   --rotulo-peso-activo: 700;
   --meta-espaco: 0.12em;
+
+  /* — Espaco —
+     O espacamento era todo em vw, por isso a PROPORCAO entre niveis
+     perdia-se ao encolher -- e e a proporcao, nao o valor, que faz ler a
+     hierarquia. No Sobre, a distancia entre seccoes era 2.6x a distancia
+     entre paragrafos no telemovel, contra 6.3x no desktop: a essa razao as
+     seccoes deixam de se ler como seccoes.
+
+     Quatro degraus, cada um com um piso em px para nao colapsarem no
+     telemovel, e o vw a mandar a partir do desktop. */
+  --e-cerrado: max(20px, 2.6vw);   /* dentro de uma seccao */
+  --e-bloco: max(52px, 6vw);       /* entre seccoes */
+  --e-parte: max(64px, 8vw);       /* entre partes da pagina */
+  --e-cena: max(72px, 9.5vw);      /* antes da galeria e do remate */
   --grid-padding: 4.5vw;
   /* altura do carrossel e faixa reservada em baixo para a pill */
   --carousel-h: 75svh;
@@ -3161,8 +3175,8 @@ body.is-ready .site-preloader {
 .internal-content {
   grid-column: 2 / 12;
   grid-row: 2;
-  padding-top: 4vw;
-  padding-bottom: 8vw;
+  padding-top: var(--e-parte);
+  padding-bottom: var(--e-parte);
 }
 
 /* — About / Common Intro — */
@@ -4630,7 +4644,7 @@ body.page--detalhe.obra-aberta .logo {
 .obra-galeria {
   /* a ficha encostou-se a fotografia; a galeria afasta-se, para comecar um
      andamento novo em vez de ser a continuacao do texto */
-  margin-top: max(64px, 9.5vw);
+  margin-top: var(--e-cena);
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   column-gap: var(--grid-gap);
@@ -4673,8 +4687,8 @@ body.page--detalhe.obra-aberta .logo {
    o mesmo ritmo vertical. Assim a pagina Sobre tem o formato das outras em
    vez de ser um documento a parte. */
 .sobre-bloco {
-  margin-top: 6vw;
-  padding-top: 2.6vw;
+  margin-top: var(--e-bloco);
+  padding-top: var(--e-cerrado);
   border-top: 1px solid rgba(35, 31, 32, 0.12);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.4fr);
@@ -4779,7 +4793,7 @@ body.page--detalhe.obra-aberta .logo {
    insistir no scroll leva la. O medidor enche com essa insistencia e fica
    cheio ate onde se chegou -- so volta a zero se a pessoa sair do fundo. */
 .obra-seguinte {
-  margin-top: 8vw;
+  margin-top: var(--e-parte);
   margin-inline: calc(var(--grid-padding) * -1);
   height: 92svh;
   position: relative;
