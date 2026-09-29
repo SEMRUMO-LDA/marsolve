@@ -500,9 +500,17 @@ body.page--contacto .sobre-titulo {
    mesma cadencia: nao e um elemento novo a aparecer, e a mesma coisa que
    ja la estava a fazer-se notar. */
 .obra-scroll {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
   margin-top: max(18px, 1.6vw);
   text-align: center;
+  /* e um botao, como na entrada: leva ao conteudo em vez de so o anunciar */
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.2;
@@ -526,9 +534,37 @@ body.page--contacto .sobre-titulo {
   bottom: 146px;
   margin-top: 0;
   width: max-content;
+  /* a mesma caixa de 44px que o convite tem na entrada: com o fundo alinhado,
+     e a altura da caixa que decide onde a palavra assenta, e 10px de
+     diferenca notavam-se na passagem de uma pagina para a outra */
+  min-height: 44px;
+  justify-content: center;
   opacity: var(--abertura-desvanece, 1);
-  pointer-events: none;
+  transition: transform var(--t-medio) var(--curva);
 }
+
+/* deixa de ser alvo assim que se apaga: um botao invisivel a meio do ecra
+   apanhava toques que eram para a pagina. A classe vem do mesmo sitio que
+   escreve a opacidade, por isso apagar-se e deixar de responder e o mesmo
+   momento. */
+body.convite-fora .obra-scroll {
+  pointer-events: none;
+  /* tambem sai do Tab e do leitor de ecra: ja nao ha convite nenhum */
+  visibility: hidden;
+}
+
+.obra-scroll:hover {
+  transform: translateY(2px);
+}
+
+/* a palavra tem 14px de alto; o alvo de toque cresce num pseudo-elemento
+   para nao entrar no desenho nem na caixa */
+.obra-scroll::before {
+  content: "";
+  position: absolute;
+  inset: -15px -22px;
+}
+
 
 @media (min-width: 651px) {
   /* na entrada, no desktop, o convite esta no canto de baixo a esquerda e o
@@ -538,20 +574,41 @@ body.page--contacto .sobre-titulo {
     translate: none;
     bottom: var(--grid-padding);
     height: var(--nav-action-height);
-    display: flex;
-    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
   }
 }
 
+/* — A marca do convite —
+   Era uma barra ao lado da palavra ("SCROLL |"), que so dizia que ali acabava
+   o texto -- e ao centro, no telemovel, ate desalinhava a palavra. Passa a ser
+   um traco por baixo que se desenha de cima para baixo: aponta para onde se
+   tem de ir, e e a mesma marca na entrada e nas paginas internas. */
+.corner-scroll::after,
 .obra-scroll::after {
   content: "";
-  display: inline-block;
+  display: block;
   width: 1px;
-  height: 0.85em;
-  margin-left: 0.7em;
-  vertical-align: -0.1em;
+  height: 14px;
   background: currentColor;
-  opacity: 0.55;
+  transform-origin: top;
+  animation: convite-descer 2.6s var(--curva) infinite;
+}
+
+@keyframes convite-descer {
+  0%   { transform: scaleY(0); opacity: 0; }
+  22%  { transform: scaleY(1); opacity: 0.6; }
+  68%  { transform: scaleY(1); opacity: 0.6; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .corner-scroll::after,
+  .obra-scroll::after {
+    animation: none;
+    transform: none;
+    opacity: 0.45;
+  }
 }
 
 /* — Quebras de linha —
@@ -2870,8 +2927,13 @@ body.diamante-claro .menu-btn .menu-btn__svg {
     justify-self: center;
   }
 
-  .corner-scroll {
+  /* o "body" e para ganhar a regra base do .corner-scroll, que esta mais a
+     frente no ficheiro e por isso levava a melhor com a mesma especificidade */
+  body .corner-scroll {
     min-height: 44px;
+    /* no telemovel o convite esta ao centro da moldura: o traco centra-se
+       com a palavra, como nas paginas internas */
+    align-items: center;
   }
 
   body.page--home.selection-open .corner-scroll {
@@ -4127,6 +4189,11 @@ body[data-obra="unik-fitness-club"] .category-cover {
 }
 
 .corner-scroll {
+  /* a palavra e o traco em coluna, encostados a esquerda como na moldura */
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 7px;
   border: none;
   background: none;
   padding: 0;
@@ -4142,16 +4209,7 @@ body[data-obra="unik-fitness-club"] .category-cover {
   transition: opacity var(--t-medio) var(--curva), transform var(--t-medio) var(--curva);
 }
 
-.corner-scroll::after {
-  content: "";
-  display: inline-block;
-  width: 1px;
-  height: 0.85em;
-  margin-left: 0.7em;
-  vertical-align: -0.1em;
-  background: currentColor;
-  opacity: 0.55;
-}
+
 
 .corner-scroll:hover {
   opacity: 1;

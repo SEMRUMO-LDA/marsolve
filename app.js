@@ -539,6 +539,24 @@
       };
     };
 
+    // — O convite ao scroll, clicavel como na entrada —
+    // Na home o "Scroll" abre o portfolio; aqui leva ao fim da abertura, que
+    // e onde a foto acaba de crescer e o texto comeca. Sem medidas ainda, ou
+    // sem abertura, desce um ecra -- que e o que se esperaria de qualquer
+    // maneira.
+    const convite = document.querySelector('.obra-scroll');
+    if (convite) {
+      convite.addEventListener('click', () => {
+        if (!medidas) medir();
+        const a = medidas && medidas.abertura;
+        const destino = a ? a.topo + a.curso : grelhaObra.clientHeight;
+        grelhaObra.scrollTo({
+          top: destino,
+          behavior: menosMovimento.matches ? 'auto' : 'smooth'
+        });
+      });
+    }
+
     let insistencia = 0;         // 0 a 1: quanto se insistiu no scroll no fim
     const INSISTENCIA_NECESSARIA = 900;
     let acumulado = 0;
@@ -563,8 +581,12 @@
         // misturar, por isso troca de uma vez a meio dessa viragem, onde o
         // fundo ja e claro.
         document.body.classList.toggle('obra-claro', p > 0.81);
+        // o convite so e clicavel enquanto se le: a mesma conta que lhe da a
+        // opacidade (--abertura-desvanece) decide quando deixa de ser alvo
+        document.body.classList.toggle('convite-fora', (0.8 - p) * 2 <= 0.08);
       } else {
         document.body.classList.toggle('obra-claro', y > h * 0.34);
+        document.body.classList.toggle('convite-fora', y > h * 0.34);
       }
 
       // -1 quando a moldura entra por baixo, +1 quando sai por cima. O
