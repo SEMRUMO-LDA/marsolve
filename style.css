@@ -629,13 +629,21 @@ li,
   cursor: pointer;
   padding: 0;
   transition: all var(--t-medio) var(--curva);
-  /* o ponto tem 7px e era isso que respondia ao rato. O contorno cresce
-     para 24px sem mexer no desenho: o ponto continua do mesmo tamanho. */
-  outline-offset: 0;
-  box-sizing: content-box;
-  border-block: 8px solid transparent;
-  border-inline: 5px solid transparent;
-  background-clip: content-box;
+  position: relative;
+}
+
+/* O ponto tem 7px e era so isso que respondia ao rato. A area de toque
+   cresce num pseudo-elemento, que nao entra no desenho nem na caixa.
+
+   A primeira tentativa foi por bordas transparentes com background-clip:
+   content-box -- e o .active, que vem a seguir, tem "background:
+   currentColor", e o atalho background repoe o background-clip a
+   border-box. Resultado: o ponto activo passou a pintar a caixa toda,
+   32x23 em vez de 22x7. */
+.selection-slide-dot::before {
+  content: "";
+  position: absolute;
+  inset: -8px -5px;
 }
 
 .selection-slide-dot.active {
