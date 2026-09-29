@@ -539,6 +539,90 @@
       };
     };
 
+    // — Scroll suavizado —
+    // O scroll nativo cola ao gesto: cada volta da roda e um degrau seco. Aqui
+    // a roda nao move a pagina, move um alvo; a pagina persegue esse alvo uns
+    // por cento por quadro, o que da um arranque e uma travagem sem arestas.
+    //
+    // So no desktop com rato ou trackpad: no telemovel o proprio sistema ja
+    // tem inercia, e substitui-la por esta costuma sair pior. E quem pediu
+    // menos movimento continua com o scroll do browser, seco e imediato.
+    const rodaFina = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const podeSuavizar = () => rodaFina.matches && !menosMovimento.matches
+      && window.innerWidth > 650;
+
+    // Quanto do que falta se percorre por quadro. 0.12 a 60fps da uma
+    // constante de tempo de ~130ms: sente-se o peso sem ficar a arrastar.
+    const PUXAO = 0.12;
+    let alvoScroll = null;
+    let aPerseguir = false;
+    let ultimoQuadro = 0;
+
+    const limiteScroll = () => grelhaObra.scrollHeight - grelhaObra.clientHeight;
+
+    const parar = () => { alvoScroll = null; aPerseguir = false; };
+
+    const perseguir = (agora) => {
+      if (alvoScroll === null) { aPerseguir = false; return; }
+      // por tempo e nao por quadro: a 120Hz o puxao seria o dobro do de 60Hz
+      // e o scroll ficava com velocidades diferentes conforme o ecra
+      const dt = Math.min(64, Math.max(1, agora - ultimoQuadro));
+      ultimoQuadro = agora;
+      const f = 1 - Math.pow(1 - PUXAO, dt / 16.667);
+      // o conteudo pode ter mudado de altura a meio (uma foto que carregou)
+      alvoScroll = entre(alvoScroll, 0, limiteScroll());
+      const antes = grelhaObra.scrollTop;
+      const falta = alvoScroll - antes;
+      if (Math.abs(falta) >= 0.5) grelhaObra.scrollTop += falta * f;
+      // Chega quando esta la, mas tambem quando deixa de avancar: o scrollTop
+      // e inteiro, por isso os ultimos pixeis davam passos que arredondavam a
+      // zero e o ciclo nunca mais parava -- e uma pagina que ficasse presa a
+      // um alvo velho recusava o scroll seguinte.
+      if (Math.abs(falta) < 0.5 || grelhaObra.scrollTop === antes) {
+        grelhaObra.scrollTop = alvoScroll;
+        alvoScroll = null;
+        aPerseguir = false;
+        return;
+      }
+      requestAnimationFrame(perseguir);
+    };
+
+    // um so ciclo de cada vez: o clique e a roda partilham o mesmo alvo, e
+    // dois ciclos em paralelo davam o dobro da velocidade
+    const arrancar = () => {
+      if (alvoScroll === null || aPerseguir) return;
+      aPerseguir = true;
+      // o relogio comeca aqui: com ultimoQuadro a zero o primeiro dt dava zero,
+      // o passo dava zero e a guarda de "deixou de avancar" disparava logo --
+      // o scroll saltava para o destino sem animacao nenhuma
+      ultimoQuadro = performance.now();
+      requestAnimationFrame(perseguir);
+    };
+
+    // a gaveta tem scroll proprio: o que la se roda e dela, nao da pagina
+    const emCaixaPropria = (no) => !!(no && no.closest && no.closest('.nav-menu'));
+
+    grelhaObra.addEventListener('wheel', (e) => {
+      if (!podeSuavizar()) return;
+      if (e.ctrlKey) return;                 // zoom do browser
+      if (e.deltaMode !== 0) return;         // roda por linhas ou paginas
+      if (emCaixaPropria(e.target)) return;
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      const partida = alvoScroll === null ? grelhaObra.scrollTop : alvoScroll;
+      const destino = entre(partida + e.deltaY, 0, limiteScroll());
+      // no topo e no fundo devolve-se o gesto ao browser, para o ressalto do
+      // sistema continuar a existir
+      if (destino === grelhaObra.scrollTop && alvoScroll === null) return;
+      e.preventDefault();
+      alvoScroll = destino;
+      arrancar();
+    }, { passive: false });
+
+    // teclado, barra de scroll e toque mandam mais do que a animacao a meio
+    window.addEventListener('keydown', parar);
+    grelhaObra.addEventListener('pointerdown', parar, { passive: true });
+    grelhaObra.addEventListener('touchstart', parar, { passive: true });
+
     // — O convite ao scroll, clicavel como na entrada —
     // Na home o "Scroll" abre o portfolio; aqui leva ao primeiro bloco de
     // conteudo -- a ficha na obra, o primeiro paragrafo no Sobre e no
@@ -556,10 +640,16 @@
         const destino = primeiro
           ? topoEm(primeiro) - Math.max(56, grelhaObra.clientHeight * 0.09)
           : (a ? a.topo + a.curso : grelhaObra.clientHeight);
-        grelhaObra.scrollTo({
-          top: Math.max(0, Math.round(destino)),
-          behavior: menosMovimento.matches ? 'auto' : 'smooth'
-        });
+        const y = Math.max(0, Math.round(destino));
+        if (podeSuavizar()) {
+          alvoScroll = entre(y, 0, limiteScroll());
+          arrancar();
+        } else {
+          grelhaObra.scrollTo({
+            top: y,
+            behavior: menosMovimento.matches ? 'auto' : 'smooth'
+          });
+        }
       });
     }
 
