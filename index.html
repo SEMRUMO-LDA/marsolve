@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gantari:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,700&amp;family=Source+Serif+4:ital,opsz,wght@1,8..60,400;1,8..60,600;1,8..60,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
   <script>
     if (sessionStorage.getItem('marsolve_visited')) {
       document.documentElement.classList.add('preloader-done');
@@ -147,9 +147,9 @@
 
           <div class="corner-filters" role="group" aria-label="Filtrar obras">
             <span class="corner-filters__rotulo" aria-hidden="true">Obras</span>
-            <button type="button" class="corner-filter is-active" data-filter="todos" aria-pressed="true">Todas</button>
-            <button type="button" class="corner-filter" data-filter="execucao" aria-pressed="false">Em execução</button>
-            <button type="button" class="corner-filter" data-filter="concluida" aria-pressed="false">Concluídas</button>
+            <button type="button" class="corner-filter is-active" data-filter="todos" data-rotulo="Todas" aria-pressed="true">Todas</button>
+            <button type="button" class="corner-filter" data-filter="execucao" data-rotulo="Em execu&ccedil;&atilde;o" aria-pressed="false">Em execução</button>
+            <button type="button" class="corner-filter" data-filter="concluida" data-rotulo="Conclu&iacute;das" aria-pressed="false">Concluídas</button>
           </div>
           <!-- Controlos do carrossel: setas e paginacao juntas, por baixo dos cards -->
           <div class="selection-controls">
@@ -444,6 +444,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=16"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

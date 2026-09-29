@@ -2893,8 +2893,10 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   }
 
   body .corner-filter {
-    display: inline-flex;
-    align-items: center;
+    /* grelha e nao flex: assim a copia invisivel fica por cima do texto, em
+       vez de ao lado dele a somar largura */
+    display: inline-grid;
+    align-content: center;
     min-height: 44px;
   }
 
@@ -4251,13 +4253,15 @@ body.selection-open .corner-scroll {
 }
 
 .corner-filter {
+  display: inline-block;
   border: none;
   background: none;
   padding: 0;
   font-family: var(--sans-font);
   font-size: var(--corner-text-size);
   line-height: 1.2;
-  font-weight: var(--rotulo-peso-activo);
+  /* so nomeia: o peso cheio fica para o que esta escolhido */
+  font-weight: var(--rotulo-peso);
   letter-spacing: var(--rotulo-espaco);
   text-transform: uppercase;
   color: currentColor;
@@ -4267,12 +4271,28 @@ body.selection-open .corner-scroll {
   position: relative;
 }
 
+/* O peso do escolhido nao pode mexer com a largura: a fila esta em
+   space-between e, ao trocar de filtro, o bold a saltar de um para o outro
+   empurrava os vizinhos. Cada botao reserva sempre a largura da sua propria
+   versao em bold, numa copia invisivel de altura zero -- o que se le por
+   cima muda de peso a vontade e ninguem se mexe. */
+.corner-filter::before {
+  content: attr(data-rotulo);
+  display: block;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: var(--rotulo-peso-activo);
+  pointer-events: none;
+}
+
 .corner-filter:hover {
   opacity: 0.75;
 }
 
 .corner-filter.is-active {
   opacity: 1;
+  font-weight: var(--rotulo-peso-activo);
 }
 
 .corner-filter.is-active::after {

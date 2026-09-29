@@ -540,18 +540,24 @@
     };
 
     // — O convite ao scroll, clicavel como na entrada —
-    // Na home o "Scroll" abre o portfolio; aqui leva ao fim da abertura, que
-    // e onde a foto acaba de crescer e o texto comeca. Sem medidas ainda, ou
-    // sem abertura, desce um ecra -- que e o que se esperaria de qualquer
-    // maneira.
+    // Na home o "Scroll" abre o portfolio; aqui leva ao primeiro bloco de
+    // conteudo -- a ficha na obra, o primeiro paragrafo no Sobre e no
+    // Contacto. Parar no fim da abertura, que era o que fazia, deixava um
+    // ecra so com o fundo da foto e nada escrito: parecia que a pagina
+    // acabava ali. Fica uma folga no topo para o bloco nao colar ao
+    // logotipo.
     const convite = document.querySelector('.obra-scroll');
     if (convite) {
       convite.addEventListener('click', () => {
         if (!medidas) medir();
+        const hero = document.querySelector('.obra-hero');
+        const primeiro = hero && hero.nextElementSibling;
         const a = medidas && medidas.abertura;
-        const destino = a ? a.topo + a.curso : grelhaObra.clientHeight;
+        const destino = primeiro
+          ? topoEm(primeiro) - Math.max(56, grelhaObra.clientHeight * 0.09)
+          : (a ? a.topo + a.curso : grelhaObra.clientHeight);
         grelhaObra.scrollTo({
-          top: destino,
+          top: Math.max(0, Math.round(destino)),
           behavior: menosMovimento.matches ? 'auto' : 'smooth'
         });
       });
