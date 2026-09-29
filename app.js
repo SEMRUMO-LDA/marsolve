@@ -833,7 +833,9 @@
   function updateCarousel(slideIndex) {
     currentSlide = Math.max(0, Math.min(slideIndex, totalSlides - 1));
     if (carouselTrack) {
-      carouselTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+      // cada passo e a largura da moldura mais a folga entre paginas
+      carouselTrack.style.transform =
+        `translateX(calc(${-currentSlide} * (100% + var(--grid-gap))))`;
     }
     if (carouselPrev) carouselPrev.disabled = (currentSlide === 0);
     if (carouselNext) carouselNext.disabled = (currentSlide === totalSlides - 1);

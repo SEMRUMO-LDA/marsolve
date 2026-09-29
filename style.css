@@ -652,6 +652,14 @@ li,
   display: flex;
   width: 100%;
   height: 100%;
+  /* A pagina seguinte estava colada a esta: o slide 2 comecava exactamente
+     onde a moldura corta, e como essa fronteira cai a meio de um pixel
+     (1375.203125px a 1440), o ultimo pixel do card da direita era metade
+     dele e metade do primeiro card da pagina seguinte -- via-se uma risca da
+     fotografia seguinte encostada a borda. Com uma folga entre paginas, o
+     que esta do outro lado do corte e so a pagina, e a borda fica limpa.
+     O passo do updateCarousel ja conta com esta folga. */
+  gap: var(--grid-gap);
   transition: transform var(--t-amplo) var(--curva);
   will-change: transform;
 }
