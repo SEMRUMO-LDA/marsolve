@@ -4862,7 +4862,11 @@ body.page--detalhe.obra-aberta .logo {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(35, 31, 32, 0.42);
+  /* o veu chapado da o contraste ao titulo; o degrade em baixo garante que o
+     medidor e o diamante se leem mesmo quando a foto e clara nessa faixa */
+  background:
+    linear-gradient(to top, rgba(35, 31, 32, 0.58) 0%, rgba(35, 31, 32, 0.52) 18%, rgba(35, 31, 32, 0) 48%),
+    rgba(35, 31, 32, 0.42);
 }
 
 .obra-seguinte__texto {
