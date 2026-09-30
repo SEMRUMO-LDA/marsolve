@@ -363,14 +363,18 @@
       updateCarousel(0);
       return;
     }
-    // na home o portfolio e um estado, nao uma pagina
-    if (isHomePage && document.getElementById('home-selection')) {
-      updateCarousel(0);
-      openSelection();
-      return;
-    }
-    // noutras paginas, voltar a home com o hash: o portfolio vive la
-    window.location.href = 'index.html#portfolio';
+    // O portfolio passa a ser so uma pagina.
+    //
+    // Era tambem um estado da entrada (index.html#portfolio), com os mesmos
+    // cards a abrirem-se por cima da hero. Duas implementacoes da mesma
+    // coisa, e no telemovel notava-se: o Safari le a cor das barras uma vez,
+    // quando carrega a pagina, e ignora o que mudar depois -- por isso o
+    // portfolio aberto dentro da entrada ficava sempre com as barras
+    // terracota dela. E como a barra so ganha a faixa tingida quando a cor
+    // nao e branca, o mesmo portfolio tinha dois espacamentos conforme o
+    // caminho. Nao ha remendo do lado da cor: a decisao tem de ser tomada
+    // antes de a pagina abrir. Uma pagina so resolve as duas coisas.
+    window.location.href = 'portfolio.html';
   }
 
   // Attach to all portfolio buttons
@@ -385,13 +389,9 @@
     const wants = window.location.hash === '#portfolio';
 
     if (homeSelectionAvailable()) {
-      // tirar ou por o hash (incluindo pelo botao Voltar) muda o estado
-      if (wants && !body.classList.contains('selection-open')) {
-        updateCarousel(0);
-        openSelection();
-      } else if (!wants && body.classList.contains('selection-open')) {
-        closeSelection();
-      }
+      // um endereco antigo, ou o historico de quem ja la esteve, continua a
+      // levar ao portfolio -- agora a pagina dele
+      if (wants) window.location.replace('portfolio.html');
       return;
     }
 
@@ -435,14 +435,9 @@
 
     const homeSelection = document.getElementById('home-selection');
 
+    // o gesto para cima na entrada leva ao mesmo sitio que o botao
     function showSelection() {
-      if (!homeSelection) {
-        // sem cards na pagina, o comportamento antigo serve de recurso
-        window.location.href = 'portfolio.html';
-        return;
-      }
-      updateCarousel(0);
-      openSelection();
+      window.location.href = 'portfolio.html';
     }
 
     function hideSelection() {
