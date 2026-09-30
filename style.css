@@ -101,7 +101,11 @@
   /* a abertura da obra: a faixa da hero (o JS afina-a com as medidas reais
      da pagina) e o curso de scroll que a capa leva a crescer */
   --obra-hero-altura: calc(100svh - var(--grid-padding) * 2 - 12vh);
-  --obra-abertura-curso: 150svh;
+  /* Quanto se tem de descer para a foto acabar de crescer. Eram 150svh:
+     uma vez e meia o ecra so para a abertura, o que no telemovel dava uma
+     data de gestos antes de aparecer a primeira palavra. 80svh chega para
+     se perceber o movimento sem o transformar numa tarefa. */
+  --obra-abertura-curso: 80svh;
   --nav-footer-text-size: 1.1vw;
   /* filtros e paginacao partilham a barra de baixo, logo a mesma escala */
   --corner-text-size: clamp(11px, 0.96vw, 15px);
@@ -143,6 +147,9 @@ html, body {
   margin: 0;
   height: 100svh;
   overflow: hidden;
+  /* nem o documento estica: no iOS o ressalto ainda aparecia por fora do
+     scroller, e arrastava com ele a moldura toda */
+  overscroll-behavior: none;
   color: var(--brand-dark);
   background: var(--white);
   font-size: var(--text-size);
@@ -543,6 +550,80 @@ body.page--contacto .sobre-titulo {
   transition: transform var(--t-medio) var(--curva);
 }
 
+/* — O caminho de volta —
+   Numa obra chega-se pelo portfolio, e ate aqui so se voltava pelo botao do
+   browser ou pela gaveta. Vive no mesmo canto que o convite ao scroll e
+   troca com ele: enquanto ha convite nao ha volta, e vice-versa. Assim
+   ganha-se a ligacao sem acrescentar nada ao ecra -- e o mesmo lugar, com o
+   que serve em cada momento. */
+.obra-voltar {
+  position: fixed;
+  z-index: 40;
+  /* no canto inferior esquerdo em qualquer largura, na linha do diamante. No
+     telemovel o convite ao scroll esta ao centro e o diamante tambem: este
+     canto fica livre, e um "voltar" ao centro nao se le como voltar. */
+  left: var(--grid-padding);
+  bottom: var(--grid-padding);
+  height: var(--nav-action-height);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  width: max-content;
+  font-family: var(--sans-font);
+  font-size: var(--corner-text-size);
+  line-height: 1.2;
+  font-weight: var(--rotulo-peso-activo);
+  letter-spacing: var(--rotulo-espaco);
+  text-transform: uppercase;
+  color: inherit;
+  text-decoration: none;
+  /* ao contrario do convite: aparece quando ele se apaga */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--t-medio) var(--curva), transform var(--t-medio) var(--curva);
+}
+
+body.convite-fora .obra-voltar {
+  opacity: 0.75;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+body.convite-fora .obra-voltar:hover,
+.obra-voltar:focus-visible {
+  opacity: 1;
+  transform: translateX(-2px);
+}
+
+/* No fim da pagina a tinta do canto e a da fotografia da obra seguinte, nao
+   a da pagina: o voltar passa a branco, como ja acontece com o diamante.
+   Esconde-lo nao servia -- estas paginas sao curtas e a seccao do fim ocupa
+   metade delas, por isso o botao nunca chegaria a ver-se. */
+body.obra-fim .obra-voltar {
+  color: var(--white);
+}
+
+/* a seta desenhada, para nao depender de um glifo que muda de fonte */
+.obra-voltar__seta {
+  width: 0.85em;
+  height: 0.85em;
+  border-left: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  rotate: 45deg;
+  translate: 0 -0.05em;
+}
+
+@media (max-width: 650px) {
+  /* No telemovel o diamante nao assenta na moldura: fica a 8vw do fundo,
+     e a moldura sao 6vw. Medido a 360, 390, 430 e 600 -- e sempre 4/3 da
+     moldura. Sem isto o voltar ficava 8px abaixo da linha dele. */
+  .obra-voltar {
+    bottom: calc(var(--grid-padding) * 4 / 3);
+  }
+}
+
 /* deixa de ser alvo assim que se apaga: um botao invisivel a meio do ecra
    apanhava toques que eram para a pagina. A classe vem do mesmo sitio que
    escreve a opacidade, por isso apagar-se e deixar de responder e o mesmo
@@ -691,33 +772,56 @@ li,
 }
 
 /* Slide Navigation Arrows */
+/* As setas vivem dentro da moldura do carrossel, encostadas as bordas e por
+   cima dos cards. Em repouso nao estao la: so aparecem com o rato na moldura,
+   ou quando o teclado chega a elas. A pagina em descanso e so os cards, e
+   quem quer navegar tem o alvo onde ja esta a olhar.
+
+   A tinta e branca com uma sombra curta: a meia altura o card tanto pode ter
+   o painel terracota como a fotografia por tras, e o branco sozinho
+   perdia-se numa foto clara. */
 .selection-nav-arrow {
-  /* sem caixa: toda a moldura do site e tinta sobre o fundo, e os controlos
-     passam a pertencer-lhe em vez de ficarem pousados por cima */
-  position: static;
-  transform: none;
-  width: 28px;
-  height: 28px;
-  /* a area de toque fica, mas deixa de contar para a altura da linha */
-  margin-block: calc((var(--corner-line) - 28px) / 2);
+  position: absolute;
+  /* a meio da fotografia, nao a meio do card: a meia altura do card esta a
+     localidade na vertical, encostada a direita, e a seta tapava-a */
+  top: 76%;
+  translate: 0 -50%;
+  z-index: 6;
+  width: 46px;
+  height: 46px;
   border: none;
-  background: none;
+  border-radius: 50%;
+  /* um disco discreto: por cima de uma fotografia clara o branco sozinho
+     desaparecia, e uma sombra so nao chegava */
+  background: rgba(35, 31, 32, 0.38);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   box-shadow: none;
-  color: currentColor;
-  opacity: 0.72;
+  color: #fff;
+  opacity: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: opacity var(--t-medio) var(--curva), transform var(--t-medio) var(--curva);
+  transition: opacity var(--t-medio) var(--curva), transform var(--t-medio) var(--curva),
+    background-color var(--t-medio) var(--curva);
 }
 
-.selection-nav-arrow:hover:not(:disabled) {
+.selection-nav-prev { left: max(10px, 0.9vw); }
+.selection-nav-next { right: max(10px, 0.9vw); }
+
+.selection-carousel-wrapper:hover .selection-nav-arrow:not(:disabled),
+.selection-nav-arrow:focus-visible:not(:disabled) {
+  opacity: 0.9;
+}
+
+.selection-carousel-wrapper:hover .selection-nav-arrow:hover:not(:disabled) {
   opacity: 1;
+  background: rgba(35, 31, 32, 0.6);
   transform: translateX(2px);
 }
 
-.selection-nav-prev:hover:not(:disabled) {
+.selection-carousel-wrapper:hover .selection-nav-prev:hover:not(:disabled) {
   transform: translateX(-2px);
 }
 
@@ -733,8 +837,8 @@ li,
 }
 
 /* Indicators */
-/* setas e paginacao vivem juntas numa barra centrada por baixo dos cards,
-   para nada ficar por cima das imagens */
+/* a barra de baixo ficou so com a paginacao: as setas mudaram-se para cima
+   dos cards */
 .selection-controls {
   /* Estavam pousados no fundo do carrossel, cuja altura varia com o ecra, por
      isso desalinhavam dos filtros -- a mesma barra, duas ancoras diferentes.
@@ -1995,6 +2099,15 @@ body.diamante-claro .menu-btn .menu-btn__svg {
   overflow: visible;
 }
 
+/* A frase que rola por tras da foto vive a 18% de opacidade e a 9.5vw: no
+   desktop e uma marca de agua, no telemovel sao 37px de cinzento que mal se
+   distinguem do fundo -- ruido em vez de textura. Sai. */
+@media (max-width: 650px) {
+  .marquee {
+    display: none;
+  }
+}
+
 .marquee-scroll {
   display: flex;
   width: max-content;
@@ -3252,6 +3365,12 @@ body.is-ready .site-preloader {
 .page-grid--scrollable {
   overflow-y: auto;
   align-content: start;
+  /* No iOS, chegar ao fim de um scroller nao para: a pagina estica e volta
+     (o "rubber band"). No fim de uma obra, que e onde se insiste no scroll
+     para ir para a seguinte, isso dava a sensacao de a imagem nao ficar
+     presa -- uns saltinhos que no Android nao existem, porque o Android nao
+     estica. O none tira o ressalto e o encadeamento para a pagina de tras. */
+  overscroll-behavior-y: none;
 }
 
 .internal-content {

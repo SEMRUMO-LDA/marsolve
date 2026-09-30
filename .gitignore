@@ -33,3 +33,6 @@ _*.html
 
 # originais fora do git: pesados e so servem para derivar
 assets/originais/
+
+# ficheiro temporario usado para levar alteracoes para o ambiente de teste
+_t.tgz
