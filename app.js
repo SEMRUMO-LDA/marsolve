@@ -25,6 +25,67 @@
   // vivem em JS -- o contador do preloader e o parallax da galeria.
   const menosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  // — Mostrador de diagnostico (so com ?debug=1 no endereco) —
+  // Nao se depura um telemovel a distancia sem ver o que ele ve. Cada parte
+  // do site escreve a sua linha; fora do modo de depuracao nada disto existe.
+  const depurar = (() => {
+    const activo = /[?&]debug=1/.test(location.search);
+    if (!activo) return { activo: false, escreve: () => {} };
+    const caixa = document.createElement('div');
+    caixa.style.cssText = 'position:fixed;left:8px;top:8px;z-index:99999;' +
+      'font:600 11px/1.45 ui-monospace,monospace;background:rgba(0,0,0,.82);' +
+      'color:#fff;padding:6px 8px;border-radius:6px;white-space:pre;' +
+      'pointer-events:none;letter-spacing:0;max-width:60vw';
+    const por = () => (document.body || document.documentElement).appendChild(caixa);
+    if (document.body) por(); else window.addEventListener('DOMContentLoaded', por);
+    const partes = {};
+    return {
+      activo: true,
+      escreve(chave, texto) {
+        partes[chave] = texto;
+        caixa.textContent = Object.keys(partes).map(k => partes[k]).join('\n');
+      }
+    };
+  })();
+
+  // as medidas do ecra, que sao o que explica um layout diferente entre
+  // paginas: o Safari muda a altura util conforme tinge ou nao as barras
+  if (depurar.activo) {
+    const sonda = document.createElement('div');
+    sonda.style.cssText = 'position:absolute;left:-9999px;top:0;width:1px;' +
+      'visibility:hidden;pointer-events:none';
+    const alturaEm = (unidade) => {
+      sonda.style.height = '100' + unidade;
+      return Math.round(sonda.getBoundingClientRect().height);
+    };
+    const alto = (sel) => {
+      const el = document.querySelector(sel);
+      return el ? Math.round(el.getBoundingClientRect().height) : '-';
+    };
+    const medirEcra = () => {
+      const meta = document.querySelector('meta[name="theme-color"]');
+      depurar.escreve('ecra',
+        'innerHeight ' + Math.round(window.innerHeight) +
+        '  svh ' + alturaEm('svh') +
+        '\nlvh ' + alturaEm('lvh') + '  dvh ' + alturaEm('dvh') +
+        '\npalco ' + alto('.page-grid, .portfolio-stage') +
+        '  carrossel ' + alto('.selection-carousel-wrapper') +
+        '\ncard ' + alto('.selection-card') +
+        '  cor ' + (meta ? meta.getAttribute('content') : '-'));
+    };
+    const arrancarSonda = () => {
+      document.body.appendChild(sonda);
+      medirEcra();
+      window.addEventListener('resize', medirEcra);
+      window.addEventListener('scroll', medirEcra, { passive: true });
+      const rolavel = document.querySelector('.page-grid--scrollable');
+      if (rolavel) rolavel.addEventListener('scroll', medirEcra, { passive: true });
+      setInterval(medirEcra, 500);
+    };
+    if (document.body) arrancarSonda();
+    else window.addEventListener('DOMContentLoaded', arrancarSonda);
+  }
+
   let preloaderCount = 0;
   const totalFrames = preloaderFrames ? preloaderFrames.length : 0;
   const preloaderTarget = 100;
@@ -760,26 +821,15 @@
     grelhaObra.addEventListener('scroll', agendar, { passive: true });
     grelhaObra.addEventListener('wheel', (e) => insistir(e.deltaY), { passive: true });
 
-    // Com ?debug=1 no endereco aparece um mostrador com os numeros que
-    // interessam. Nao se depura um telemovel a distancia sem ver o que ele ve.
-    let mostrador = null;
-    if (/[?&]debug=1/.test(location.search)) {
-      mostrador = document.createElement('div');
-      mostrador.style.cssText = 'position:fixed;left:8px;top:8px;z-index:9999;' +
-        'font:600 11px/1.5 ui-monospace,monospace;background:rgba(0,0,0,.82);' +
-        'color:#fff;padding:6px 8px;border-radius:6px;white-space:pre;' +
-        'pointer-events:none;letter-spacing:0';
-      document.body.appendChild(mostrador);
-    }
     let ultimoDelta = 0;
     let contaToques = 0;
     const anotar = () => {
-      if (!mostrador) return;
-      mostrador.textContent =
+      if (!depurar.activo) return;
+      depurar.escreve('fim',
         'resta ' + Math.round(restaParaOFundo()) +
         '  fundo ' + (noFundo() ? 'sim' : 'nao') +
         '\nacumulado ' + Math.round(acumulado) + ' / ' + INSISTENCIA_NECESSARIA +
-        '\ndelta ' + Math.round(ultimoDelta) + '  eventos ' + contaToques;
+        '\ndelta ' + Math.round(ultimoDelta) + '  eventos ' + contaToques);
     };
 
     let toqueY = null;
