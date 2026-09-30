@@ -4159,6 +4159,41 @@ body.page--home.selection-open .home-selection .selection-card {
 .home-selection .selection-cards-slide .selection-card:nth-child(3) { transition-delay: 380ms; }
 .home-selection .selection-cards-slide .selection-card:nth-child(4) { transition-delay: 440ms; }
 
+/* — A entrada dos cards, agora na propria pagina —
+   Esta subida escalonada era o que fazia a seleccao valer a pena na
+   entrada. Como o portfolio passou a ser uma pagina, a animacao vem com
+   ele: em vez de os cards subirem por cima da hero, sobem ao chegar. Sao os
+   mesmos 46px, a mesma curva e o mesmo compasso -- muda o sitio onde
+   acontece, nao o que se ve. O logotipo ja se interpola de uma pagina para
+   a outra (view-transition-name), por isso a passagem nao e um corte. */
+@keyframes cards-a-subir {
+  from { opacity: 0; transform: translateY(46px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+body.page--portfolio .selection-card {
+  animation: cards-a-subir 460ms var(--e-in) both;
+}
+
+body.page--portfolio .selection-cards-slide .selection-card:nth-child(1) { animation-delay: 120ms; }
+body.page--portfolio .selection-cards-slide .selection-card:nth-child(2) { animation-delay: 180ms; }
+body.page--portfolio .selection-cards-slide .selection-card:nth-child(3) { animation-delay: 240ms; }
+body.page--portfolio .selection-cards-slide .selection-card:nth-child(4) { animation-delay: 300ms; }
+
+/* a fila de baixo entra a seguir aos cards, como entrava na entrada */
+body.page--portfolio .corner-filters,
+body.page--portfolio .selection-controls {
+  animation: cards-a-subir 400ms var(--curva) 380ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page--portfolio .selection-card,
+  body.page--portfolio .corner-filters,
+  body.page--portfolio .selection-controls {
+    animation: none;
+  }
+}
+
 /* ao fechar, os cards saem todos juntos e depressa — sem stagger
    invertido, que faria a saída parecer hesitante */
 body.page--home:not(.selection-open) .home-selection .selection-card {
