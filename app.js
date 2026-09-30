@@ -701,12 +701,29 @@
         const visivel = y + h > sg.topo + sg.altura * 0.35;
         seguinte.classList.toggle('obra-seguinte--visivel', visivel);
         document.body.classList.toggle('obra-fim', visivel);
-        if (!noFundo()) { acumulado = 0; aplicarInsistencia(0); }
+        if (foraDoFundo()) { acumulado = 0; aplicarInsistencia(0); }
       }
+      anotar();
     };
 
-    const noFundo = () =>
-      grelhaObra.scrollTop >= grelhaObra.scrollHeight - grelhaObra.clientHeight - 4;
+    // O fundo nao e um ponto, e uma faixa -- e sair dela nao pode ser ao
+    // primeiro pixel.
+    //
+    // A tolerancia era de 4px. No iOS o scrollTop no fim fica quase sempre a
+    // uns pixeis do maximo: as alturas sao fraccionarias, o 100svh arredonda,
+    // e o travao ao ressalto ainda encurtou o fim do curso. Com 4px o
+    // noFundo() piscava, e cada vez que dava falso o pintar() zerava o
+    // medidor: o que ja se tinha insistido perdia-se e era preciso comecar de
+    // novo. Nao era o medidor a encher devagar, era a esvaziar-se por tras.
+    //
+    // Entrar na faixa sao 24px do fim; sair dela sao 120px. A salvaguarda
+    // mantem-se -- ninguem e levado para outra pagina sem estar no fim e sem
+    // ter insistido --, mas um pixel a mais ou a menos deixa de apagar tudo.
+    const restaParaOFundo = () =>
+      grelhaObra.scrollHeight - grelhaObra.clientHeight - grelhaObra.scrollTop;
+
+    const noFundo = () => restaParaOFundo() <= 24;
+    const foraDoFundo = () => restaParaOFundo() > 120;
 
     const aplicarInsistencia = (v) => {
       if (v === insistencia) return;
@@ -743,6 +760,28 @@
     grelhaObra.addEventListener('scroll', agendar, { passive: true });
     grelhaObra.addEventListener('wheel', (e) => insistir(e.deltaY), { passive: true });
 
+    // Com ?debug=1 no endereco aparece um mostrador com os numeros que
+    // interessam. Nao se depura um telemovel a distancia sem ver o que ele ve.
+    let mostrador = null;
+    if (/[?&]debug=1/.test(location.search)) {
+      mostrador = document.createElement('div');
+      mostrador.style.cssText = 'position:fixed;left:8px;top:8px;z-index:9999;' +
+        'font:600 11px/1.5 ui-monospace,monospace;background:rgba(0,0,0,.82);' +
+        'color:#fff;padding:6px 8px;border-radius:6px;white-space:pre;' +
+        'pointer-events:none;letter-spacing:0';
+      document.body.appendChild(mostrador);
+    }
+    let ultimoDelta = 0;
+    let contaToques = 0;
+    const anotar = () => {
+      if (!mostrador) return;
+      mostrador.textContent =
+        'resta ' + Math.round(restaParaOFundo()) +
+        '  fundo ' + (noFundo() ? 'sim' : 'nao') +
+        '\nacumulado ' + Math.round(acumulado) + ' / ' + INSISTENCIA_NECESSARIA +
+        '\ndelta ' + Math.round(ultimoDelta) + '  eventos ' + contaToques;
+    };
+
     let toqueY = null;
     grelhaObra.addEventListener('touchstart', (e) => { toqueY = e.touches[0].clientY; }, { passive: true });
     grelhaObra.addEventListener('touchmove', (e) => {
@@ -754,8 +793,11 @@
       // dedo, e por isso eram precisos quatro swipes em vez de dois. Com 140
       // o corte so apanha um salto que ja nao e um gesto -- e o que conta
       // passa a ser mesmo a distancia percorrida: 900 / 1.8 = 500px de dedo.
-      insistir((toqueY - y) * 1.8, 140);
+      ultimoDelta = (toqueY - y) * 1.8;
+      contaToques++;
+      insistir(ultimoDelta, 140);
       toqueY = y;
+      anotar();
     }, { passive: true });
 
     window.addEventListener('resize', () => { medidas = null; agendar(); });
