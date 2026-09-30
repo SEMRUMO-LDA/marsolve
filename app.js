@@ -1111,9 +1111,19 @@
   // quais sao, le-se o brilho do pedaco de imagem que esta mesmo por tras:
   // a foto e desenhada uma vez num canvas de 48x48 (mesma origem, logo sem
   // taint) e guardada em cache, e depois so se convertem coordenadas.
-  (function tintaDoDiamante() {
-    const botao = document.querySelector('.menu-btn');
-    if (!botao) return;
+  (function tintaSobreFotografia() {
+    // O mesmo problema em dois cantos: o diamante em baixo a direita e, nas
+    // paginas de obra, a seta de voltar em baixo a esquerda. Cada um le o
+    // pedaco de imagem que tem mesmo por tras -- a leitura de um nao serve
+    // ao outro, porque uma fotografia pode ser clara de um lado e escura do
+    // outro.
+    const alvos = [
+      { el: document.querySelector('.menu-btn'),
+        classeClaro: 'diamante-claro', classeFoto: 'diamante-em-foto', claro: false },
+      { el: document.querySelector('.obra-voltar'),
+        classeClaro: 'voltar-claro', classeFoto: 'voltar-em-foto', claro: false }
+    ].filter(a => a.el);
+    if (!alvos.length) return;
 
     const cache = new Map();
 
@@ -1165,19 +1175,20 @@
       return img.closest('.obra-seguinte') ? 0.58 : 1;
     }
 
-    let claro = false;
     let pedido = null;
 
-    function medir() {
-      pedido = null;
-      const r = botao.getBoundingClientRect();
-      if (!r.width) return;
-      // quem esta por tras, tirando o proprio botao
+    function medirUm(alvo) {
+      const el = alvo.el;
+      const r = el.getBoundingClientRect();
+      // um alvo escondido (o voltar no telemovel, ou antes de aparecer) nao
+      // se mede: ficava com a leitura do sitio onde nem esta
+      if (!r.width || !r.height) return;
+      // quem esta por tras, tirando o proprio alvo
       const img = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2)
-        .find(el => el.tagName === 'IMG' && !botao.contains(el));
+        .find(n => n.tagName === 'IMG' && !el.contains(n));
       const b = img ? brilho(img, r) : null;
       if (!img) {
-        claro = false;
+        alvo.claro = false;
       } else if (b === null) {
         // a fotografia ainda nao chegou (as de baixo sao lazy): fica como
         // esta e volta-se a medir no load dela
@@ -1185,13 +1196,18 @@
         const luz = b * veu(img);
         // histerese: sem ela a tinta piscava ao passar por um meio-tom.
         // Nos meios-tons fica a tinta da casa -- e o halo que a segura.
-        if (!claro && luz < 0.46) claro = true;
-        else if (claro && luz > 0.6) claro = false;
+        if (!alvo.claro && luz < 0.46) alvo.claro = true;
+        else if (alvo.claro && luz > 0.6) alvo.claro = false;
       }
-      document.body.classList.toggle('diamante-claro', claro);
-      // sobre fotografia ha sempre um halo, para o diamante nao se perder
-      // num pormenor claro ou escuro da imagem
-      document.body.classList.toggle('diamante-em-foto', !!img);
+      document.body.classList.toggle(alvo.classeClaro, alvo.claro);
+      // sobre fotografia ha sempre um halo, para a marca nao se perder num
+      // pormenor claro ou escuro da imagem
+      document.body.classList.toggle(alvo.classeFoto, !!img);
+    }
+
+    function medir() {
+      pedido = null;
+      for (const alvo of alvos) medirUm(alvo);
     }
 
     const agendar = () => {

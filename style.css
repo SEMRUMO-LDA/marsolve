@@ -595,12 +595,17 @@ body.convite-fora .obra-voltar:hover,
   transform: translateX(-2px);
 }
 
-/* No fim da pagina a tinta do canto e a da fotografia da obra seguinte, nao
-   a da pagina: o voltar passa a branco, como ja acontece com o diamante.
-   Esconde-lo nao servia -- estas paginas sao curtas e a seccao do fim ocupa
-   metade delas, por isso o botao nunca chegaria a ver-se. */
-body.obra-fim .obra-voltar {
+/* A tinta da seta le-se da fotografia que tem por tras, como a do diamante e
+   pelo mesmo mecanismo -- mas com a leitura do seu proprio canto, que a de um
+   lado nao serve ao outro. Por cima de uma foto escura fica branca; por cima
+   de uma clara fica preta. Passar a branco sempre que se chegava ao fim,
+   como estava, perdia-a numa parede clara. */
+body.voltar-claro .obra-voltar {
   color: var(--white);
+}
+
+body.voltar-em-foto:not(.voltar-claro) .obra-voltar {
+  color: var(--brand-dark);
 }
 
 /* a seta desenhada, para nao depender de um glifo que muda de fonte */
@@ -614,12 +619,18 @@ body.obra-fim .obra-voltar {
   border-left: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   rotate: 45deg;
-  filter: drop-shadow(0 1px 4px rgba(35, 31, 32, 0.45));
 }
 
-/* ja em branco sobre a fotografia, a sombra passa a ser a que a separa dela */
-body.obra-fim .obra-voltar__seta {
-  filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.6));
+/* Sobre fotografia ha sempre um halo, ao contrario da tinta: com a seta
+   escura o halo e claro, com a seta branca e escuro. E o que a segura num
+   pormenor da imagem que va ao contrario da leitura media do canto -- a
+   mesma regra que o diamante ja tinha. */
+body.voltar-em-foto .obra-voltar__seta {
+  filter: drop-shadow(0 1px 3px rgba(255, 255, 255, 0.6));
+}
+
+body.voltar-claro .obra-voltar__seta {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.55));
 }
 
 @media (max-width: 650px) {
