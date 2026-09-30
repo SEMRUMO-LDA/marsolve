@@ -723,9 +723,13 @@
     // cheia ate onde se chegou, e o empurrao seguinte continua dai. Quem se
     // afasta do fundo e que volta a zero, no pintar(), e essa e a salvaguarda
     // que interessa: ninguem e levado para outra pagina sem ter insistido.
-    const insistir = (delta) => {
+    // O tecto por evento e uma guarda contra um salto absurdo (um evento que
+    // chegue com meio ecra de uma vez), nao uma forma de contar. Por isso e
+    // diferente para cada entrada: a roda manda porcoes pequenas e regulares,
+    // o dedo manda o que o browser lhe der.
+    const insistir = (delta, tecto) => {
       if (aNavegar || !ligacao || !noFundo() || delta <= 0) return;
-      acumulado = Math.min(INSISTENCIA_NECESSARIA, acumulado + Math.min(delta, 60));
+      acumulado = Math.min(INSISTENCIA_NECESSARIA, acumulado + Math.min(delta, tecto || 60));
       aplicarInsistencia(acumulado / INSISTENCIA_NECESSARIA);
       if (acumulado >= INSISTENCIA_NECESSARIA) {
         aNavegar = true;
@@ -744,7 +748,13 @@
     grelhaObra.addEventListener('touchmove', (e) => {
       if (toqueY === null) return;
       const y = e.touches[0].clientY;
-      insistir((toqueY - y) * 1.8);
+      // Com o tecto de 60 do rato, um swipe rapido perdia metade do caminho:
+      // o iOS junta varios movimentos num so evento, e cada um desses eventos
+      // grandes era cortado aos 60. Contavam-se eventos em vez de contar
+      // dedo, e por isso eram precisos quatro swipes em vez de dois. Com 140
+      // o corte so apanha um salto que ja nao e um gesto -- e o que conta
+      // passa a ser mesmo a distancia percorrida: 900 / 1.8 = 500px de dedo.
+      insistir((toqueY - y) * 1.8, 140);
       toqueY = y;
     }, { passive: true });
 
@@ -1266,6 +1276,85 @@
     window.addEventListener('resize', agendar);
     window.addEventListener('load', agendar);
     agendar();
+  })();
+
+  // — A cor das barras do sistema —
+  // No telemovel a barra de estado e a barra do browser tomam a cor do meta
+  // theme-color. Estava escrita a mao em cada pagina e quase nenhuma batia
+  // certo -- o portfolio anunciava preto numa pagina branca --, e ao passar
+  // de uma pagina para a outra o Safari ficava com a cor da anterior: a
+  // entrada e terracota, e o portfolio a seguir a ela aparecia com as barras
+  // terracota sobre uma pagina branca.
+  //
+  // Passa a ser lida do proprio palco, a cada quadro em que mude. Assim
+  // acompanha tambem as viragens de cor a meio do scroll (o Sobre comeca
+  // azul e acaba branco) e ninguem tem de se lembrar de a actualizar.
+  (function corDasBarras() {
+    const palco = document.getElementById('page-stage');
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'theme-color');
+      document.head.appendChild(meta);
+    }
+
+    // O getComputedStyle pode devolver rgb(), rgba() ou color(srgb ...),
+    // conforme o que estiver escrito no CSS, e nem tudo isso serve ao meta.
+    // Um canvas de 1x1 normaliza: pinta-se branco por baixo (e o que esta
+    // debaixo do palco) e a cor por cima, e le-se o resultado em bytes.
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 1;
+    const ctx = cv.getContext('2d', { willReadFrequently: true });
+
+    const hex = (css) => {
+      if (!css) return null;
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 1, 1);
+      try { ctx.fillStyle = css; } catch (e) { return null; }
+      ctx.fillRect(0, 0, 1, 1);
+      const d = ctx.getImageData(0, 0, 1, 1).data;
+      return '#' + [d[0], d[1], d[2]].map(v => v.toString(16).padStart(2, '0')).join('');
+    };
+
+    let ultima = null;
+    let pedido = null;
+
+    const medir = () => {
+      pedido = null;
+      // o palco e quem pinta; sem palco (o portfolio nao tem) manda o body
+      const fonte = palco && getComputedStyle(palco).backgroundColor;
+      const c = hex(fonte && fonte !== 'rgba(0, 0, 0, 0)' ? fonte
+        : getComputedStyle(document.body).backgroundColor);
+      if (!c || c === ultima) return;
+      ultima = c;
+      meta.setAttribute('content', c);
+      // O Safari nem sempre repara numa mudanca de content num meta que ja
+      // estava no documento -- sobretudo quando a cor que ele esta a mostrar
+      // e a que trouxe da pagina anterior. Tirar e voltar a por o no obriga-o
+      // a reler.
+      const pai = meta.parentNode;
+      if (pai) { pai.removeChild(meta); pai.appendChild(meta); }
+    };
+
+    const agendar = () => {
+      if (pedido === null) pedido = requestAnimationFrame(medir);
+    };
+
+    const rolavel = document.querySelector('.page-grid--scrollable');
+    if (rolavel) rolavel.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('scroll', agendar, { passive: true });
+    window.addEventListener('resize', agendar);
+    window.addEventListener('load', agendar);
+    window.addEventListener('pageshow', agendar);
+    // a viragem de cor do palco e uma transicao de CSS: o fim dela e o
+    // momento em que a cor final ja esta la
+    document.addEventListener('transitionend', agendar, true);
+    // e as classes do palco mudam sem haver scroll nenhum (a entrada troca
+    // de tema quando o portfolio abre)
+    if (palco) new MutationObserver(agendar).observe(palco, { attributes: true, attributeFilter: ['class', 'style'] });
+    new MutationObserver(agendar).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    medir();
   })();
 
 })();
