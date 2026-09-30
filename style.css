@@ -584,7 +584,7 @@ body.page--contacto .sobre-titulo {
 }
 
 body.convite-fora .obra-voltar {
-  opacity: 0.75;
+  opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
@@ -604,13 +604,22 @@ body.obra-fim .obra-voltar {
 }
 
 /* a seta desenhada, para nao depender de um glifo que muda de fonte */
-/* sem texto ao lado, a medida deixa de poder vir do em */
+/* Sem texto ao lado, a medida deixa de poder vir do em -- e uma seta
+   sozinha tem de aguentar-se por si. A 13px e 1.6px de traco desaparecia
+   sobre a fotografia do fim; a 17px e 2px le-se, e a sombra segura-a tanto
+   sobre uma foto escura como sobre uma clara. */
 .obra-voltar__seta {
-  width: 13px;
-  height: 13px;
-  border-left: 1.6px solid currentColor;
-  border-bottom: 1.6px solid currentColor;
+  width: 17px;
+  height: 17px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
   rotate: 45deg;
+  filter: drop-shadow(0 1px 4px rgba(35, 31, 32, 0.45));
+}
+
+/* ja em branco sobre a fotografia, a sombra passa a ser a que a separa dela */
+body.obra-fim .obra-voltar__seta {
+  filter: drop-shadow(0 1px 5px rgba(0, 0, 0, 0.6));
 }
 
 @media (max-width: 650px) {
