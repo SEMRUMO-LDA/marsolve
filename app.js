@@ -1372,17 +1372,42 @@
 
   // — A cor das barras do sistema —
   // No telemovel a barra de estado e a barra do browser tomam a cor do meta
-  // theme-color. Estava escrita a mao em cada pagina e quase nenhuma batia
-  // certo -- o portfolio anunciava preto numa pagina branca --, e ao passar
-  // de uma pagina para a outra o Safari ficava com a cor da anterior: a
-  // entrada e terracota, e o portfolio a seguir a ela aparecia com as barras
-  // terracota sobre uma pagina branca.
+  // theme-color, e essa cor deve ser a que se ve na pagina.
   //
-  // Passa a ser lida do proprio palco, a cada quadro em que mude. Assim
-  // acompanha tambem as viragens de cor a meio do scroll (o Sobre comeca
-  // azul e acaba branco) e ninguem tem de se lembrar de a actualizar.
+  // A primeira tentativa lia a cor do palco com getComputedStyle e
+  // normalizava-a num canvas. Falhou por duas razoes. Uma: o palco nao e
+  // quem manda em todos os casos -- na entrada com o portfolio aberto o
+  // palco ja esta branco, mas o que o browser tinge continuava terracota.
+  // Outra: o getComputedStyle devolve aqui um color(srgb ...) e o canvas do
+  // Safari nao o aceita, ficando com o branco que estava antes -- era por
+  // isso que o Sobre e o Contacto apareciam com as barras brancas.
+  //
+  // Agora a cor e declarada, nao deduzida. Sao cinco estados, e cada um diz
+  // o seu valor. Sem leituras, sem conversoes e sem nada para correr mal.
   (function corDasBarras() {
-    const palco = document.getElementById('page-stage');
+    const COR = {
+      terracota: '#C7554A',
+      branco: '#FFFFFF',
+      azul: '#00758F',
+      escuro: '#231F20'
+    };
+
+    const daPagina = () => {
+      const c = document.body.classList;
+      // na entrada, abrir o portfolio deixa a pagina branca -- e as barras
+      // com ela. E o portfolio tem a mesma cor venha de onde vier.
+      if (c.contains('page--home')) {
+        return c.contains('selection-open') ? COR.branco : COR.terracota;
+      }
+      if (c.contains('page--contacto')) return COR.escuro;
+      // o Sobre abre em azul e vira para branco a meio do scroll; a classe
+      // obra-claro e a mesma que ja marca esse momento para a tinta
+      if (c.contains('page--sobre')) {
+        return c.contains('obra-claro') ? COR.branco : COR.azul;
+      }
+      return COR.branco;
+    };
+
     let meta = document.querySelector('meta[name="theme-color"]');
     if (!meta) {
       meta = document.createElement('meta');
@@ -1390,62 +1415,31 @@
       document.head.appendChild(meta);
     }
 
-    // O getComputedStyle pode devolver rgb(), rgba() ou color(srgb ...),
-    // conforme o que estiver escrito no CSS, e nem tudo isso serve ao meta.
-    // Um canvas de 1x1 normaliza: pinta-se branco por baixo (e o que esta
-    // debaixo do palco) e a cor por cima, e le-se o resultado em bytes.
-    const cv = document.createElement('canvas');
-    cv.width = cv.height = 1;
-    const ctx = cv.getContext('2d', { willReadFrequently: true });
-
-    const hex = (css) => {
-      if (!css) return null;
-      ctx.clearRect(0, 0, 1, 1);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, 1, 1);
-      try { ctx.fillStyle = css; } catch (e) { return null; }
-      ctx.fillRect(0, 0, 1, 1);
-      const d = ctx.getImageData(0, 0, 1, 1).data;
-      return '#' + [d[0], d[1], d[2]].map(v => v.toString(16).padStart(2, '0')).join('');
-    };
-
     let ultima = null;
     let pedido = null;
 
     const medir = () => {
       pedido = null;
-      // o palco e quem pinta; sem palco (o portfolio nao tem) manda o body
-      const fonte = palco && getComputedStyle(palco).backgroundColor;
-      const c = hex(fonte && fonte !== 'rgba(0, 0, 0, 0)' ? fonte
-        : getComputedStyle(document.body).backgroundColor);
-      if (!c || c === ultima) return;
+      const c = daPagina();
+      if (c === ultima) return;
       ultima = c;
       meta.setAttribute('content', c);
       // O Safari nem sempre repara numa mudanca de content num meta que ja
-      // estava no documento -- sobretudo quando a cor que ele esta a mostrar
-      // e a que trouxe da pagina anterior. Tirar e voltar a por o no obriga-o
-      // a reler.
+      // estava no documento. Tirar e voltar a por obriga-o a reler.
       const pai = meta.parentNode;
       if (pai) { pai.removeChild(meta); pai.appendChild(meta); }
+      if (depurar.activo) depurar.escreve('barras', 'barras ' + c);
     };
 
     const agendar = () => {
       if (pedido === null) pedido = requestAnimationFrame(medir);
     };
 
-    const rolavel = document.querySelector('.page-grid--scrollable');
-    if (rolavel) rolavel.addEventListener('scroll', agendar, { passive: true });
-    window.addEventListener('scroll', agendar, { passive: true });
-    window.addEventListener('resize', agendar);
-    window.addEventListener('load', agendar);
+    // o que muda a cor e sempre uma classe no body
+    new MutationObserver(agendar).observe(document.body, {
+      attributes: true, attributeFilter: ['class']
+    });
     window.addEventListener('pageshow', agendar);
-    // a viragem de cor do palco e uma transicao de CSS: o fim dela e o
-    // momento em que a cor final ja esta la
-    document.addEventListener('transitionend', agendar, true);
-    // e as classes do palco mudam sem haver scroll nenhum (a entrada troca
-    // de tema quando o portfolio abre)
-    if (palco) new MutationObserver(agendar).observe(palco, { attributes: true, attributeFilter: ['class', 'style'] });
-    new MutationObserver(agendar).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     medir();
   })();
 
