@@ -762,7 +762,7 @@
         const visivel = y + h > sg.topo + sg.altura * 0.35;
         seguinte.classList.toggle('obra-seguinte--visivel', visivel);
         document.body.classList.toggle('obra-fim', visivel);
-        if (foraDoFundo()) { acumulado = 0; aplicarInsistencia(0); }
+        if (foraDoFundo()) { acumulado = 0; esquecerGestos(); aplicarInsistencia(0); }
       }
       anotar();
     };
@@ -845,25 +845,79 @@
         '  vista ' + Math.round(fraccaoSeguinte * 100) + '%' +
         '  fundo ' + (noFundo() ? 'sim' : 'nao') +
         '\nacumulado ' + Math.round(acumulado) + ' / ' + INSISTENCIA_NECESSARIA +
-        '\ndelta ' + Math.round(ultimoDelta) + '  eventos ' + contaToques);
+        '  gestos ' + gestosFeitos + '/' + GESTOS_NECESSARIOS +
+        '\ndelta ' + Math.round(ultimoDelta) + '  no gesto ' + Math.round(percorridoNoGesto));
+    };
+
+    // — No dedo, contam-se gestos e nao distancia —
+    //
+    // A regra e "dois swipes para cima", e era isso que eu estava a tentar
+    // obter medindo quanto dedo tinha passado. Nunca ia bater certo: um
+    // swipe nao tem comprimento fixo. Com 900 pontos a 1.8x eram precisos
+    // 500px de dedo, e um polegar no fundo do ecra faz uns 200 a 250 -- daí
+    // as tres passagens em vez de duas. Baixar o numero so mudava o sitio
+    // do erro: bastaria um arrasto longo para saltar de pagina de uma vez,
+    // que e justamente o que a insistencia existe para evitar.
+    //
+    // Entao conta-se o que a regra diz: cada swipe vale metade, seja ele
+    // longo ou curto, e dois levam a pagina seguinte. Um so nunca chega,
+    // por mais comprido que seja. A barra continua a encher-se com o dedo
+    // durante o gesto -- so que nunca passa da metade que lhe pertence.
+    const GESTOS_NECESSARIOS = 2;
+    const POR_GESTO = INSISTENCIA_NECESSARIA / GESTOS_NECESSARIOS;
+    // um toque que mal se mexe nao e um swipe
+    const MINIMO_GESTO = 40;
+    let gestosFeitos = 0;
+    let percorridoNoGesto = 0;
+
+    const mostrarInsistencia = () => {
+      acumulado = Math.min(INSISTENCIA_NECESSARIA,
+        gestosFeitos * POR_GESTO + Math.min(POR_GESTO, percorridoNoGesto * 1.8));
+      aplicarInsistencia(acumulado / INSISTENCIA_NECESSARIA);
+    };
+
+    const esquecerGestos = () => {
+      gestosFeitos = 0;
+      percorridoNoGesto = 0;
     };
 
     let toqueY = null;
-    grelhaObra.addEventListener('touchstart', (e) => { toqueY = e.touches[0].clientY; }, { passive: true });
+    // So conta o gesto que ja comeca no fim. Senao o proprio swipe que nos
+    // traz ate ao fundo contava como o primeiro, e bastava mais um para
+    // mudar de pagina -- quem chega ao fim por inercia ficava a um gesto de
+    // sair dali sem querer.
+    let gestoComecouNoFundo = false;
+    grelhaObra.addEventListener('touchstart', (e) => {
+      toqueY = e.touches[0].clientY;
+      percorridoNoGesto = 0;
+      gestoComecouNoFundo = noFundo();
+    }, { passive: true });
+
     grelhaObra.addEventListener('touchmove', (e) => {
       if (toqueY === null) return;
       const y = e.touches[0].clientY;
-      // Com o tecto de 60 do rato, um swipe rapido perdia metade do caminho:
-      // o iOS junta varios movimentos num so evento, e cada um desses eventos
-      // grandes era cortado aos 60. Contavam-se eventos em vez de contar
-      // dedo, e por isso eram precisos quatro swipes em vez de dois. Com 140
-      // o corte so apanha um salto que ja nao e um gesto -- e o que conta
-      // passa a ser mesmo a distancia percorrida: 900 / 1.8 = 500px de dedo.
-      ultimoDelta = (toqueY - y) * 1.8;
-      contaToques++;
-      insistir(ultimoDelta, 140);
+      const andou = toqueY - y;
       toqueY = y;
+      if (andou > 0) percorridoNoGesto += andou;
+      ultimoDelta = andou;
+      contaToques++;
+      if (!aNavegar && ligacao && gestoComecouNoFundo && noFundo()) mostrarInsistencia();
       anotar();
+    }, { passive: true });
+
+    grelhaObra.addEventListener('touchend', () => {
+      toqueY = null;
+      if (aNavegar || !ligacao || !gestoComecouNoFundo || !noFundo()) {
+        percorridoNoGesto = 0; anotar(); return;
+      }
+      if (percorridoNoGesto >= MINIMO_GESTO) gestosFeitos++;
+      percorridoNoGesto = 0;
+      mostrarInsistencia();
+      anotar();
+      if (gestosFeitos >= GESTOS_NECESSARIOS) {
+        aNavegar = true;
+        window.location.href = ligacao.getAttribute('href');
+      }
     }, { passive: true });
 
     window.addEventListener('resize', () => { medidas = null; agendar(); });
