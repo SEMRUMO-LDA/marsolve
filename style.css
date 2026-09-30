@@ -4159,6 +4159,35 @@ body.page--home.selection-open .home-selection .selection-card {
 .home-selection .selection-cards-slide .selection-card:nth-child(3) { transition-delay: 380ms; }
 .home-selection .selection-cards-slide .selection-card:nth-child(4) { transition-delay: 440ms; }
 
+/* — A cor que o telemovel le nas barras —
+   O Safari nao usa o meta theme-color depois de a pagina abrir: tinge as
+   barras com a cor da propria pagina. Foi o que os numeros do telemovel
+   mostraram -- o meta dizia #FFFFFF, o mostrador confirmava que era isso
+   que estava escrito, e as barras continuavam terracota, porque o body da
+   entrada e terracota mesmo com o portfolio aberto por cima.
+   Essa leitura explica tudo o resto: o Sobre e o Contacto davam barras
+   brancas porque a cor deles esta no #page-stage e o body por baixo e
+   branco.
+   Entao a cor vai para onde ele a le. Por baixo do palco, que e opaco e
+   cobre o ecra, isto nao se ve na pagina -- so nas barras. */
+body.page--home.selection-open {
+  background: var(--white);
+}
+
+body.page--sobre {
+  background: var(--brand-blue);
+}
+
+/* o Sobre vira para branco a meio do scroll; a classe e a mesma que ja
+   decide a tinta */
+body.page--sobre.obra-claro {
+  background: var(--white);
+}
+
+body.page--contacto {
+  background: var(--brand-dark);
+}
+
 /* — A entrada dos cards, agora na propria pagina —
    Esta subida escalonada era o que fazia a seleccao valer a pena na
    entrada. Como o portfolio passou a ser uma pagina, a animacao vem com
