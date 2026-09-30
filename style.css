@@ -2997,7 +2997,17 @@ body.diamante-claro .menu-btn .menu-btn__svg {
      ficavam empilhados em cima do botao do menu. */
   body.page--portfolio .portfolio-stage {
     grid-template-rows: auto auto minmax(0, 1fr) auto;
-    padding-bottom: calc(var(--grid-padding) + 15vw);
+    /* Sem padding-bottom aqui de proposito.
+       A folga de baixo do palco com os cards e a paginacao esta declarada
+       mais acima, a 22vw, com o comentario que explica porque: o diamante e
+       fixo a 8vw do fundo e sem ela a paginacao fica-lhe a uma dezena de
+       pixeis. Essa regra apanha as duas formas do portfolio -- o da entrada
+       e a pagina.
+       Repetir aqui 15vw anulava-a so para a pagina: mesma especificidade,
+       mais abaixo no ficheiro, ganha a ultima. Na entrada nao se notava
+       porque la o selector leva .selection-open e tem mais especificidade.
+       Era por isso que a mesma barra tinha 35px ate ao diamante num caso e
+       8px no outro. */
   }
 
   /* o polegar em cima, os filtros por baixo: a ordem da esquerda para a
@@ -3062,8 +3072,14 @@ body.diamante-claro .menu-btn .menu-btn__svg {
     align-items: center;
     gap: 12px;
     height: auto;
-    /* a barra pertence a fita, nao aos filtros: fica colada ao card */
-    margin-top: 16px;
+    /* A barra pertence a fita, nao aos filtros: fica por baixo do card.
+       Os 32px sao os que a entrada ja tinha, mas la vinham por acidente: o
+       convite ao scroll, que com o portfolio aberto e invisivel, continuava
+       a ocupar a mesma linha da grelha com os seus 44px de altura minima, e
+       era isso que empurrava a paginacao para baixo. A pagina do portfolio
+       nao tem esse elemento, e por isso a barra ficava a 16px do card em vez
+       de 32. Agora a folga e declarada e as duas ficam iguais. */
+    margin-top: 32px;
     margin-bottom: 0;
   }
 
