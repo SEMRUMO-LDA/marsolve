@@ -767,24 +767,39 @@
       anotar();
     };
 
-    // O fundo nao e um ponto, e uma faixa -- e sair dela nao pode ser ao
-    // primeiro pixel.
+    // "Estar no fim" deixa de ser uma conta de scroll e passa a ser uma
+    // pergunta sobre o que se ve.
     //
-    // A tolerancia era de 4px. No iOS o scrollTop no fim fica quase sempre a
-    // uns pixeis do maximo: as alturas sao fraccionarias, o 100svh arredonda,
-    // e o travao ao ressalto ainda encurtou o fim do curso. Com 4px o
-    // noFundo() piscava, e cada vez que dava falso o pintar() zerava o
-    // medidor: o que ja se tinha insistido perdia-se e era preciso comecar de
-    // novo. Nao era o medidor a encher devagar, era a esvaziar-se por tras.
+    // Media-se scrollHeight - clientHeight - scrollTop e comparava-se com uma
+    // tolerancia. Isso funciona no computador e engana no telemovel: no iOS
+    // estas tres medidas sao fraccionarias, o 100svh arredonda, e o scrollTop
+    // no fim raramente bate certo com o maximo. Tolerancia curta e o fim
+    // pisca -- e cada pisca apagava o medidor. Tolerancia longa e a pagina
+    // seguinte comeca a chamar cedo de mais. E a tolerancia certa nao e a
+    // mesma em todas as paginas: o Sobre e quase o dobro do comprimento de
+    // uma obra.
     //
-    // Entrar na faixa sao 24px do fim; sair dela sao 120px. A salvaguarda
-    // mantem-se -- ninguem e levado para outra pagina sem estar no fim e sem
-    // ter insistido --, mas um pixel a mais ou a menos deixa de apagar tudo.
+    // O que interessa saber e outra coisa: se a seccao da pagina seguinte ja
+    // esta a ocupar o ecra. Isso o browser sabe responder sozinho, com um
+    // IntersectionObserver, sem aritmetica nenhuma pelo meio -- e a resposta
+    // e a mesma em qualquer pagina e em qualquer telemovel.
+    //
+    // Entrar: 90% da seccao a vista. Sair: abaixo de 55%. A salvaguarda
+    // mantem-se, e a histerese tambem.
+    let fraccaoSeguinte = 0;
+    if (seguinte && 'IntersectionObserver' in window) {
+      const degraus = [];
+      for (let i = 0; i <= 20; i++) degraus.push(i / 20);
+      new IntersectionObserver((entradas) => {
+        for (const e of entradas) fraccaoSeguinte = e.intersectionRatio;
+      }, { root: grelhaObra, threshold: degraus }).observe(seguinte);
+    }
+
     const restaParaOFundo = () =>
       grelhaObra.scrollHeight - grelhaObra.clientHeight - grelhaObra.scrollTop;
 
-    const noFundo = () => restaParaOFundo() <= 24;
-    const foraDoFundo = () => restaParaOFundo() > 120;
+    const noFundo = () => fraccaoSeguinte >= 0.9;
+    const foraDoFundo = () => fraccaoSeguinte < 0.55;
 
     const aplicarInsistencia = (v) => {
       if (v === insistencia) return;
@@ -827,6 +842,7 @@
       if (!depurar.activo) return;
       depurar.escreve('fim',
         'resta ' + Math.round(restaParaOFundo()) +
+        '  vista ' + Math.round(fraccaoSeguinte * 100) + '%' +
         '  fundo ' + (noFundo() ? 'sim' : 'nao') +
         '\nacumulado ' + Math.round(acumulado) + ' / ' + INSISTENCIA_NECESSARIA +
         '\ndelta ' + Math.round(ultimoDelta) + '  eventos ' + contaToques);
