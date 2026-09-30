@@ -565,23 +565,15 @@ body.page--contacto .sobre-titulo {
   left: var(--grid-padding);
   bottom: var(--grid-padding);
   height: var(--nav-action-height);
-  /* A seta e o nome sao a mesma coisa dita de duas maneiras, e cada largura
-     fica so com uma. No desktop a seta chega: esta sozinha no canto e le-se
-     de imediato. No telemovel o diamante esta mesmo ao lado, e duas figuras
-     encostadas uma a outra sao duas figuras -- a palavra distingue-se. */
+  /* So a seta, e so no desktop. No telemovel a moldura de baixo ja tem o
+     diamante, que abre a gaveta com a navegacao toda: um segundo alvo ao
+     lado dele era repetir o caminho que ja existe. O nome vai no aria-label,
+     para quem ouve a pagina em vez de a ver. */
   min-width: 44px;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.6em;
-  width: max-content;
-  font-family: var(--sans-font);
-  font-size: var(--corner-text-size);
-  line-height: 1.2;
-  font-weight: var(--rotulo-peso-activo);
-  letter-spacing: var(--rotulo-espaco);
-  text-transform: uppercase;
   color: inherit;
   text-decoration: none;
   /* ao contrario do convite: aparece quando ele se apaga */
@@ -621,19 +613,8 @@ body.obra-fim .obra-voltar {
   rotate: 45deg;
 }
 
-@media (min-width: 651px) {
-  .obra-voltar__nome { display: none; }
-}
-
 @media (max-width: 650px) {
-  .obra-voltar__seta { display: none; }
-
-  /* No telemovel o diamante nao assenta na moldura: fica a 8vw do fundo,
-     e a moldura sao 6vw. Medido a 360, 390, 430 e 600 -- e sempre 4/3 da
-     moldura. Sem isto o voltar ficava 8px abaixo da linha dele. */
-  .obra-voltar {
-    bottom: calc(var(--grid-padding) * 4 / 3);
-  }
+  .obra-voltar { display: none; }
 }
 
 /* deixa de ser alvo assim que se apaga: um botao invisivel a meio do ecra
