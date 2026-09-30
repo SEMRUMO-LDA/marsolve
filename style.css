@@ -565,9 +565,15 @@ body.page--contacto .sobre-titulo {
   left: var(--grid-padding);
   bottom: var(--grid-padding);
   height: var(--nav-action-height);
+  /* A seta e o nome sao a mesma coisa dita de duas maneiras, e cada largura
+     fica so com uma. No desktop a seta chega: esta sozinha no canto e le-se
+     de imediato. No telemovel o diamante esta mesmo ao lado, e duas figuras
+     encostadas uma a outra sao duas figuras -- a palavra distingue-se. */
+  min-width: 44px;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.6em;
   width: max-content;
   font-family: var(--sans-font);
@@ -606,16 +612,22 @@ body.obra-fim .obra-voltar {
 }
 
 /* a seta desenhada, para nao depender de um glifo que muda de fonte */
+/* sem texto ao lado, a medida deixa de poder vir do em */
 .obra-voltar__seta {
-  width: 0.85em;
-  height: 0.85em;
-  border-left: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
+  width: 13px;
+  height: 13px;
+  border-left: 1.6px solid currentColor;
+  border-bottom: 1.6px solid currentColor;
   rotate: 45deg;
-  translate: 0 -0.05em;
+}
+
+@media (min-width: 651px) {
+  .obra-voltar__nome { display: none; }
 }
 
 @media (max-width: 650px) {
+  .obra-voltar__seta { display: none; }
+
   /* No telemovel o diamante nao assenta na moldura: fica a 8vw do fundo,
      e a moldura sao 6vw. Medido a 360, 390, 430 e 600 -- e sempre 4/3 da
      moldura. Sem isto o voltar ficava 8px abaixo da linha dele. */
@@ -787,17 +799,18 @@ li,
   top: 76%;
   translate: 0 -50%;
   z-index: 6;
-  width: 46px;
-  height: 46px;
+  width: 52px;
+  height: 52px;
   border: none;
   border-radius: 50%;
-  /* um disco discreto: por cima de uma fotografia clara o branco sozinho
-     desaparecia, e uma sombra so nao chegava */
-  background: rgba(35, 31, 32, 0.38);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: none;
-  color: #fff;
+  /* Disco branco com a seta escura, e nao o contrario. O disco escuro
+     translucido perdia-se: sobre uma fotografia cinzenta clara ficava um
+     borrao, e a seta branca la dentro quase nao tinha contraste. O branco
+     destaca-se tanto da fotografia como do painel terracota, e e a cor do
+     resto da moldura do site. */
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 2px 14px rgba(35, 31, 32, 0.22);
+  color: var(--brand-dark);
   opacity: 0;
   display: flex;
   align-items: center;
@@ -812,12 +825,12 @@ li,
 
 .selection-carousel-wrapper:hover .selection-nav-arrow:not(:disabled),
 .selection-nav-arrow:focus-visible:not(:disabled) {
-  opacity: 0.9;
+  opacity: 1;
 }
 
 .selection-carousel-wrapper:hover .selection-nav-arrow:hover:not(:disabled) {
   opacity: 1;
-  background: rgba(35, 31, 32, 0.6);
+  background: #fff;
   transform: translateX(2px);
 }
 
