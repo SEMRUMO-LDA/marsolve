@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "serve -l 8000 .",
     "start": "serve -l 8000 .",
-    "build": "node scripts/obras.mjs"
+    "build": "node scripts/obras.mjs && node scripts/publicar.mjs"
   },
   "devDependencies": {
     "serve": "^14.2.4"
