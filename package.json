@@ -5,7 +5,8 @@
   "description": "Marsolve Website",
   "scripts": {
     "dev": "serve -l 8000 .",
-    "start": "serve -l 8000 ."
+    "start": "serve -l 8000 .",
+    "build": "node scripts/obras.mjs"
   },
   "devDependencies": {
     "serve": "^14.2.4"
