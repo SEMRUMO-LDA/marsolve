@@ -12,9 +12,10 @@
 // arrancar, e por isso o conteudo tem de estar no HTML antes de ele correr.
 //
 // Se o kiban nao responder, ou nao tiver nenhuma obra publicada, nao se
-// toca em nada e fica o HTML que esta no git -- o deploy segue. Um erro do
-// proprio gerador, pelo contrario, para o build: e melhor o Vercel manter o
-// deploy anterior do que publicar paginas pela metade.
+// toca em nada e fica o HTML que esta no git -- o deploy segue. Uma chave
+// recusada (401/403) ou um erro do proprio gerador, pelo contrario, param o
+// build: e melhor o Vercel manter o deploy anterior, e dizer porque, do que
+// publicar paginas pela metade ou fingir que esta tudo bem.
 //
 //   node scripts/obras.mjs                  obras publicadas, escreve no projeto
 //   node scripts/obras.mjs --rascunhos      inclui rascunhos (so para ver antes de publicar)
@@ -52,12 +53,21 @@ const aviso = (m) => { avisos.push(m); console.warn('[obras] ' + m); };
 async function configuracao() {
   const js = await readFile(path.join(RAIZ, 'kiban.js'), 'utf8');
   const valor = (nome) => (js.match(new RegExp(nome + ":[^\\n]*\\|\\|\\s*'([^']+)'")) || [])[1];
-  return {
+  const cfg = {
     url: (process.env.KIBAN_API_URL || valor('apiUrl') || 'https://kiban.pt').replace(/\/$/, ''),
     chave: process.env.KIBAN_API_KEY || valor('apiKey'),
     tenant: process.env.KIBAN_TENANT || valor('tenant') || 'marsolve',
   };
+  // a chave pode vir de dois sitios; dizer qual, para uma chave velha num
+  // deles nao passar por avaria do kiban
+  const origem = process.env.KIBAN_API_KEY ? 'variavel KIBAN_API_KEY' : 'kiban.js';
+  console.log(`[obras] kiban ${cfg.url}, tenant ${cfg.tenant}, chave …${String(cfg.chave).slice(-4)} (de ${origem})`);
+  return cfg;
 }
+
+// Uma chave recusada nao e o kiban em baixo: e configuracao errada, e tem de
+// se ver. Para o build, e o Vercel fica com o deploy anterior.
+class ChaveRecusada extends Error {}
 
 async function buscarObras(cfg) {
   const estados = COM_RASCUNHOS ? ['published', 'draft'] : ['published'];
@@ -67,6 +77,9 @@ async function buscarObras(cfg) {
       headers: { Authorization: 'Bearer ' + cfg.chave, 'X-Tenant': cfg.tenant },
       signal: AbortSignal.timeout(15000),
     });
+    if (r.status === 401 || r.status === 403) {
+      throw new ChaveRecusada(`o kiban recusou a chave (${r.status}): confirmar KIBAN_API_KEY no Vercel ou a chave em kiban.js`);
+    }
     if (!r.ok) throw new Error(`o kiban respondeu ${r.status} a /entries/obras`);
     const j = await r.json();
     const total = j.meta?.pagination?.total;
@@ -342,6 +355,7 @@ async function main() {
   try {
     entradas = await buscarObras(cfg);
   } catch (err) {
+    if (err instanceof ChaveRecusada) throw err;
     console.warn(`[obras] sem ligacao ao kiban (${err.message}): fica o HTML que esta no git.`);
     return;
   }
