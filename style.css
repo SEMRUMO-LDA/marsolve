@@ -5360,3 +5360,252 @@ body.obra-fim .menu-btn {
     translate: none !important;
   }
 }
+
+/* ============================================================
+   POLITICA DE PRIVACIDADE
+   O texto vive em privacidade.html. Em qualquer pagina, o link abre-o num
+   lightbox (<dialog>, ver app.js); sem JavaScript, ou partilhado, abre a
+   pagina. As mesmas regras de .politica servem os dois sitios.
+
+   O reset do site tira a seleccao de texto a tudo. Num texto legal tem de
+   voltar: e dele que se copia o email ou a morada.
+   ============================================================ */
+.politica {
+  -webkit-user-select: text;
+  user-select: text;
+  max-width: 68ch;
+  font-family: var(--sans-font);
+  color: rgba(35, 31, 32, 0.78);
+}
+
+.politica * {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.politica__sobretitulo {
+  margin: 0 0 14px;
+  font-size: var(--corner-text-size);
+  font-weight: var(--rotulo-peso);
+  letter-spacing: var(--rotulo-espaco);
+  text-transform: uppercase;
+  color: rgba(35, 31, 32, 0.68);
+}
+
+.politica__titulo {
+  margin: 0;
+  font-size: clamp(28px, 2.6vw, 46px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--brand-dark);
+}
+
+/* as linhas que separavam as seccoes no texto original */
+.politica__seccao {
+  margin-top: clamp(28px, 2.4vw, 40px);
+  padding-top: clamp(22px, 1.8vw, 30px);
+  border-top: 1px solid rgba(35, 31, 32, 0.12);
+}
+
+.politica__seccao:first-of-type {
+  margin-top: clamp(24px, 2vw, 34px);
+}
+
+.politica h2 {
+  margin: 0 0 0.75em;
+  font-size: clamp(17px, 1.15vw, 20px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--brand-dark);
+}
+
+.politica p,
+.politica li,
+.politica address {
+  font-size: clamp(15px, 1vw, 17px);
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.politica p { margin: 0; }
+.politica p + p,
+.politica ul + p,
+.politica p + ul,
+.politica p + address { margin-top: 0.9em; }
+
+.politica ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.politica li + li { margin-top: 0.35em; }
+
+.politica strong {
+  font-weight: 600;
+  color: var(--brand-dark);
+}
+
+.politica address { font-style: normal; }
+
+.politica a {
+  color: var(--brand-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.politica a strong { color: inherit; }
+
+/* — O lightbox — */
+.politica-lightbox {
+  width: min(820px, calc(100vw - 48px));
+  max-width: none;
+  height: min(88svh, 1000px);
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  /* o mesmo canto do cartao do formulario, que fica por tras dele */
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--brand-dark);
+  box-shadow: 0 30px 80px rgba(35, 31, 32, 0.28);
+  overflow: hidden;
+  opacity: 0;
+  translate: 0 18px;
+  transition:
+    opacity var(--t-longo) var(--curva),
+    translate var(--t-longo) var(--curva),
+    overlay var(--t-longo) allow-discrete,
+    display var(--t-longo) allow-discrete;
+}
+
+.politica-lightbox[open] {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  translate: 0 0;
+}
+
+@starting-style {
+  .politica-lightbox[open] {
+    opacity: 0;
+    translate: 0 18px;
+  }
+}
+
+.politica-lightbox::backdrop {
+  background: rgba(35, 31, 32, 0);
+  transition:
+    background var(--t-longo) var(--curva),
+    overlay var(--t-longo) allow-discrete,
+    display var(--t-longo) allow-discrete;
+}
+
+.politica-lightbox[open]::backdrop {
+  background: rgba(35, 31, 32, 0.62);
+}
+
+@starting-style {
+  .politica-lightbox[open]::backdrop {
+    background: rgba(35, 31, 32, 0);
+  }
+}
+
+.politica-lightbox__barra {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: none;
+  padding: 10px 14px 0;
+}
+
+.politica-lightbox__fechar {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--brand-dark);
+  font-size: var(--corner-text-size);
+  font-weight: var(--rotulo-peso-activo);
+  letter-spacing: var(--rotulo-espaco);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--t-curto) var(--curva);
+}
+
+.politica-lightbox__fechar:hover {
+  color: var(--brand-primary);
+}
+
+.politica-lightbox__fechar svg {
+  width: 14px;
+  height: 14px;
+}
+
+.politica-lightbox__corpo {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px clamp(24px, 4.5vw, 64px) clamp(36px, 4vw, 64px);
+}
+
+.politica-lightbox__corpo:focus {
+  outline: none;
+}
+
+.politica-lightbox__aviso {
+  margin: 0;
+  font-size: clamp(15px, 1vw, 17px);
+  color: rgba(35, 31, 32, 0.68);
+}
+
+/* no telemovel ocupa o ecra todo: uma caixa com margem a volta so tirava
+   largura a um texto que ja e comprido */
+@media (max-width: 650px) {
+  .politica-lightbox {
+    width: 100vw;
+    height: 100svh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* — A pagina, para quem chega sem o lightbox —
+   O reset prende o html e o body a altura do ecra (o scroll do site e
+   feito por dentro do palco). Esta pagina nao tem palco: volta a ter o
+   scroll do documento. */
+html:has(body.politica-pagina),
+body.politica-pagina {
+  height: auto;
+  overflow: auto;
+  overscroll-behavior: auto;
+}
+
+body.politica-pagina {
+  padding: 0 clamp(20px, 6vw, 96px);
+}
+
+/* uma coluna so, ao centro: e a medida do texto que manda */
+body.politica-pagina > * {
+  max-width: 68ch;
+  margin-inline: auto;
+}
+
+.politica-pagina__topo {
+  padding: clamp(24px, 3vw, 44px) 0 clamp(36px, 4vw, 64px);
+}
+
+.politica-pagina__logo {
+  width: clamp(140px, 13vw, 200px);
+}
+
+.politica-pagina__fim {
+  /* aqui nao ha diamante fixo para reservar */
+  padding-bottom: clamp(32px, 4vw, 56px);
+}

@@ -23,13 +23,9 @@
 
 import { readFile, writeFile, readdir, unlink, mkdir, access } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { RAIZ, opcoesDaLinha, configuracao, ChaveRecusada, buscarEntradas, esc, entreMarcadores } from './kiban.mjs';
 
-const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const opcoes = Object.fromEntries(process.argv.slice(2).map((a) => {
-  const [k, v] = a.replace(/^--/, '').split('=');
-  return [k, v ?? true];
-}));
+const opcoes = opcoesDaLinha();
 const SAIDA = opcoes.saida ? path.resolve(opcoes.saida) : RAIZ;
 const COM_RASCUNHOS = Boolean(opcoes.rascunhos);
 
@@ -47,45 +43,11 @@ const SIMBOLO = 'M335.6,237.62L172.41,2.19c-.94-1.38-2.5-2.19-4.18-2.19s-3.23.81
 const avisos = [];
 const aviso = (m) => { avisos.push(m); console.warn('[obras] ' + m); };
 
-// — Ligacao ao kiban —
-// Os valores sao os do kiban.js (sao os que o browser usa); o Vercel pode
-// sobrepo-los com KIBAN_API_URL, KIBAN_API_KEY e KIBAN_TENANT.
-async function configuracao() {
-  const js = await readFile(path.join(RAIZ, 'kiban.js'), 'utf8');
-  const valor = (nome) => (js.match(new RegExp(nome + ":[^\\n]*\\|\\|\\s*'([^']+)'")) || [])[1];
-  const cfg = {
-    url: (process.env.KIBAN_API_URL || valor('apiUrl') || 'https://kiban.pt').replace(/\/$/, ''),
-    chave: process.env.KIBAN_API_KEY || valor('apiKey'),
-    tenant: process.env.KIBAN_TENANT || valor('tenant') || 'marsolve',
-  };
-  // a chave pode vir de dois sitios; dizer qual, para uma chave velha num
-  // deles nao passar por avaria do kiban
-  const origem = process.env.KIBAN_API_KEY ? 'variavel KIBAN_API_KEY' : 'kiban.js';
-  console.log(`[obras] kiban ${cfg.url}, tenant ${cfg.tenant}, chave …${String(cfg.chave).slice(-4)} (de ${origem})`);
-  return cfg;
-}
-
-// Uma chave recusada nao e o kiban em baixo: e configuracao errada, e tem de
-// se ver. Para o build, e o Vercel fica com o deploy anterior.
-class ChaveRecusada extends Error {}
-
+// — Ligacao ao kiban (configuracao e pedidos em kiban.mjs) —
 async function buscarObras(cfg) {
   const estados = COM_RASCUNHOS ? ['published', 'draft'] : ['published'];
-  const todas = [];
-  for (const estado of estados) {
-    const r = await fetch(`${cfg.url}/api/v1/entries/obras?status=${estado}&limit=200`, {
-      headers: { Authorization: 'Bearer ' + cfg.chave, 'X-Tenant': cfg.tenant },
-      signal: AbortSignal.timeout(15000),
-    });
-    if (r.status === 401 || r.status === 403) {
-      throw new ChaveRecusada(`o kiban recusou a chave (${r.status}): confirmar KIBAN_API_KEY no Vercel ou a chave em kiban.js`);
-    }
-    if (!r.ok) throw new Error(`o kiban respondeu ${r.status} a /entries/obras`);
-    const j = await r.json();
-    const total = j.meta?.pagination?.total;
-    if (total && total > j.data.length) aviso(`o kiban tem ${total} obras e so vieram ${j.data.length}`);
-    todas.push(...j.data);
-  }
+  const todas = await buscarEntradas(cfg, 'obras', { estados, aviso });
+  if (todas === null) throw new Error('o kiban nao tem a colecao obras');
   return todas;
 }
 
@@ -162,9 +124,6 @@ async function versaoPequena(img, endereco) {
 }
 
 // — HTML —
-const esc = (s) => String(s)
-  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
 function picture(img, atributos) {
   const medidas = atributos.medidas || (img.w && img.h ? img : null);
   // prioridade: a capa da abertura; logo: o primeiro card do portfolio, que e
@@ -258,15 +217,6 @@ function pontos(obras) {
   ];
 }
 
-// troca o que esta entre <!-- nome ... --> e <!-- /nome -->, com o recuo do marcador
-function entreMarcadores(html, nome, linhas, ficheiro) {
-  const re = new RegExp(`(\\n( *)<!-- ${nome}\\b[^\\n]*-->\\n)[\\s\\S]*?(\\n *<!-- /${nome} -->)`);
-  const m = html.match(re);
-  if (!m) throw new Error(`${ficheiro} nao tem o marcador ${nome}`);
-  return html.replace(re, (_, abre, recuo, fecha) =>
-    abre + linhas.map((l) => (l ? recuo + l : '')).join('\n') + fecha);
-}
-
 function preencherMolde(molde, valores, blocos) {
   const inicio = molde.indexOf('<!DOCTYPE html>');
   if (inicio < 0) throw new Error('o molde nao tem <!DOCTYPE html>');
@@ -350,7 +300,7 @@ async function prepararObras(entradas) {
 
 // — Escrever —
 async function main() {
-  const cfg = await configuracao();
+  const cfg = await configuracao('obras');
   let entradas;
   try {
     entradas = await buscarObras(cfg);

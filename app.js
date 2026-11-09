@@ -1513,4 +1513,103 @@
     medir();
   })();
 
+  // — A Politica de Privacidade —
+  // O texto vive num so sitio, privacidade.html. Os links para la abrem-no
+  // aqui num <dialog>, sem sair da pagina -- importa sobretudo no
+  // formulario, onde sair era perder o que ja estava escrito. Sem
+  // JavaScript, com Ctrl/Cmd, ou se o pedido falhar, o link segue para a
+  // pagina, que e o mesmo texto.
+  (function politicaDePrivacidade() {
+    const ENDERECO = 'privacidade.html';
+    let dialogo = null;
+    let corpo = null;
+    let texto = null;
+
+    function criar() {
+      dialogo = document.createElement('dialog');
+      dialogo.className = 'politica-lightbox';
+      dialogo.setAttribute('aria-label', 'Política de Privacidade');
+      dialogo.innerHTML =
+        '<div class="politica-lightbox__barra">' +
+          '<button type="button" class="politica-lightbox__fechar">Fechar' +
+            '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>' +
+          '</button>' +
+        '</div>' +
+        // o foco vai para aqui ao abrir: as setas e o Page Down passam a
+        // percorrer o texto logo, e o leitor de ecra comeca pelo titulo
+        '<div class="politica-lightbox__corpo" tabindex="-1"></div>';
+      corpo = dialogo.querySelector('.politica-lightbox__corpo');
+
+      dialogo.querySelector('.politica-lightbox__fechar').addEventListener('click', () => dialogo.close());
+
+      // um clique no fundo escuro fecha; o fundo nao e um elemento, por isso
+      // ve-se pela posicao do clique em relacao a caixa
+      dialogo.addEventListener('click', (e) => {
+        if (e.target !== dialogo) return;
+        const r = dialogo.getBoundingClientRect();
+        const dentro = e.clientX >= r.left && e.clientX <= r.right &&
+                       e.clientY >= r.top && e.clientY <= r.bottom;
+        if (!dentro) dialogo.close();
+      });
+
+      // o Escape fecha o dialogo (o browser trata disso), mas nao pode
+      // chegar ao teclado do site: la fechava a gaveta e, no portfolio,
+      // mudava de pagina
+      dialogo.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') e.stopPropagation();
+      });
+
+      document.body.appendChild(dialogo);
+    }
+
+    function carregar() {
+      if (texto) return Promise.resolve(texto);
+      return fetch(ENDERECO, { credentials: 'same-origin' })
+        .then((r) => {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.text();
+        })
+        .then((html) => {
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const artigo = doc.querySelector('article.politica');
+          if (!artigo) throw new Error('privacidade.html sem article.politica');
+          texto = document.importNode(artigo, true);
+          return texto;
+        });
+    }
+
+    function abrir(link) {
+      if (!dialogo) criar();
+      // com a gaveta aberta o resto da pagina fica inert -- e o dialogo, se
+      // ja existia, ia com ele. Um modal tem de poder receber o foco.
+      dialogo.removeAttribute('inert');
+      if (!texto) corpo.innerHTML = '<p class="politica-lightbox__aviso">A carregar&hellip;</p>';
+      dialogo.showModal();
+      corpo.scrollTop = 0;
+      corpo.focus();
+
+      carregar().then((artigo) => {
+        if (artigo.parentNode !== corpo) {
+          corpo.textContent = '';
+          corpo.appendChild(artigo);
+        }
+      }).catch((err) => {
+        console.warn('[privacidade] nao consegui abrir o lightbox, sigo para a pagina:', err);
+        window.location.href = link.href;
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      const destino = new URL(link.href, window.location.href);
+      if (destino.origin !== window.location.origin) return;
+      if (!destino.pathname.endsWith('/' + ENDERECO)) return;
+      // Ctrl/Cmd/Shift/botao do meio: a pessoa pediu outro separador
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      abrir(link);
+    });
+  })();
+
 })();

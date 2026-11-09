@@ -148,6 +148,38 @@
     },
 
     /**
+     * A campanha de onde a pessoa veio.
+     * Quem chega por um anuncio traz gclid ou utm_* no endereco da primeira
+     * pagina -- e quase nunca e a do formulario: entra na home, ve obras e
+     * so depois vai ao Contacto. Guarda-se a chegada na sessao para o pedido
+     * a levar consigo (a Politica de Privacidade diz que o fazemos).
+     */
+    CAMPANHA_PARAMS: ['gclid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'],
+
+    guardarCampanha: function() {
+      var params;
+      try { params = new URLSearchParams(window.location.search); } catch (e) { return; }
+      var achados = {};
+      var algum = false;
+      this.CAMPANHA_PARAMS.forEach(function(p) {
+        var v = params.get(p);
+        if (v) { achados[p] = v.slice(0, 200); algum = true; }
+      });
+      if (!algum) return;
+      // a ultima campanha com que a pessoa chegou e a que conta
+      try { sessionStorage.setItem('marsolve-campanha', JSON.stringify(achados)); } catch (e) {}
+    },
+
+    lerCampanha: function() {
+      try {
+        var v = JSON.parse(sessionStorage.getItem('marsolve-campanha') || 'null');
+        return v && typeof v === 'object' ? v : null;
+      } catch (e) {
+        return null;
+      }
+    },
+
+    /**
      * Auto-bind contact form handlers
      */
     initContactForm: function() {
@@ -174,14 +206,25 @@
         var subjectInput = form.querySelector('[name="subject"], #c-assunto');
         var messageInput = form.querySelector('[name="message"], #c-msg');
 
+        var campanha = Kiban.lerCampanha();
+        var mensagem = messageInput ? messageInput.value.trim() : '';
+
         var data = {
           form_name: 'contact',
           name: nameInput ? nameInput.value.trim() : '',
           email: emailInput ? emailInput.value.trim() : '',
           phone: phoneInput ? phoneInput.value.trim() : '',
           subject: subjectInput ? (subjectInput.options ? subjectInput.options[subjectInput.selectedIndex].text : subjectInput.value) : '',
-          message: messageInput ? messageInput.value.trim() : '',
-          source_url: window.location.href,
+          // a mensagem e opcional no site (a politica diz "caso a escreva"),
+          // mas o kiban recusa o pedido sem ela: vai uma nota no lugar
+          message: mensagem || '(Sem mensagem)',
+          source_url: paginaComCampanha(campanha),
+          extra: {
+            tipo_pedido: subjectInput ? subjectInput.value : '',
+            consentimento_privacidade: true,
+            consentimento_em: new Date().toISOString(),
+            campanha: campanha || null,
+          },
         };
 
         if (!data.email) {
@@ -208,7 +251,16 @@
             form.reset();
           })
           .catch(function(err) {
+            // 400 e o kiban a dizer que falta ou esta mal um campo: o pedido
+            // chegou, e mandar a pessoa para o email nao resolvia nada
+            if (err && err.status === 400) {
+              console.warn('[kibanCMS] O kiban recusou o pedido:', err.message);
+              showFeedback(mensagemDeValidacao(err.message), 'error');
+              return;
+            }
+
             console.warn('[kibanCMS] Submissão direta à API falhou, a ativar fallback por email:', err);
+            var emailContacto = emailDaPagina();
 
             // Resilient fallback to mailto so no lead is lost
             var subjectEncoded = encodeURIComponent('[Website Marsolve] ' + (data.subject || 'Contacto') + ' - ' + data.name);
@@ -219,14 +271,14 @@
               'Assunto: ' + data.subject + '\n\n' +
               'Mensagem:\n' + data.message
             );
-            var mailtoUrl = 'mailto:comercial@marsolve.net?subject=' + subjectEncoded + '&body=' + bodyEncoded;
+            var mailtoUrl = 'mailto:' + emailContacto + '?subject=' + subjectEncoded + '&body=' + bodyEncoded;
 
             // nada ficou registado: o aviso tem de o dizer, senao a pessoa
             // fecha o email achando que a mensagem ja seguiu
             showFeedback(
               'Não conseguimos enviar a mensagem pelo site. Vamos abrir o seu email com a mensagem já escrita — só falta carregar em enviar. ' +
               '<a href="' + mailtoUrl + '" style="color: inherit; text-decoration: underline; font-weight: bold;">Clique aqui se não abrir</a>, ' +
-              'ou escreva-nos para comercial@marsolve.net.',
+              'ou escreva-nos para ' + emailContacto + '.',
               'warning'
             );
 
@@ -276,6 +328,40 @@
         feedbackBox.style.display = 'none';
         feedbackBox.innerHTML = '';
       }
+
+      // O email de contacto vem do kiban (colecao contactos) e o build
+      // escreve-o na pagina; o fallback usa esse, para nao haver dois
+      // sitios onde o mudar.
+      function emailDaPagina() {
+        var a = document.querySelector('.contacto-vias a[href^="mailto:"]');
+        var m = a && a.getAttribute('href').match(/^mailto:([^?]+)/);
+        return (m && m[1]) || 'comercial@marsolve.net';
+      }
+
+      // A pagina e onde o pedido foi feito; os parametros da campanha vao
+      // acrescentados, porque o campo "Source Page" e o que o kiban guarda
+      // de certeza (o extra depende da versao do add-on).
+      function paginaComCampanha(campanha) {
+        if (!campanha) return window.location.href;
+        try {
+          var u = new URL(window.location.href);
+          Object.keys(campanha).forEach(function(k) {
+            if (!u.searchParams.has(k)) u.searchParams.set(k, campanha[k]);
+          });
+          return u.href;
+        } catch (e) {
+          return window.location.href;
+        }
+      }
+
+      function mensagemDeValidacao(msg) {
+        var campos = { email: 'o email', name: 'o nome', phone: 'o telefone', message: 'a mensagem', subject: 'o assunto' };
+        var m = String(msg || '').match(/field:\s*(\w+)/i);
+        var campo = m && campos[m[1]];
+        return campo
+          ? 'Confirme ' + campo + ' e tente de novo.'
+          : 'Não foi possível enviar: confirme os campos e tente de novo.';
+      }
     },
 
     /**
@@ -311,6 +397,7 @@
     init: function() {
       // antes dos widgets, para estar a escuta quando o i18n chegar
       this.syncLang();
+      this.guardarCampanha();
       this.loadWidgets();
       this.initContactForm();
     }
