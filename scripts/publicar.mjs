@@ -20,7 +20,7 @@ const FORA_DA_RAIZ = new Set([
 
 // as paginas que vem do kiban sao servidas pela funcao (api/site.mjs): se
 // estivessem tambem em public/, o Vercel servia o ficheiro e nunca a funcao
-const DINAMICAS = /^(?:index|portfolio|about|contact)\.html$|^obra-[a-z0-9-]+\.html$|^sitemap\.xml$/;
+const DINAMICAS = /^(?:index|portfolio|about|contact|privacidade)\.html$|^obra-[a-z0-9-]+\.html$|^sitemap\.xml$/;
 
 function fica(rel) {
   const nome = path.basename(rel);

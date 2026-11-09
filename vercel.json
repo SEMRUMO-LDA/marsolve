@@ -3,12 +3,12 @@
   "outputDirectory": "public",
   "functions": {
     "api/site.mjs": {
-      "includeFiles": "{index.html,portfolio.html,about.html,contact.html,sitemap.xml,obra-*.html,kiban.js,scripts/**,assets/obras/**}"
+      "includeFiles": "{index.html,portfolio.html,about.html,contact.html,privacidade.html,sitemap.xml,obra-*.html,kiban.js,scripts/**,assets/obras/**}"
     }
   },
   "rewrites": [
     { "source": "/", "destination": "/api/site?f=index.html" },
-    { "source": "/:pagina(index|portfolio|about|contact).html", "destination": "/api/site?f=:pagina.html" },
+    { "source": "/:pagina(index|portfolio|about|contact|privacidade).html", "destination": "/api/site?f=:pagina.html" },
     { "source": "/obra-:slug.html", "destination": "/api/site?f=obra-:slug.html" },
     { "source": "/sitemap.xml", "destination": "/api/site?f=sitemap.xml" }
   ]

@@ -17,6 +17,10 @@
     enableWidgets: true,
   };
 
+  // a lingua em que o servidor entregou a pagina, lida antes de qualquer
+  // widget mexer no <html lang>
+  var LINGUA_DA_PAGINA = document.documentElement.getAttribute('lang');
+
   var Kiban = {
     config: CONFIG,
 
@@ -188,7 +192,7 @@
       form.dataset.kibanBound = 'true';
 
       var submitBtn = form.querySelector('button[type="submit"], .hero-price');
-      var originalBtnText = submitBtn ? submitBtn.textContent : 'Enviar mensagem';
+      var originalBtnText = submitBtn ? submitBtn.textContent : Kiban.texto('Enviar mensagem', 'Send message');
 
       // Feedback container
       var feedbackBox = document.createElement('div');
@@ -228,7 +232,7 @@
         };
 
         if (!data.email) {
-          showFeedback('Por favor, indique um email válido.', 'error');
+          showFeedback(Kiban.texto('Por favor, indique um email válido.', 'Please enter a valid email address.'), 'error');
           if (emailInput) emailInput.focus();
           return;
         }
@@ -236,7 +240,7 @@
         // Setting loading state
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.textContent = 'A enviar...';
+          submitBtn.textContent = Kiban.texto('A enviar...', 'Sending...');
           submitBtn.style.opacity = '0.7';
           submitBtn.style.cursor = 'wait';
         }
@@ -245,7 +249,8 @@
         Kiban.submitContactForm(data)
           .then(function(result) {
             showFeedback(
-              '✓ Mensagem enviada com sucesso! Entraremos em contacto consigo com a maior brevidade.',
+              Kiban.texto('✓ Mensagem enviada com sucesso! Entraremos em contacto consigo com a maior brevidade.',
+                '✓ Message sent! We will get back to you as soon as possible.'),
               'success'
             );
             form.reset();
@@ -276,9 +281,13 @@
             // nada ficou registado: o aviso tem de o dizer, senao a pessoa
             // fecha o email achando que a mensagem ja seguiu
             showFeedback(
-              'Não conseguimos enviar a mensagem pelo site. Vamos abrir o seu email com a mensagem já escrita — só falta carregar em enviar. ' +
-              '<a href="' + mailtoUrl + '" style="color: inherit; text-decoration: underline; font-weight: bold;">Clique aqui se não abrir</a>, ' +
-              'ou escreva-nos para ' + emailContacto + '.',
+              Kiban.texto(
+                'Não conseguimos enviar a mensagem pelo site. Vamos abrir o seu email com a mensagem já escrita — só falta carregar em enviar. ' +
+                '<a href="' + mailtoUrl + '" style="color: inherit; text-decoration: underline; font-weight: bold;">Clique aqui se não abrir</a>, ' +
+                'ou escreva-nos para ' + emailContacto + '.',
+                'We could not send your message through the website. Your email app will open with the message ready — just press send. ' +
+                '<a href="' + mailtoUrl + '" style="color: inherit; text-decoration: underline; font-weight: bold;">Click here if it does not open</a>, ' +
+                'or write to us at ' + emailContacto + '.'),
               'warning'
             );
 
@@ -355,40 +364,17 @@
       }
 
       function mensagemDeValidacao(msg) {
-        var campos = { email: 'o email', name: 'o nome', phone: 'o telefone', message: 'a mensagem', subject: 'o assunto' };
+        var en = Kiban.linguaActual('pt') === 'en';
+        var campos = en
+          ? { email: 'your email', name: 'your name', phone: 'your phone number', message: 'your message', subject: 'the subject' }
+          : { email: 'o email', name: 'o nome', phone: 'o telefone', message: 'a mensagem', subject: 'o assunto' };
         var m = String(msg || '').match(/field:\s*(\w+)/i);
         var campo = m && campos[m[1]];
+        if (en) return campo ? 'Please check ' + campo + ' and try again.' : 'Could not send: please check the fields and try again.';
         return campo
           ? 'Confirme ' + campo + ' e tente de novo.'
           : 'Não foi possível enviar: confirme os campos e tente de novo.';
       }
-    },
-
-    /**
-     * Mantem o <html lang> igual a lingua em que a pagina esta a ser lida.
-     * Quem traduz e o widget i18n do kiban, que o loader injeta quando o
-     * add-on esta ativo no painel; ele troca o texto mas deixa o atributo
-     * em "pt", e os leitores de ecra e o tradutor do browser guiam-se por ele.
-     */
-    syncLang: function() {
-      var raiz = document.documentElement;
-      function aplicar(lang) {
-        if (lang) raiz.setAttribute('lang', lang);
-      }
-
-      // troca feita na bolha
-      window.addEventListener('kiban-lang-change', function(e) {
-        aplicar(e.detail && e.detail.lang);
-      });
-
-      // quem ja chega numa lingua (cookie ou ?lang=) e traduzido sem o
-      // evento: le-se a lingua quando o script do widget acaba de correr
-      document.addEventListener('load', function(e) {
-        var s = e.target;
-        if (s && s.tagName === 'SCRIPT' && /\/i18n\/widget\.js/.test(s.src) && window.KibanI18n) {
-          aplicar(window.KibanI18n.getLanguage());
-        }
-      }, true);
     },
 
     /**
@@ -414,8 +400,9 @@
           blocos.forEach(function(bloco) {
             var lista = bloco.querySelector('.drawer-linguas');
             linguas.forEach(function(l) {
-              var b = document.createElement('button');
-              b.type = 'button';
+              // um link de verdade: mudar de lingua e ir para a outra pagina
+              var b = document.createElement('a');
+              b.href = self.enderecoNaLingua(l.code, padrao);
               b.className = 'drawer-lingua';
               b.setAttribute('data-lang', l.code);
               b.setAttribute('lang', l.code);
@@ -423,13 +410,15 @@
               // o rotulo vai por CSS (content: attr): o tradutor do kiban
               // traduz todo o texto da pagina, e "PT" passava a outra coisa
               b.setAttribute('data-rotulo', String(l.code).toUpperCase());
-              b.addEventListener('click', function() { self.mudarLingua(l.code, padrao); });
+              b.addEventListener('click', function(e) {
+                if (l.code === self.linguaActual(padrao)) { e.preventDefault(); return; }
+                self.lembrarLingua(l.code);
+              });
               lista.appendChild(b);
             });
             bloco.hidden = false;
           });
           self.marcarLingua(padrao);
-          window.addEventListener('kiban-lang-change', function() { self.marcarLingua(padrao); });
         }).catch(function(err) {
           console.warn('[kibanCMS] Sem linguas para a gaveta:', err && err.message);
         });
@@ -451,10 +440,20 @@
       }
     },
 
+    // A pagina chega do servidor ja na lingua certa (?lingua=en; ver
+    // scripts/traduzir.mjs): a lingua actual e a do <html lang>.
     linguaActual: function(padrao) {
-      if (window.KibanI18n) return window.KibanI18n.getLanguage();
-      var m = document.cookie.match(/(?:^|; )kiban-lang=([^;]+)/);
-      return (m && decodeURIComponent(m[1])) || padrao;
+      return LINGUA_DA_PAGINA || padrao;
+    },
+
+    // O widget i18n do kiban poe o <html lang> na lingua dele ("pt") sempre
+    // que o endereco muda. Quem manda e o servidor: se mudar, volta.
+    guardarLingua: function() {
+      if (!LINGUA_DA_PAGINA || typeof MutationObserver === 'undefined') return;
+      var raiz = document.documentElement;
+      new MutationObserver(function() {
+        if (raiz.getAttribute('lang') !== LINGUA_DA_PAGINA) raiz.setAttribute('lang', LINGUA_DA_PAGINA);
+      }).observe(raiz, { attributes: true, attributeFilter: ['lang'] });
     },
 
     marcarLingua: function(padrao) {
@@ -464,26 +463,121 @@
       });
     },
 
-    mudarLingua: function(codigo, padrao) {
-      if (window.KibanI18n) {
-        window.KibanI18n.setLanguage(codigo);
-        this.marcarLingua(padrao);
-        return;
-      }
-      // o widget de traducao ainda nao chegou (ou o add-on esta desligado):
-      // a lingua fica no cookie e no endereco, que e o que ele le ao arrancar
-      document.cookie = 'kiban-lang=' + encodeURIComponent(codigo) + ';path=/;max-age=31536000;SameSite=Lax';
+    // Mudar de lingua e mudar de pagina: a outra versao vem traduzida do
+    // servidor, sem passar pelo portugues. O cookie faz quem volta por um
+    // link sem ?lingua (um favorito, o logotipo) ir parar a mesma lingua.
+    enderecoNaLingua: function(codigo, padrao) {
       var u = new URL(window.location.href);
-      if (codigo === padrao) u.searchParams.delete('lang'); else u.searchParams.set('lang', codigo);
-      window.location.href = u.href;
+      if (codigo === padrao) u.searchParams.delete('lingua'); else u.searchParams.set('lingua', codigo);
+      u.searchParams.delete('lang');
+      return u.pathname.split('/').pop() + u.search + u.hash;
+    },
+
+    lembrarLingua: function(codigo) {
+      document.cookie = 'marsolve-lingua=' + encodeURIComponent(codigo) + ';path=/;max-age=31536000;SameSite=Lax';
+    },
+
+    mudarLingua: function(codigo, padrao) {
+      if (codigo === this.linguaActual(padrao)) return;
+      this.lembrarLingua(codigo);
+      window.location.href = this.enderecoNaLingua(codigo, padrao);
+    },
+
+    // O widget i18n do kiban traduzia no browser, e a pagina mostrava o
+    // portugues uns segundos. Continua carregado (o loader do kiban traz
+    // todos os widgets activos), mas sem o cookie nem o ?lang dele fica na
+    // lingua de origem e nao toca na pagina.
+    calarWidgetDeLingua: function() {
+      document.cookie = 'kiban-lang=;path=/;max-age=0;SameSite=Lax';
+    },
+
+    // as frases que o JavaScript escreve na pagina: o servidor nao as ve
+    texto: function(pt, en) {
+      return this.linguaActual('pt') === 'en' ? en : pt;
+    },
+
+    // O aviso de cookies do kiban e escrito no browser, com o texto da
+    // configuracao (em portugues) -- o servidor nao o ve. Numa pagina noutra
+    // lingua traduz-se aqui, com o mesmo servico do kiban, e fica escondido
+    // ate estar traduzido (no maximo 4s, para nunca ficar sem aviso).
+    traduzirAvisoDeCookies: function() {
+      var lingua = this.linguaActual('pt');
+      if (lingua === 'pt' || typeof MutationObserver === 'undefined') return;
+      var self = this;
+      var raiz = document.documentElement;
+      raiz.classList.add('a-traduzir-cookies');
+      var soltar = function() { raiz.classList.remove('a-traduzir-cookies'); };
+      setTimeout(soltar, 4000);
+
+      var memoria = {};
+      var postas = {};
+      var pedido = null;
+
+      function traduzir(wrapper) {
+        var nos = [];
+        var walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, null);
+        while (walker.nextNode()) {
+          var t = walker.currentNode.textContent.trim();
+          if (t.length >= 2 && !postas[t]) nos.push(walker.currentNode);
+        }
+        if (!nos.length) { soltar(); return; }
+        var faltam = [];
+        nos.forEach(function(n) {
+          var t = n.textContent.trim();
+          if (!(t in memoria) && faltam.indexOf(t) < 0) faltam.push(t);
+        });
+        var pronto = faltam.length
+          ? self.request('/i18n/translate-text', { method: 'POST', body: { texts: faltam, target_lang: lingua } })
+              .then(function(r) {
+                var tr = (r && r.data && r.data.translations) || [];
+                faltam.forEach(function(t, i) { memoria[t] = tr[i] || t; });
+              })
+          : Promise.resolve();
+        pronto.then(function() {
+          nos.forEach(function(n) {
+            var orig = n.textContent;
+            var t = orig.trim();
+            var novoTexto = memoria[t];
+            if (!novoTexto) return;
+            postas[novoTexto] = true;
+            n.textContent = orig.replace(t, novoTexto);
+          });
+        }).catch(function(err) {
+          console.warn('[kibanCMS] Nao consegui traduzir o aviso de cookies:', err && err.message);
+        }).then(soltar);
+      }
+
+      new MutationObserver(function() {
+        var w = document.getElementById('stcm-wrapper');
+        if (!w || pedido) return;
+        pedido = setTimeout(function() { pedido = null; traduzir(w); }, 30);
+      }).observe(document.body, { childList: true, subtree: true, characterData: true });
+    },
+
+    // As transicoes entre paginas (@view-transition no style.css) nem
+    // sempre se conseguem fazer -- por exemplo, a mudar de lingua com a
+    // gaveta aberta. O browser salta a animacao e mostra a pagina, mas deixa
+    // a promessa rejeitada sem ninguem a apanhar, e isso aparece como erro.
+    calarTransicoesFalhadas: function() {
+      function calar(e) {
+        var t = e && e.viewTransition;
+        if (!t) return;
+        ['ready', 'finished', 'updateCallbackDone'].forEach(function(k) {
+          if (t[k] && t[k].catch) t[k].catch(function() {});
+        });
+      }
+      window.addEventListener('pageswap', calar);
+      window.addEventListener('pagereveal', calar);
     },
 
     /**
      * Initialize Kiban on page
      */
     init: function() {
-      // antes dos widgets, para estar a escuta quando o i18n chegar
-      this.syncLang();
+      this.calarWidgetDeLingua();
+      this.calarTransicoesFalhadas();
+      this.guardarLingua();
+      this.traduzirAvisoDeCookies();
       this.guardarCampanha();
       this.loadWidgets();
       this.initGaveta();

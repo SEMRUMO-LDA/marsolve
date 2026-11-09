@@ -5673,3 +5673,16 @@ body.politica-pagina > * {
 .drawer-lingua::before {
   content: attr(data-rotulo);
 }
+
+/* o aviso de cookies so aparece depois de traduzido (kiban.js) */
+html.a-traduzir-cookies #stcm-wrapper {
+  visibility: hidden !important;
+}
+
+/* os botoes de lingua sao links (mudar de lingua e mudar de pagina) */
+a.drawer-lingua {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}

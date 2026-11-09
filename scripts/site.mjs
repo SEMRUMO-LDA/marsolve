@@ -22,7 +22,7 @@ import { prepararObras, gerarObras } from './obras.mjs';
 import { escolherEntrada, aplicarConteudo } from './conteudo.mjs';
 
 // as paginas que vem do kiban; o resto do site e estatico
-export const DINAMICAS = /^(?:index|portfolio|about|contact)\.html$|^obra-[a-z0-9-]+\.html$|^sitemap\.xml$/;
+export const DINAMICAS = /^(?:index|portfolio|about|contact|privacidade)\.html$|^obra-[a-z0-9-]+\.html$|^sitemap\.xml$/;
 const DAS_OBRAS = /^(?:index|portfolio)\.html$|^obra-[a-z0-9-]+\.html$|^sitemap\.xml$/;
 const VALIDADE = 30 * 1000;
 const NOVA_TENTATIVA = 5 * 1000;
@@ -43,8 +43,30 @@ export function paginasDoGit() {
 let cfg = null;
 const calado = () => {};
 
-async function construir() {
+export async function configuracaoDoKiban() {
   cfg ??= await configuracao('site');
+  return cfg;
+}
+
+// as linguas activas no kiban (as do widget i18n); sem resposta, so pt
+async function linguas() {
+  try {
+    const r = await fetch(`${cfg.url}/api/v1/i18n/languages`, {
+      headers: { Authorization: 'Bearer ' + cfg.chave, 'X-Tenant': cfg.tenant },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = (await r.json()).data || {};
+    const disponiveis = (d.available || []).map((l) => l.code).filter((c) => /^[a-z]{2}$/.test(c));
+    return { padrao: d.default || 'pt', disponiveis: disponiveis.length ? disponiveis : ['pt'] };
+  } catch (err) {
+    console.warn(`[site] linguas: ${err.message}`);
+    return null;
+  }
+}
+
+async function construir() {
+  await configuracaoDoKiban();
   // undefined: o pedido falhou; null: a colecao nao existe (normal para
   // sobre e contactos enquanto nao forem criadas)
   const pedir = (c) => buscarEntradas(cfg, c, { aviso: calado }).catch((err) => {
@@ -52,7 +74,7 @@ async function construir() {
     console.warn(`[site] ${c}: ${err.message}`);
     return undefined;
   });
-  const [eObras, eContactos, eSobre] = await Promise.all([pedir('obras'), pedir('contactos'), pedir('sobre')]);
+  const [eObras, eContactos, eSobre, ling] = await Promise.all([pedir('obras'), pedir('contactos'), pedir('sobre'), linguas()]);
   const git = await paginasDoGit();
   let completo = eObras !== undefined && eContactos !== undefined && eSobre !== undefined;
 
@@ -64,7 +86,7 @@ async function construir() {
     completo = false;
     ficheiros = new Map([...git].filter(([f]) => DAS_OBRAS.test(f)));
   }
-  for (const f of ['about.html', 'contact.html']) ficheiros.set(f, git.get(f));
+  for (const f of ['about.html', 'contact.html', 'privacidade.html']) ficheiros.set(f, git.get(f));
 
   const contactos = escolherEntrada('contactos', eContactos, calado);
   const sobre = escolherEntrada('sobre', eSobre, calado);
@@ -72,7 +94,7 @@ async function construir() {
     async (f) => ficheiros.get(f) ?? ler(f),
     [...ficheiros.keys()].filter((f) => f.endsWith('.html')).sort());
 
-  return { ficheiros, completo, quando: Date.now() };
+  return { ficheiros, completo, quando: Date.now(), linguas: ling ?? emMemoria?.linguas ?? { padrao: 'pt', disponiveis: ['pt'] } };
 }
 
 let emMemoria = null;
@@ -96,7 +118,8 @@ export async function obterSite() {
         console.error('[site] nao consegui montar o site:', err.message);
         if (emMemoria) return emMemoria;
         // o HTML do git, guardado so uns segundos: nao martelar o kiban
-        emMemoria = { ficheiros: await paginasDoGit(), completo: false, quando: Date.now() - VALIDADE + NOVA_TENTATIVA };
+        emMemoria = { ficheiros: await paginasDoGit(), completo: false, quando: Date.now() - VALIDADE + NOVA_TENTATIVA,
+          linguas: { padrao: 'pt', disponiveis: ['pt'] } };
         return emMemoria;
       })
       .finally(() => { aConstruir = null; });

@@ -1521,6 +1521,8 @@
   // pagina, que e o mesmo texto.
   (function politicaDePrivacidade() {
     const ENDERECO = 'privacidade.html';
+    // a pagina chega traduzida do servidor; o que se escreve aqui tambem
+    const EN = document.documentElement.lang === 'en';
     let dialogo = null;
     let corpo = null;
     let texto = null;
@@ -1528,10 +1530,10 @@
     function criar() {
       dialogo = document.createElement('dialog');
       dialogo.className = 'politica-lightbox';
-      dialogo.setAttribute('aria-label', 'Política de Privacidade');
+      dialogo.setAttribute('aria-label', EN ? 'Privacy Policy' : 'Política de Privacidade');
       dialogo.innerHTML =
         '<div class="politica-lightbox__barra">' +
-          '<button type="button" class="politica-lightbox__fechar">Fechar' +
+          '<button type="button" class="politica-lightbox__fechar">' + (EN ? 'Close' : 'Fechar') +
             '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>' +
           '</button>' +
         '</div>' +
@@ -1562,9 +1564,10 @@
       document.body.appendChild(dialogo);
     }
 
-    function carregar() {
+    function carregar(link) {
       if (texto) return Promise.resolve(texto);
-      return fetch(ENDERECO, { credentials: 'same-origin' })
+      // o link ja leva a lingua (?lingua=en), e a politica vem nessa lingua
+      return fetch(link.href, { credentials: 'same-origin' })
         .then((r) => {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.text();
@@ -1583,12 +1586,12 @@
       // com a gaveta aberta o resto da pagina fica inert -- e o dialogo, se
       // ja existia, ia com ele. Um modal tem de poder receber o foco.
       dialogo.removeAttribute('inert');
-      if (!texto) corpo.innerHTML = '<p class="politica-lightbox__aviso">A carregar&hellip;</p>';
+      if (!texto) corpo.innerHTML = '<p class="politica-lightbox__aviso">' + (EN ? 'Loading&hellip;' : 'A carregar&hellip;') + '</p>';
       dialogo.showModal();
       corpo.scrollTop = 0;
       corpo.focus();
 
-      carregar().then((artigo) => {
+      carregar(link).then((artigo) => {
         if (artigo.parentNode !== corpo) {
           corpo.textContent = '';
           corpo.appendChild(artigo);
