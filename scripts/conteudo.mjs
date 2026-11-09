@@ -20,6 +20,7 @@
 
 import { readFile, writeFile, readdir, mkdir, access } from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { RAIZ, opcoesDaLinha, configuracao, ChaveRecusada, buscarEntradas, esc, entreMarcadores, temMarcador } from './kiban.mjs';
 import { COLECOES } from './kiban-colecoes.mjs';
 
@@ -158,11 +159,17 @@ async function lerColecao(cfg, slug) {
     aviso(`a colecao ${slug} nao tem nenhuma entrada publicada: fica o HTML que esta no git`);
     return null;
   }
-  if (entradas.length > 1) aviso(`a colecao ${slug} tem ${entradas.length} entradas publicadas; uso "${entradas[0].title}"`);
+  return escolherEntrada(slug, entradas);
+}
+
+// a entrada a usar de uma colecao, ou null se estiver incompleta
+export function escolherEntrada(slug, entradas, avisar = aviso) {
+  if (!entradas || !entradas.length) return null;
+  if (entradas.length > 1) avisar(`a colecao ${slug} tem ${entradas.length} entradas publicadas; uso "${entradas[0].title}"`);
   const c = entradas[0].content || {};
   const falta = OBRIGATORIOS[slug].filter((k) => !limpo(c[k]));
   if (falta.length) {
-    aviso(`"${entradas[0].title}" (${slug}) fica de fora: falta ${falta.join(', ')}. Fica o HTML que esta no git`);
+    avisar(`"${entradas[0].title}" (${slug}) fica de fora: falta ${falta.join(', ')}. Fica o HTML que esta no git`);
     return null;
   }
   return c;
@@ -180,19 +187,10 @@ async function ler(f) {
   return readFile((await existe(naSaida)) ? naSaida : path.join(RAIZ, f), 'utf8');
 }
 
-async function main() {
-  const cfg = INICIAL ? null : await configuracao('conteudo');
-  if (INICIAL) console.log('[conteudo] conteudo inicial do kiban-colecoes.mjs (sem ir ao kiban)');
-  const contactos = await lerColecao(cfg, 'contactos');
-  const sobre = await lerColecao(cfg, 'sobre');
-  if (!contactos && !sobre) {
-    console.log('[conteudo] nada a escrever');
-    return;
-  }
-
-  // tudo em memoria primeiro: so se escreve quando todas as paginas estao prontas
-  const ficheiros = new Map();
-
+// Aplica o Sobre e os Contactos as paginas: as que ja estao em `ficheiros`
+// (por exemplo, as das obras acabadas de gerar) e as outras lidas com `ler`.
+// Usada aqui (build) e pela funcao do Vercel (api/site.mjs).
+export async function aplicarConteudo(ficheiros, { contactos, sobre }, ler, paginas) {
   if (contactos) {
     let html = await ler('contact.html');
     html = entreMarcadores(html, 'contactos:titulo', titulo(contactos), 'contact.html');
@@ -202,8 +200,7 @@ async function main() {
     html = trocarMeta(html, 'property="og:description"', descricao, 'contact.html');
     ficheiros.set('contact.html', html);
 
-    const paginas = new Set([...await readdir(RAIZ), ...(SAIDA === RAIZ ? [] : await readdir(SAIDA).catch(() => []))]);
-    for (const f of [...paginas].filter((f) => f.endsWith('.html')).sort()) {
+    for (const f of paginas) {
       const atual = ficheiros.get(f) ?? await ler(f);
       if (!temMarcador(atual, 'contactos:redes')) continue;
       ficheiros.set(f, entreMarcadores(atual, 'contactos:redes', redesDaGaveta(contactos), f));
@@ -216,6 +213,23 @@ async function main() {
     html = entreMarcadores(html, 'sobre:blocos', blocosDoSobre(sobre), 'about.html');
     ficheiros.set('about.html', html);
   }
+  return ficheiros;
+}
+
+async function main() {
+  const cfg = INICIAL ? null : await configuracao('conteudo');
+  if (INICIAL) console.log('[conteudo] conteudo inicial do kiban-colecoes.mjs (sem ir ao kiban)');
+  const contactos = await lerColecao(cfg, 'contactos');
+  const sobre = await lerColecao(cfg, 'sobre');
+  if (!contactos && !sobre) {
+    console.log('[conteudo] nada a escrever');
+    return;
+  }
+
+  // tudo em memoria primeiro: so se escreve quando todas as paginas estao prontas
+  const paginas = new Set([...await readdir(RAIZ), ...(SAIDA === RAIZ ? [] : await readdir(SAIDA).catch(() => []))]);
+  const ficheiros = await aplicarConteudo(new Map(), { contactos, sobre }, ler,
+    [...paginas].filter((f) => f.endsWith('.html')).sort());
 
   await mkdir(SAIDA, { recursive: true });
   let mudaram = 0;
@@ -232,7 +246,9 @@ async function main() {
   if (avisos.length) console.log(`[conteudo] ${avisos.length} aviso(s) acima`);
 }
 
-main().catch((err) => {
-  console.error('[conteudo] o gerador falhou:', err);
-  process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
+  main().catch((err) => {
+    console.error('[conteudo] o gerador falhou:', err);
+    process.exit(1);
+  });
+}

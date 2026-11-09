@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "serve -l 8000 .",
     "start": "serve -l 8000 .",
-    "build": "node scripts/obras.mjs && node scripts/conteudo.mjs && node scripts/publicar.mjs",
+    "build": "node scripts/publicar.mjs",
+    "gerar": "node scripts/obras.mjs && node scripts/conteudo.mjs",
     "kiban:colecoes": "node scripts/kiban-colecoes.mjs"
   },
   "devDependencies": {

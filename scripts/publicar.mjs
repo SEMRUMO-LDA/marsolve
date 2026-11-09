@@ -14,12 +14,17 @@ const SAIDA = path.join(RAIZ, 'public');
 
 // na raiz: o que nao e site
 const FORA_DA_RAIZ = new Set([
-  'public', 'node_modules', 'scripts', 'Claude outputs',
+  'public', 'node_modules', 'scripts', 'api', 'Claude outputs',
   'package.json', 'package-lock.json', 'vercel.json',
 ]);
 
+// as paginas que vem do kiban sao servidas pela funcao (api/site.mjs): se
+// estivessem tambem em public/, o Vercel servia o ficheiro e nunca a funcao
+const DINAMICAS = /^(?:index|portfolio|about|contact)\.html$|^obra-[a-z0-9-]+\.html$|^sitemap\.xml$/;
+
 function fica(rel) {
   const nome = path.basename(rel);
+  if (rel === nome && DINAMICAS.test(nome)) return false;
   if (nome.startsWith('.')) return false;                       // .git, .env, .DS_Store...
   if (/^_/.test(nome)) return false;                            // ficheiros de trabalho (_t.tgz, _*.jpg)
   if (rel.startsWith('assets/originais')) return false;         // originais pesados, fora do git

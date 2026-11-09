@@ -23,6 +23,7 @@
 
 import { readFile, writeFile, readdir, unlink, mkdir, access } from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { RAIZ, opcoesDaLinha, configuracao, ChaveRecusada, buscarEntradas, esc, entreMarcadores } from './kiban.mjs';
 
 const opcoes = opcoesDaLinha();
@@ -44,7 +45,7 @@ const avisos = [];
 const aviso = (m) => { avisos.push(m); console.warn('[obras] ' + m); };
 
 // — Ligacao ao kiban (configuracao e pedidos em kiban.mjs) —
-async function buscarObras(cfg) {
+export async function buscarObras(cfg) {
   const estados = COM_RASCUNHOS ? ['published', 'draft'] : ['published'];
   const todas = await buscarEntradas(cfg, 'obras', { estados, aviso });
   if (todas === null) throw new Error('o kiban nao tem a colecao obras');
@@ -255,7 +256,8 @@ function validar(c) {
   return null;
 }
 
-async function prepararObras(entradas) {
+export async function prepararObras(entradas) {
+  avisos.length = 0;
   const vistas = new Set();
   const obras = [];
   for (const e of entradas) {
@@ -298,26 +300,12 @@ async function prepararObras(entradas) {
   return obras.sort((a, b) => a.ordem - b.ordem || a.titulo.localeCompare(b.titulo, 'pt'));
 }
 
-// — Escrever —
-async function main() {
-  const cfg = await configuracao('obras');
-  let entradas;
-  try {
-    entradas = await buscarObras(cfg);
-  } catch (err) {
-    if (err instanceof ChaveRecusada) throw err;
-    console.warn(`[obras] sem ligacao ao kiban (${err.message}): fica o HTML que esta no git.`);
-    return;
-  }
-  const obras = await prepararObras(entradas);
-  if (!obras.length) {
-    console.warn('[obras] o kiban nao tem obras publicadas que se possam usar: fica o HTML que esta no git.');
-    return;
-  }
-
-  // tudo em memoria primeiro: so se escreve quando todas as paginas estao prontas
+// As paginas que dependem das obras, em memoria: uma por obra, a entrada,
+// o portfolio e o sitemap. Usada aqui (build) e pela funcao do Vercel
+// (api/site.mjs), que monta as paginas a pedido.
+export async function gerarObras(obras, ler = (f) => readFile(path.join(RAIZ, f), 'utf8')) {
   const ficheiros = new Map();
-  const molde = await readFile(path.join(RAIZ, 'scripts/obra.molde.html'), 'utf8');
+  const molde = await ler('scripts/obra.molde.html');
   obras.forEach((o, i) => {
     const s = obras[(i + 1) % obras.length];
     ficheiros.set(`obra-${o.slug}.html`, preencherMolde(molde, {
@@ -340,13 +328,35 @@ async function main() {
     }));
   });
   for (const f of ['index.html', 'portfolio.html']) {
-    let html = await readFile(path.join(RAIZ, f), 'utf8');
+    let html = await ler(f);
     // na entrada o portfolio esta escondido ao abrir; no portfolio e o que se ve
     html = entreMarcadores(html, 'obras:cards', cards(obras, f === 'portfolio.html'), f);
     html = entreMarcadores(html, 'obras:pontos', pontos(obras), f);
     ficheiros.set(f, html);
   }
-  ficheiros.set('sitemap.xml', sitemap(await readFile(path.join(RAIZ, 'sitemap.xml'), 'utf8'), obras));
+  ficheiros.set('sitemap.xml', sitemap(await ler('sitemap.xml'), obras));
+  return ficheiros;
+}
+
+// — Escrever —
+async function main() {
+  const cfg = await configuracao('obras');
+  let entradas;
+  try {
+    entradas = await buscarObras(cfg);
+  } catch (err) {
+    if (err instanceof ChaveRecusada) throw err;
+    console.warn(`[obras] sem ligacao ao kiban (${err.message}): fica o HTML que esta no git.`);
+    return;
+  }
+  const obras = await prepararObras(entradas);
+  if (!obras.length) {
+    console.warn('[obras] o kiban nao tem obras publicadas que se possam usar: fica o HTML que esta no git.');
+    return;
+  }
+
+  // tudo em memoria primeiro: so se escreve quando todas as paginas estao prontas
+  const ficheiros = await gerarObras(obras);
 
   await mkdir(SAIDA, { recursive: true });
   for (const [f, conteudo] of ficheiros) await writeFile(path.join(SAIDA, f), conteudo);
@@ -365,7 +375,9 @@ async function main() {
   if (avisos.length) console.log(`[obras] ${avisos.length} aviso(s) acima`);
 }
 
-main().catch((err) => {
-  console.error('[obras] o gerador falhou:', err);
-  process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
+  main().catch((err) => {
+    console.error('[obras] o gerador falhou:', err);
+    process.exit(1);
+  });
+}

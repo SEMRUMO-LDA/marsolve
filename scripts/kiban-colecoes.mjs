@@ -180,7 +180,7 @@ async function main() {
   console.log('\nFeito. O proximo deploy no Vercel ja vai buscar o Sobre e os Contactos ao kiban.');
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (import.meta.url === pathToFileURL(process.argv[1] || '').href) {
   main().catch((err) => {
     console.error('[colecoes]', err.message);
     process.exit(1);
