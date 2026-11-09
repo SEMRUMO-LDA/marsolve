@@ -5609,3 +5609,67 @@ body.politica-pagina > * {
   /* aqui nao ha diamante fixo para reservar */
   padding-bottom: clamp(32px, 4vw, 56px);
 }
+
+/* ============================================================
+   LINGUA E WHATSAPP NA GAVETA
+   Os widgets do kiban flutuavam no canto, por cima das fotografias e do
+   diamante do menu. Neste site vivem na gaveta (kiban.js, initGaveta):
+   os botoes deles escondem-se, e o de traducao continua a trabalhar por
+   tras.
+   ============================================================ */
+#kiban-i18n-widget,
+#kiban-wa-widget {
+  display: none !important;
+}
+
+/* o .drawer-footer__section e o .drawer-social-link tem display proprio,
+   que passava por cima do hidden: ate o kiban responder nao se ve nada */
+[data-kiban-linguas][hidden],
+[data-kiban-whatsapp][hidden] {
+  display: none !important;
+}
+
+.drawer-linguas {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.drawer-lingua {
+  min-width: 2.6em;
+  padding: 0.35em 0.6em;
+  border: 1px solid color-mix(in srgb, var(--gaveta-tinta) 30%, transparent);
+  border-radius: 999px;
+  background: none;
+  color: var(--gaveta-tinta);
+  font-family: var(--sans-font);
+  font-size: 0.7rem;
+  font-weight: var(--rotulo-peso-activo);
+  letter-spacing: var(--rotulo-espaco);
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity var(--t-medio) var(--curva), background var(--t-medio) var(--curva), color var(--t-medio) var(--curva);
+}
+
+.drawer-lingua:hover {
+  opacity: 1;
+  border-color: var(--gaveta-tinta);
+}
+
+.drawer-lingua[aria-pressed="true"] {
+  opacity: 1;
+  background: var(--gaveta-tinta);
+  border-color: var(--gaveta-tinta);
+  color: var(--white);
+}
+
+@media (max-width: 650px) {
+  .drawer-lingua {
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 13px;
+  }
+}
+
+.drawer-lingua::before {
+  content: attr(data-rotulo);
+}

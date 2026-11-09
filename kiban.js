@@ -392,6 +392,93 @@
     },
 
     /**
+     * A lingua e o WhatsApp na gaveta.
+     * Os widgets do kiban desenham-se como botoes a flutuar no canto, por
+     * cima das fotografias e do diamante do menu. Neste site vivem na
+     * gaveta: o CSS esconde os botoes deles (#kiban-i18n-widget,
+     * #kiban-wa-widget) e aqui preenche-se a gaveta com os mesmos dados.
+     * O widget de traducao continua a correr -- e ele que traduz a pagina;
+     * a gaveta so lhe diz para que lingua.
+     */
+    initGaveta: function() {
+      var self = this;
+      var blocos = document.querySelectorAll('[data-kiban-linguas]');
+      var wa = document.querySelectorAll('[data-kiban-whatsapp]');
+
+      if (blocos.length) {
+        this.request('/i18n/languages').then(function(res) {
+          var d = res && res.data;
+          var linguas = (d && d.available) || [];
+          if (linguas.length < 2) return;
+          var padrao = d.default || 'pt';
+          blocos.forEach(function(bloco) {
+            var lista = bloco.querySelector('.drawer-linguas');
+            linguas.forEach(function(l) {
+              var b = document.createElement('button');
+              b.type = 'button';
+              b.className = 'drawer-lingua';
+              b.setAttribute('data-lang', l.code);
+              b.setAttribute('lang', l.code);
+              b.setAttribute('aria-label', l.name);
+              // o rotulo vai por CSS (content: attr): o tradutor do kiban
+              // traduz todo o texto da pagina, e "PT" passava a outra coisa
+              b.setAttribute('data-rotulo', String(l.code).toUpperCase());
+              b.addEventListener('click', function() { self.mudarLingua(l.code, padrao); });
+              lista.appendChild(b);
+            });
+            bloco.hidden = false;
+          });
+          self.marcarLingua(padrao);
+          window.addEventListener('kiban-lang-change', function() { self.marcarLingua(padrao); });
+        }).catch(function(err) {
+          console.warn('[kibanCMS] Sem linguas para a gaveta:', err && err.message);
+        });
+      }
+
+      if (wa.length) {
+        this.request('/whatsapp-widget/config').then(function(res) {
+          var c = res && res.data;
+          if (!c || !c.enabled || !c.phone_number) return;
+          var url = 'https://wa.me/' + String(c.phone_number).replace(/[^0-9]/g, '') +
+            (c.default_message ? '?text=' + encodeURIComponent(c.default_message) : '');
+          wa.forEach(function(el) {
+            if (el.tagName === 'A') el.href = url;
+            el.hidden = false;
+          });
+        }).catch(function(err) {
+          console.warn('[kibanCMS] Sem WhatsApp para a gaveta:', err && err.message);
+        });
+      }
+    },
+
+    linguaActual: function(padrao) {
+      if (window.KibanI18n) return window.KibanI18n.getLanguage();
+      var m = document.cookie.match(/(?:^|; )kiban-lang=([^;]+)/);
+      return (m && decodeURIComponent(m[1])) || padrao;
+    },
+
+    marcarLingua: function(padrao) {
+      var actual = this.linguaActual(padrao);
+      document.querySelectorAll('.drawer-lingua').forEach(function(b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-lang') === actual ? 'true' : 'false');
+      });
+    },
+
+    mudarLingua: function(codigo, padrao) {
+      if (window.KibanI18n) {
+        window.KibanI18n.setLanguage(codigo);
+        this.marcarLingua(padrao);
+        return;
+      }
+      // o widget de traducao ainda nao chegou (ou o add-on esta desligado):
+      // a lingua fica no cookie e no endereco, que e o que ele le ao arrancar
+      document.cookie = 'kiban-lang=' + encodeURIComponent(codigo) + ';path=/;max-age=31536000;SameSite=Lax';
+      var u = new URL(window.location.href);
+      if (codigo === padrao) u.searchParams.delete('lang'); else u.searchParams.set('lang', codigo);
+      window.location.href = u.href;
+    },
+
+    /**
      * Initialize Kiban on page
      */
     init: function() {
@@ -399,6 +486,7 @@
       this.syncLang();
       this.guardarCampanha();
       this.loadWidgets();
+      this.initGaveta();
       this.initContactForm();
     }
   };
